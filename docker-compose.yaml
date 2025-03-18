@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  honeypot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: honeypot
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "2222:2222"
+    environment:
+      - NODE_ENV=production
+      - HONEYPOT_ID=test
+      - API_KEY=e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a
+      - API_ENDPOINT=https://api.ipswamp.com/api
+      - HEARTBEAT_INTERVAL=60000
+      - HTTP_PORT=8080
+      - SSH_PORT=2222
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - honeypot-network
+
+networks:
+  honeypot-network:
+    driver: bridge

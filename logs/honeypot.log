@@ -1,0 +1,9 @@
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-18T17:18:36.197Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-18T17:18:36.248Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-18T17:18:36.248Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-18T17:18:36.251Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"test\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.20.0.2\"\n}","timestamp":"2025-03-18T17:18:36.251Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-18T17:18:36.592Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-18T17:19:00.037Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-18T17:19:00.194Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-18T17:19:12.081Z"}
