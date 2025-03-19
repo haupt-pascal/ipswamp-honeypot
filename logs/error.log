@@ -1,2 +1,5 @@
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-18T17:18:36.593Z"}
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-18T17:19:00.194Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T08:18:37.695Z"}
+{"error":"connect ECONNREFUSED ::1:3001","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T08:31:33.498Z"}
+{"error":"connect ECONNREFUSED ::1:3001","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T09:35:11.645Z"}

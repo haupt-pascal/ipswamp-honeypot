@@ -7,3 +7,24 @@
 {"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-18T17:19:00.037Z"}
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-18T17:19:00.194Z"}
 {"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-18T17:19:12.081Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-19T08:18:37.347Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-19T08:18:37.376Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-19T08:18:37.376Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-19T08:18:37.378Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"test\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.21.0.2\"\n}","timestamp":"2025-03-19T08:18:37.378Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T08:18:37.695Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-19T08:18:55.010Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-19T08:31:33.468Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-19T08:31:33.485Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-19T08:31:33.486Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-19T08:31:33.487Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"test\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"http://localhost:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.21.0.2\"\n}","timestamp":"2025-03-19T08:31:33.488Z"}
+{"error":"connect ECONNREFUSED ::1:3001","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T08:31:33.497Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-19T08:31:39.560Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-19T09:35:11.606Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-19T09:35:11.632Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-19T09:35:11.632Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-19T09:35:11.634Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"http://localhost:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.21.0.2\"\n}","timestamp":"2025-03-19T09:35:11.634Z"}
+{"error":"connect ECONNREFUSED ::1:3001","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T09:35:11.645Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-19T09:35:15.940Z"}
