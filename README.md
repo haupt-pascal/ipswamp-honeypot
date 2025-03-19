@@ -2,6 +2,12 @@
 
 Ein modularer Honeypot-Service, der verdächtige Aktivitäten erkennt und an die API meldet. Dieser Honeypot ist in Docker verpackt und kann leicht erweitert werden.
 
+```bash
+curl -X POST "https://api.ipswamp.com/api/honeypot/heartbeat?api_key=e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a" \
+  -H "Content-Type: application/json" \
+  -d '{"honeypot_id": "2"}'
+```
+
 ## Funktionen
 
 - HTTP-Honeypot mit simulierten Schwachstellen
