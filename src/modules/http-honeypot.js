@@ -1,5 +1,5 @@
 // HTTP-Honeypot-Modul
-const express = require('express');
+const express = require("express");
 
 // Typische Angriffsmuster für HTTP-Requests
 const ATTACK_PATTERNS = {
@@ -15,7 +15,7 @@ const ATTACK_PATTERNS = {
     "SELECT * FROM",
     "DELETE FROM",
     "DROP TABLE",
-    "OR 1=1"
+    "OR 1=1",
   ],
   COMMAND_INJECTION: [
     "; ls -la",
@@ -26,14 +26,14 @@ const ATTACK_PATTERNS = {
     "; rm -rf",
     "& del /f",
     "; nc -e /bin/sh",
-    "| bash -i"
+    "| bash -i",
   ],
   PATH_TRAVERSAL: [
     "../../../",
     "..\\..\\..\\",
     "/etc/passwd",
     "C:\\Windows\\system.ini",
-    "WEB-INF/web.xml"
+    "WEB-INF/web.xml",
   ],
   XSS: [
     "<script>",
@@ -44,7 +44,7 @@ const ATTACK_PATTERNS = {
     "document.cookie",
     "alert(",
     "<img src=x onerror=",
-    "String.fromCharCode("
+    "String.fromCharCode(",
   ],
   SUSPICIOUS_ENDPOINTS: [
     "/admin",
@@ -59,18 +59,18 @@ const ATTACK_PATTERNS = {
     "/jenkins",
     "/solr",
     "/struts",
-    "/weblogic"
-  ]
+    "/weblogic",
+  ],
 };
 
 // HTTP-Honeypot einrichten
 function setupHTTPHoneypot(app, logger, config, reportAttack) {
-  logger.info('HTTP-Honeypot-Modul wird eingerichtet...');
+  logger.info("HTTP-Honeypot-Modul wird eingerichtet...");
 
   // Middleware für die Erkennung von Angriffen
   app.use((req, res, next) => {
-    const clientIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    
+    const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
     // Erfassen von Grundinformationen für jede Anfrage
     const requestInfo = {
       timestamp: new Date().toISOString(),
@@ -79,37 +79,41 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
       query: req.query,
       headers: req.headers,
       body: req.body,
-      ip: clientIP
+      ip: clientIP,
     };
 
     // Überprüfen auf verdächtige Anfragen
     const attackType = detectAttack(requestInfo);
-    
+
     if (attackType) {
-      logger.warn(`Möglicher ${attackType}-Angriff erkannt`, { request: requestInfo });
-      
+      logger.warn(`Möglicher ${attackType}-Angriff erkannt`, {
+        request: requestInfo,
+      });
+
       // Angriff an API melden
       reportAttack(config, {
         ip_address: clientIP,
         attack_type: attackType,
         description: `Honeypot hat einen ${attackType}-Angriff erkannt: ${req.method} ${req.path}`,
-        evidence: JSON.stringify(requestInfo)
-      }).catch(error => {
-        logger.error('Fehler beim Melden des Angriffs', { error: error.message });
+        evidence: JSON.stringify(requestInfo),
+      }).catch((error) => {
+        logger.error("Fehler beim Melden des Angriffs", {
+          error: error.message,
+        });
       });
 
       // Weitermachen, um den fake server zu presentieren
     }
 
     // Aufzeichnen aller Anfragen für Analysezwecke
-    logger.info('HTTP-Anfrage empfangen', { request: requestInfo });
+    logger.info("HTTP-Anfrage empfangen", { request: requestInfo });
     next();
   });
 
   // Fake-Server-Antworten für verschiedene Endpunkte
 
   // Fake-Login-Seite
-  app.get('/login', (req, res) => {
+  app.get("/login", (req, res) => {
     res.send(`
       <!DOCTYPE html>
       <html>
@@ -135,20 +139,29 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
   });
 
   // Fake-Login-Post-Handler
-  app.post('/login', (req, res) => {
+  app.post("/login", (req, res) => {
     const { username, password } = req.body;
-    const clientIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
-    logger.info('Login-Versuch', { username, password: '******', ip: clientIP });
-    
+    logger.info("Login-Versuch", {
+      username,
+      password: "******",
+      ip: clientIP,
+    });
+
     // Angriff an API melden - Credential Harvesting
     reportAttack(config, {
       ip_address: clientIP,
-      attack_type: 'CREDENTIAL_HARVESTING',
+      attack_type: "CREDENTIAL_HARVESTING",
       description: `Login-Versuch mit Benutzername: ${username}`,
-      evidence: JSON.stringify({ username, attempt_time: new Date().toISOString() })
-    }).catch(error => {
-      logger.error('Fehler beim Melden des Login-Versuchs', { error: error.message });
+      evidence: JSON.stringify({
+        username,
+        attempt_time: new Date().toISOString(),
+      }),
+    }).catch((error) => {
+      logger.error("Fehler beim Melden des Login-Versuchs", {
+        error: error.message,
+      });
     });
 
     // Immer mit einer Fehlermeldung antworten
@@ -168,7 +181,7 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
   });
 
   // Fake-Admin-Bereich
-  app.get('/admin', (req, res) => {
+  app.get("/admin", (req, res) => {
     res.status(401).send(`
       <!DOCTYPE html>
       <html>
@@ -185,7 +198,7 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
   });
 
   // Fake-PHP-Info-Seite
-  app.get('/phpinfo.php', (req, res) => {
+  app.get("/phpinfo.php", (req, res) => {
     res.send(`
       <!DOCTYPE html>
       <html>
@@ -206,10 +219,10 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
   });
 
   // Fake-API-Endpunkt
-  app.get('/api/users', (req, res) => {
+  app.get("/api/users", (req, res) => {
     res.status(401).json({
-      error: 'Unauthorized',
-      message: 'Valid API key required'
+      error: "Unauthorized",
+      message: "Valid API key required",
     });
   });
 
@@ -229,73 +242,95 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
     `);
   });
 
-  logger.info('HTTP-Honeypot-Modul erfolgreich eingerichtet.');
+  logger.info("HTTP-Honeypot-Modul erfolgreich eingerichtet.");
 }
 
 // Funktion zur Erkennung von Angriffen
 function detectAttack(requestInfo) {
   const { method, path, query, headers, body } = requestInfo;
-  
+
   // Verdächtige Pfade überprüfen
   for (const endpoint of ATTACK_PATTERNS.SUSPICIOUS_ENDPOINTS) {
     if (path.includes(endpoint)) {
-      return 'SUSPICIOUS_ENDPOINT';
+      return "SUSPICIOUS_ENDPOINT";
     }
   }
 
   // Überprüfe URL-Parameter auf Angriffsmuster
-  const queryString = Object.values(query || {}).join(' ');
-  
+  const queryString = Object.values(query || {}).join(" ");
+
   // SQL-Injection in Query-Parametern
-  if (ATTACK_PATTERNS.SQL_INJECTION.some(pattern => queryString.includes(pattern))) {
-    return 'SQL_INJECTION';
+  if (
+    ATTACK_PATTERNS.SQL_INJECTION.some((pattern) =>
+      queryString.includes(pattern)
+    )
+  ) {
+    return "SQL_INJECTION";
   }
-  
+
   // Command-Injection in Query-Parametern
-  if (ATTACK_PATTERNS.COMMAND_INJECTION.some(pattern => queryString.includes(pattern))) {
-    return 'COMMAND_INJECTION';
+  if (
+    ATTACK_PATTERNS.COMMAND_INJECTION.some((pattern) =>
+      queryString.includes(pattern)
+    )
+  ) {
+    return "COMMAND_INJECTION";
   }
-  
+
   // XSS in Query-Parametern
-  if (ATTACK_PATTERNS.XSS.some(pattern => queryString.includes(pattern))) {
-    return 'XSS';
+  if (ATTACK_PATTERNS.XSS.some((pattern) => queryString.includes(pattern))) {
+    return "XSS";
   }
-  
+
   // Path Traversal in Query-Parametern
-  if (ATTACK_PATTERNS.PATH_TRAVERSAL.some(pattern => queryString.includes(pattern))) {
-    return 'PATH_TRAVERSAL';
+  if (
+    ATTACK_PATTERNS.PATH_TRAVERSAL.some((pattern) =>
+      queryString.includes(pattern)
+    )
+  ) {
+    return "PATH_TRAVERSAL";
   }
-  
+
   // Überprüfe Request-Body, wenn vorhanden
-  if (body && typeof body === 'object') {
+  if (body && typeof body === "object") {
     const bodyString = JSON.stringify(body);
-    
+
     // SQL-Injection im Body
-    if (ATTACK_PATTERNS.SQL_INJECTION.some(pattern => bodyString.includes(pattern))) {
-      return 'SQL_INJECTION';
+    if (
+      ATTACK_PATTERNS.SQL_INJECTION.some((pattern) =>
+        bodyString.includes(pattern)
+      )
+    ) {
+      return "SQL_INJECTION";
     }
-    
+
     // Command-Injection im Body
-    if (ATTACK_PATTERNS.COMMAND_INJECTION.some(pattern => bodyString.includes(pattern))) {
-      return 'COMMAND_INJECTION';
+    if (
+      ATTACK_PATTERNS.COMMAND_INJECTION.some((pattern) =>
+        bodyString.includes(pattern)
+      )
+    ) {
+      return "COMMAND_INJECTION";
     }
-    
+
     // XSS im Body
-    if (ATTACK_PATTERNS.XSS.some(pattern => bodyString.includes(pattern))) {
-      return 'XSS';
+    if (ATTACK_PATTERNS.XSS.some((pattern) => bodyString.includes(pattern))) {
+      return "XSS";
     }
   }
-  
+
   // Überprüfe auf verdächtige User-Agents
-  const userAgent = headers['user-agent'] || '';
-  if (userAgent.includes('sqlmap') || 
-      userAgent.includes('nikto') || 
-      userAgent.includes('nmap') || 
-      userAgent.includes('wget') || 
-      userAgent.includes('curl')) {
-    return 'SUSPICIOUS_USER_AGENT';
+  const userAgent = headers["user-agent"] || "";
+  if (
+    userAgent.includes("sqlmap") ||
+    userAgent.includes("nikto") ||
+    userAgent.includes("nmap") ||
+    userAgent.includes("wget") ||
+    userAgent.includes("curl")
+  ) {
+    return "SUSPICIOUS_USER_AGENT";
   }
-  
+
   // Keine bekannten Angriffsmuster erkannt
   return null;
 }

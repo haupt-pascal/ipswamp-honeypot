@@ -1,22 +1,26 @@
 {
-    "name": "honeypot-service",
-    "version": "1.0.0",
-    "description": "Ein modularer Honeypot-Service mit HTTP-Server",
-    "main": "src/index.js",
-    "scripts": {
-      "start": "node src/index.js",
-      "dev": "nodemon src/index.js",
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "dependencies": {
-      "axios": "^1.6.3",
-      "express": "^4.18.2",
-      "winston": "^3.11.0",
-      "cron": "^3.1.6",
-      "ip": "^1.1.8",
-      "ssh2": "^1.15.0"
-    },
-    "devDependencies": {
-      "nodemon": "^3.0.2"
-    }
+  "name": "honeypot-service",
+  "version": "1.0.0",
+  "description": "Ein modularer Honeypot-Service mit HTTP-Server",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "NODE_ENV=development LOG_LEVEL=debug node src/index.js",
+    "debug": "NODE_ENV=development LOG_LEVEL=debug node --inspect src/index.js",
+    "dev:docker": "docker-compose -f docker-compose.dev.yaml up",
+    "dev:build": "docker-compose -f docker-compose.dev.yaml build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.6.3",
+    "express": "^4.18.2",
+    "winston": "^3.11.0",
+    "cron": "^3.1.6",
+    "ip": "^1.1.8",
+    "ssh2": "^1.15.0",
+    "ftpd": "^0.2.15"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
+}

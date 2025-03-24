@@ -24,3 +24,64 @@
 {"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-19T14:37:00.023Z"}
 {"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"debug":{"fetch_success":true,"method":"supabase","update_data_length":0},"honeypot":{"id":2,"last_heartbeat":"2025-03-19T14:37:00.391Z","name":"test"},"message":"Heartbeat successfully updated","status":"ok","timestamp":"2025-03-19T14:37:00.391Z"},"timestamp":"2025-03-19T14:37:00.425Z"}
 {"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-19T14:37:34.091Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-19T17:43:45.936Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-19T17:43:45.968Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-19T17:43:45.968Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-19T17:43:45.970Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.19.0.2\"\n}","timestamp":"2025-03-19T17:43:45.970Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T17:43:46.153Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-19T17:44:00.018Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T17:44:00.171Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-19T17:44:00.792Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-19T17:47:39.088Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-19T17:47:39.118Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-19T17:47:39.118Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-19T17:47:39.120Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\"\n}","timestamp":"2025-03-19T17:47:39.120Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-19T17:47:39.336+00:00","name":"test","updated_at":"2025-03-19T17:47:39.336+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-19T17:47:39.336Z"},"timestamp":"2025-03-19T17:47:39.366Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-19T17:48:00.020Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-19T17:48:00.241+00:00","name":"test","updated_at":"2025-03-19T17:48:00.241+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-19T17:48:00.241Z"},"timestamp":"2025-03-19T17:48:00.290Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-19T17:48:12.727Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:26:23.946Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:26:23.992Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-24T06:26:23.993Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-24T06:26:23.994Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\"\n}","timestamp":"2025-03-24T06:26:23.994Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-24T06:26:24.478+00:00","name":"test","updated_at":"2025-03-24T06:26:24.478+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-24T06:26:24.478Z"},"timestamp":"2025-03-24T06:26:24.597Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:27:00.011Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-24T06:27:00.201+00:00","name":"test","updated_at":"2025-03-24T06:27:00.201+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-24T06:27:00.201Z"},"timestamp":"2025-03-24T06:27:00.271Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7","accept-encoding":"gzip, deflate, br, zstd","accept-language":"en-US,en;q=0.9","connection":"keep-alive","cookie":"_ga=GA1.1.1178522564.1737346029; _ga_699NE13B0K=GS1.1.1737346029.1.0.1737346033.0.0.0","host":"127.0.0.1:8080","sec-ch-ua":"\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"","sec-ch-ua-mobile":"?0","sec-ch-ua-platform":"\"macOS\"","sec-fetch-dest":"document","sec-fetch-mode":"navigate","sec-fetch-site":"none","sec-fetch-user":"?1","upgrade-insecure-requests":"1","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"},"ip":"::ffff:192.168.65.1","method":"GET","path":"/","query":{},"timestamp":"2025-03-24T06:27:16.033Z"},"timestamp":"2025-03-24T06:27:16.034Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8","accept-encoding":"gzip, deflate, br, zstd","accept-language":"en-US,en;q=0.9","connection":"keep-alive","cookie":"_ga=GA1.1.1178522564.1737346029; _ga_699NE13B0K=GS1.1.1737346029.1.0.1737346033.0.0.0","host":"127.0.0.1:8080","referer":"http://127.0.0.1:8080/","sec-ch-ua":"\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"","sec-ch-ua-mobile":"?0","sec-ch-ua-platform":"\"macOS\"","sec-fetch-dest":"image","sec-fetch-mode":"no-cors","sec-fetch-site":"same-origin","user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"},"ip":"::ffff:192.168.65.1","method":"GET","path":"/favicon.ico","query":{},"timestamp":"2025-03-24T06:27:16.204Z"},"timestamp":"2025-03-24T06:27:16.205Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:28:00.013Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-24T06:28:00.183+00:00","name":"test","updated_at":"2025-03-24T06:28:00.183+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-24T06:28:00.183Z"},"timestamp":"2025-03-24T06:28:00.268Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:29:00.012Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-24T06:29:00.308+00:00","name":"test","updated_at":"2025-03-24T06:29:00.308+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-24T06:29:00.308Z"},"timestamp":"2025-03-24T06:29:00.382Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:30:00.003Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-24T06:30:00.226+00:00","name":"test","updated_at":"2025-03-24T06:30:00.226+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-24T06:30:00.226Z"},"timestamp":"2025-03-24T06:30:00.328Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:31:00.010Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-24T06:31:00.35+00:00","name":"test","updated_at":"2025-03-24T06:31:00.35+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-24T06:31:00.350Z"},"timestamp":"2025-03-24T06:31:00.406Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:32:00.002Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-24T06:32:00.221+00:00","name":"test","updated_at":"2025-03-24T06:32:00.221+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-24T06:32:00.221Z"},"timestamp":"2025-03-24T06:32:00.294Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-24T06:32:23.102Z"}
+{"environment":"development","level":"info","logLevel":"debug","message":"Logger initialisiert mit Level: debug","timestamp":"2025-03-24T06:32:37.021Z","transports":["console","file","file","file","file"]}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:32:37.023Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:32:37.048Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-24T06:32:37.048Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:32:37.049Z"}
+{"level":"info","message":"Debug-Modus aktiviert. /debug Endpunkt verfügbar.","timestamp":"2025-03-24T06:32:37.051Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-24T06:32:37.053Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"dev\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\",\n  \"debugMode\": true\n}","timestamp":"2025-03-24T06:32:37.053Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-24T06:32:37.053Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:32:37.223Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-24T06:32:48.838Z"}
+{"environment":"development","level":"info","logLevel":"debug","message":"Logger initialisiert mit Level: debug","timestamp":"2025-03-24T06:48:03.905Z","transports":["console","file","file","file","file"]}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:48:03.906Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:48:03.931Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-24T06:48:03.932Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:48:03.932Z"}
+{"level":"info","message":"Debug-Modus aktiviert. /debug Endpunkt verfügbar.","timestamp":"2025-03-24T06:48:03.933Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-24T06:48:03.936Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"dev\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\",\n  \"debugMode\": true\n}","timestamp":"2025-03-24T06:48:03.936Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-24T06:48:03.936Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:48:04.259Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-24T06:48:12.320Z"}

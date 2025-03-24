@@ -1,0 +1,22 @@
+{"environment":"development","level":"info","logLevel":"debug","message":"Logger initialisiert mit Level: debug","timestamp":"2025-03-24T06:32:37.022Z","transports":["console","file","file","file","file"]}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:32:37.023Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:32:37.048Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-24T06:32:37.048Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:32:37.049Z"}
+{"level":"info","message":"Debug-Modus aktiviert. /debug Endpunkt verfügbar.","timestamp":"2025-03-24T06:32:37.051Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-24T06:32:37.053Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"dev\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\",\n  \"debugMode\": true\n}","timestamp":"2025-03-24T06:32:37.053Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-24T06:32:37.053Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:32:37.223Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-24T06:32:48.838Z"}
+{"environment":"development","level":"info","logLevel":"debug","message":"Logger initialisiert mit Level: debug","timestamp":"2025-03-24T06:48:03.905Z","transports":["console","file","file","file","file"]}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-24T06:48:03.906Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:48:03.931Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-24T06:48:03.932Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-24T06:48:03.932Z"}
+{"level":"info","message":"Debug-Modus aktiviert. /debug Endpunkt verfügbar.","timestamp":"2025-03-24T06:48:03.933Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-24T06:48:03.936Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"dev\",\n  \"apiKey\": \"e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\",\n  \"debugMode\": true\n}","timestamp":"2025-03-24T06:48:03.936Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-24T06:48:03.936Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:48:04.261Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-24T06:48:12.320Z"}
