@@ -157,6 +157,27 @@ Mit Tools wie [Postman](https://www.postman.com/) oder [Charles Proxy](https://w
 2. Starten Sie den Proxy-Server
 3. Beobachten Sie den gesamten API-Verkehr für Debugging-Zwecke
 
+## API-Endpunkte
+
+Der Honeypot verwendet folgende API-Endpunkte zur Kommunikation mit dem Backend:
+
+| Endpunkt              | Methode | Beschreibung                                 |
+| --------------------- | ------- | -------------------------------------------- |
+| `/honeypot/heartbeat` | POST    | Meldet, dass der Honeypot aktiv ist          |
+| `/honeypot/report-ip` | POST    | Meldet erkannte Angriffe und verdächtige IPs |
+| `/ping`               | GET     | Überprüft, ob das API-Backend erreichbar ist |
+
+### Schema für `/honeypot/report-ip`
+
+```json
+{
+  "ip_address": "8.8.8.8", // Die zu meldende IP-Adresse (erforderlich)
+  "attack_type": "SQL_INJECTION", // Art des Angriffs (optional)
+  "description": "SQL-Injection versucht: ' OR 1=1", // Beschreibung (optional)
+  "evidence": "{...}" // JSON mit Beweisdaten (optional)
+}
+```
+
 ## Spezifische Fehlerszenarien und Lösungen
 
 ### "Request failed with status code 403" bei Angriffsmeldungen

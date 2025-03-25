@@ -141,7 +141,7 @@ app.post("/api/honeypot/heartbeat", simulateConditions, (req, res) => {
   });
 });
 
-// Angriffsmeldung
+// Angriffsmeldung (alte Route für Abwärtskompatibilität)
 app.post("/api/report", simulateConditions, (req, res) => {
   const { ip_address, attack_type, description, evidence, honeypot_id } =
     req.body;
@@ -172,6 +172,61 @@ app.post("/api/report", simulateConditions, (req, res) => {
     status: "ok",
     message: "Attack reported successfully",
     attack_id: attackEntry.id,
+  });
+});
+
+// Neue Honeypot-Angriffsmeldung nach Backend-Schema
+app.post("/api/honeypot/report-ip", simulateConditions, (req, res) => {
+  const { ip_address, attack_type, description, evidence } = req.body;
+
+  if (!ip_address) {
+    return res.status(400).json({
+      message: "IP address is required",
+      status: 400,
+    });
+  }
+
+  // Erstelle eine simulierte IP-ID (entweder eine neue oder hole eine bestehende)
+  let ipId;
+  let existingIpIndex = db.attacks.findIndex(
+    (a) => a.ip_address === ip_address
+  );
+  let isNew = existingIpIndex === -1;
+
+  if (isNew) {
+    ipId = Date.now();
+  } else {
+    ipId = db.attacks[existingIpIndex].id || Date.now();
+  }
+
+  // Füge Angriff zur Liste hinzu
+  const attackEntry = {
+    id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+    ip_address,
+    attack_type,
+    description,
+    evidence,
+    source: "honeypot",
+    reported_at: new Date().toISOString(),
+  };
+
+  db.attacks.push(attackEntry);
+
+  // Berechne einen simulierten Score
+  const score =
+    db.attacks.filter((a) => a.ip_address === ip_address).length * 10;
+
+  console.log(
+    `🔥 [Neue API] Angriff gemeldet: ${
+      attack_type || description || "Unknown"
+    } von ${ip_address}`
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "IP reported successfully",
+    ip_id: ipId,
+    current_score: score,
   });
 });
 
@@ -260,6 +315,7 @@ app.listen(config.port, () => {
   - GET  /api/ping
   - POST /api/honeypot/heartbeat
   - POST /api/report
+  - POST /api/honeypot/report-ip
   - GET  /api/get
   
   🧪 Admin-Endpunkte:

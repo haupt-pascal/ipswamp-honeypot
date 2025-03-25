@@ -134,19 +134,19 @@ async function reportAttack(config, attackData, logger) {
   try {
     if (config.debugMode) {
       log.debug("Melde Angriff an API", {
-        endpoint: `${config.apiEndpoint}/report`,
+        endpoint: `${config.apiEndpoint}/honeypot/report-ip`,
         type: attackData.attack_type,
       });
     }
 
+    // Use the new endpoint
     const response = await axios.post(
-      `${config.apiEndpoint}/report`,
+      `${config.apiEndpoint}/honeypot/report-ip`,
       {
         ip_address: attackData.ip_address,
         attack_type: attackData.attack_type,
         description: attackData.description,
         evidence: attackData.evidence,
-        honeypot_id: config.honeypotId, // Add honeypot_id to the payload
       },
       {
         params: {
@@ -159,6 +159,8 @@ async function reportAttack(config, attackData, logger) {
     log.debug("Angriff erfolgreich gemeldet", {
       status: response.status,
       attack_type: attackData.attack_type,
+      score: response.data?.current_score,
+      ip_id: response.data?.ip_id,
     });
 
     return response.data;
@@ -170,7 +172,7 @@ async function reportAttack(config, attackData, logger) {
       statusCode: error.response?.status,
       statusText: error.response?.statusText,
       data: error.response?.data,
-      apiEndpoint: `${config.apiEndpoint}/report`,
+      apiEndpoint: `${config.apiEndpoint}/honeypot/report-ip`,
     };
 
     log.error("Fehler beim Melden des Angriffs", errorDetails);
@@ -257,15 +259,14 @@ async function uploadStoredAttacks(config, logger) {
       if (!attack.pending_upload) continue;
 
       try {
+        // Use the new endpoint for uploads too
         await axios.post(
-          `${config.apiEndpoint}/report`,
+          `${config.apiEndpoint}/honeypot/report-ip`,
           {
             ip_address: attack.ip_address,
             attack_type: attack.attack_type,
             description: attack.description,
             evidence: attack.evidence,
-            honeypot_id: config.honeypotId,
-            original_timestamp: attack.stored_at,
           },
           {
             params: { api_key: config.apiKey },

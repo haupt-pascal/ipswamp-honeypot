@@ -5,3 +5,11 @@
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:48:04.259Z"}
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T16:53:17.537Z"}
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T16:59:34.723Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:26:49.432Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:27:19.472Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:27:49.535Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:28:19.546Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:28:49.734Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:29:19.636Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:29:49.715Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:30:19.762Z"}
