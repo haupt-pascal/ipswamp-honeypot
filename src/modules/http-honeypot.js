@@ -227,7 +227,17 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
   });
 
   // 404-Handler für alle anderen Anfragen
-  app.use((req, res) => {
+  app.use((req, res, next) => {
+    // Skip system routes
+    if (
+      req.path === "/monitor" ||
+      req.path === "/debug" ||
+      req.path === "/api-diagnostics" ||
+      req.path === "/test-heartbeat"
+    ) {
+      return next();
+    }
+
     res.status(404).send(`
       <!DOCTYPE html>
       <html>

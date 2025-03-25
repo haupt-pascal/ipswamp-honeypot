@@ -3,3 +3,7 @@
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T17:44:00.172Z"}
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:32:37.223Z"}
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:48:04.261Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_ENDPOINT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"GET","path":"/login","query":{"username":"admin' OR 1=1--"},"timestamp":"2025-03-25T16:53:17.400Z"},"timestamp":"2025-03-25T16:53:17.401Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T16:53:17.537Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/upload-offline-attacks","query":{},"timestamp":"2025-03-25T16:59:34.587Z"},"timestamp":"2025-03-25T16:59:34.588Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T16:59:34.724Z"}

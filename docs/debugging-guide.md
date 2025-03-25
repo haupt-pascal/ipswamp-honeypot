@@ -10,6 +10,7 @@ This document provides comprehensive instructions for debugging, developing, and
 4. [Adding New Modules](#adding-new-modules)
 5. [Environment Variables Reference](#environment-variables-reference)
 6. [Troubleshooting Common Issues](#troubleshooting-common-issues)
+7. [Simulating Attacks for Testing](#simulating-attacks-for-testing)
 
 ## Setup Development Environment
 
@@ -227,14 +228,93 @@ If the honeypot is consuming too many resources:
 2. Adjust logging levels to reduce disk I/O
 3. Consider limiting the number of concurrent connections in busy modules
 
+## Simulating Attacks for Testing
+
+To properly test the honeypot functionality, you can simulate various types of attacks:
+
+### HTTP Attacks
+
+```bash
+# SQL Injection attempt
+curl "http://localhost:8080/login?username=admin'%20OR%201=1--"
+
+# XSS attempt
+curl "http://localhost:8080/search?q=<script>alert(1)</script>"
+
+# Path traversal attempt
+curl "http://localhost:8080/file?path=../../../etc/passwd"
+
+# Credential harvesting test
+curl -X POST -d "username=admin&password=password123" http://localhost:8080/login
+```
+
+### SSH Attacks
+
+```bash
+# Brute force login attempt
+ssh admin@localhost -p 2222 # Try password: admin123
+ssh root@localhost -p 2222  # Try password: password123
+
+# Command execution (if you get access)
+ssh user@localhost -p 2222
+# Then try: cat /etc/passwd or other suspicious commands
+```
+
+### FTP Attacks
+
+```bash
+# Anonymous login attempt
+ftp -P 21 localhost
+# Use 'anonymous' as username with empty password
+
+# Authenticated login with default credentials
+ftp -P 21 localhost
+# Use 'admin' / 'admin123' or 'user' / 'password123'
+
+# Try to access sensitive directories
+cd /private
+get users.txt
+```
+
+## Monitoring & Troubleshooting
+
+### Using the Monitor Endpoint
+
+The honeypot provides a status endpoint at `/monitor` for checking system health:
+
+```bash
+# Access the monitor endpoint directly
+curl http://localhost:8080/monitor
+```
+
+If you're getting a 404 error, check that the route is properly defined in `src/index.js` and isn't being overridden by another route handler.
+
+### Disabling the Monitor Endpoint in Production
+
+If you want to disable the monitor endpoint in production for security reasons:
+
+```javascript
+// In src/index.js - wrap the monitor endpoint in a condition
+if (process.env.ENABLE_MONITOR === "true" || config.debugMode) {
+  app.get("/monitor", (req, res) => {
+    // Monitor endpoint code
+  });
+}
+```
+
+Then only enable it in development or testing environments:
+
+```bash
+# Only enable monitor in development
+docker run -e ENABLE_MONITOR=true -e NODE_ENV=development -p 8080:8080 honeypot
 ```
 
 ## Testing Your Development Setup
 
 1. **Verify Logging Works**: Generate some test events and check logs
 2. **Test Each Module**: Connect to each service (HTTP, SSH, new modules)
-3. **Simulate Attacks**: Try some basic attack patterns to ensure detection
-4. **API Integration**: Verify communication with the backend API
+3. **Simulate Attacks**: Use the examples above to trigger the detection systems
+4. **API Integration**: Verify attack reports are sent to the backend API
 
 ## Best Practices for Development
 
@@ -243,4 +323,3 @@ If the honeypot is consuming too many resources:
 - Document any new environment variables or configuration options
 - Always use the logging system for important events
 - Follow the existing code structure and patterns
-```

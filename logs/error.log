@@ -3,3 +3,5 @@
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-19T17:44:00.172Z"}
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:32:37.223Z"}
 {"error":"Request failed with status code 403","level":"error","message":"Fehler beim Senden des Heartbeats","timestamp":"2025-03-24T06:48:04.259Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T16:53:17.537Z"}
+{"error":"Request failed with status code 403","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T16:59:34.723Z"}

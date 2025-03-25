@@ -9,6 +9,8 @@
     "debug": "NODE_ENV=development LOG_LEVEL=debug node --inspect src/index.js",
     "dev:docker": "docker-compose -f docker-compose.dev.yaml up",
     "dev:build": "docker-compose -f docker-compose.dev.yaml build",
+    "mock-api": "node tools/mock-api-server.js",
+    "offline": "NODE_ENV=development OFFLINE_MODE=true LOG_LEVEL=debug node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -21,6 +23,7 @@
     "ftpd": "^0.2.15"
   },
   "devDependencies": {
+    "morgan": "^1.10.0",
     "nodemon": "^3.0.2"
   }
 }
