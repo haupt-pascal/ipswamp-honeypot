@@ -139,15 +139,34 @@ async function reportAttack(config, attackData, logger) {
       });
     }
 
-    // Use the new endpoint
+    // Format evidence as array if it's a string
+    let evidence = attackData.evidence;
+    if (typeof evidence === "string") {
+      try {
+        // Try to parse JSON string
+        const parsedEvidence = JSON.parse(evidence);
+        evidence = Array.isArray(parsedEvidence) ? parsedEvidence : [evidence];
+      } catch (e) {
+        // If not valid JSON, use as a single element array
+        evidence = [evidence];
+      }
+    } else if (evidence && !Array.isArray(evidence)) {
+      // Convert non-array objects to array
+      evidence = [JSON.stringify(evidence)];
+    }
+
+    // Prepare the request body according to the API specification
+    const requestBody = {
+      ip_address: attackData.ip_address,
+      attack_type: attackData.attack_type,
+      description: attackData.description,
+      evidence: evidence,
+    };
+
+    // Use the new endpoint with properly formatted body
     const response = await axios.post(
       `${config.apiEndpoint}/honeypot/report-ip`,
-      {
-        ip_address: attackData.ip_address,
-        attack_type: attackData.attack_type,
-        description: attackData.description,
-        evidence: attackData.evidence,
-      },
+      requestBody,
       {
         params: {
           api_key: config.apiKey,
@@ -259,15 +278,36 @@ async function uploadStoredAttacks(config, logger) {
       if (!attack.pending_upload) continue;
 
       try {
-        // Use the new endpoint for uploads too
+        // Format evidence as array if it's a string
+        let evidence = attack.evidence;
+        if (typeof evidence === "string") {
+          try {
+            // Try to parse JSON string
+            const parsedEvidence = JSON.parse(evidence);
+            evidence = Array.isArray(parsedEvidence)
+              ? parsedEvidence
+              : [evidence];
+          } catch (e) {
+            // If not valid JSON, use as a single element array
+            evidence = [evidence];
+          }
+        } else if (evidence && !Array.isArray(evidence)) {
+          // Convert non-array objects to array
+          evidence = [JSON.stringify(evidence)];
+        }
+
+        // Prepare the request body according to the API specification
+        const requestBody = {
+          ip_address: attack.ip_address,
+          attack_type: attack.attack_type,
+          description: attack.description,
+          evidence: evidence,
+        };
+
+        // Use the new endpoint with properly formatted body
         await axios.post(
           `${config.apiEndpoint}/honeypot/report-ip`,
-          {
-            ip_address: attack.ip_address,
-            attack_type: attack.attack_type,
-            description: attack.description,
-            evidence: attack.evidence,
-          },
+          requestBody,
           {
             params: { api_key: config.apiKey },
             timeout: 5000,

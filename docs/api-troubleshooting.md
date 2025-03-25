@@ -173,10 +173,12 @@ Der Honeypot verwendet folgende API-Endpunkte zur Kommunikation mit dem Backend:
 {
   "ip_address": "8.8.8.8", // Die zu meldende IP-Adresse (erforderlich)
   "attack_type": "SQL_INJECTION", // Art des Angriffs (optional)
-  "description": "SQL-Injection versucht: ' OR 1=1", // Beschreibung (optional)
-  "evidence": "{...}" // JSON mit Beweisdaten (optional)
+  "description": "SQL-Injection: ' OR 1=1", // Beschreibung (optional)
+  "evidence": ["Log-Eintrag 1", "Log-Eintrag 2"] // Array mit Beweisdaten (optional)
 }
 ```
+
+**Hinweis:** Der API-Schlüssel muss als Query-Parameter übermittelt werden:
 
 ## Spezifische Fehlerszenarien und Lösungen
 

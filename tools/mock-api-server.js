@@ -186,6 +186,22 @@ app.post("/api/honeypot/report-ip", simulateConditions, (req, res) => {
     });
   }
 
+  // Validiere das evidence-Feld, es sollte ein Array sein
+  if (evidence && !Array.isArray(evidence)) {
+    return res.status(400).json({
+      message: "Evidence must be an array",
+      status: 400,
+    });
+  }
+
+  // Log the received data with proper format
+  console.log("📝 Received report-ip request body:", {
+    ip_address,
+    attack_type,
+    description,
+    evidence: evidence ? `Array with ${evidence.length} items` : "None",
+  });
+
   // Erstelle eine simulierte IP-ID (entweder eine neue oder hole eine bestehende)
   let ipId;
   let existingIpIndex = db.attacks.findIndex(
