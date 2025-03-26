@@ -238,5 +238,13 @@
     "evidence": "{\"timestamp\":\"2025-03-26T08:30:53.407Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
     "stored_at": "2025-03-26T08:30:53.526Z",
     "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T10:03:59.427Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T10:03:59.752Z",
+    "pending_upload": true
   }
 ]

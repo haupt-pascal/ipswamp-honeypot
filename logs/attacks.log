@@ -127,3 +127,5 @@
 {"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:30:53.528Z"}
 {"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T08:31:00.020Z"}
 {"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T08:31:00.021Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T10:03:59.427Z"},"timestamp":"2025-03-26T10:03:59.427Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T10:03:59.753Z"}

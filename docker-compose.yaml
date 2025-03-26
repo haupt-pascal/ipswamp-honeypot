@@ -17,7 +17,7 @@ services:
       - HONEYPOT_ID=2
       - API_KEY=e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a
       # Configurable API endpoint - uncomment one of these lines
-      - API_ENDPOINT=http://hono:3001/api
+      - API_ENDPOINT=https://api.ipswamp.com/api
       #- API_ENDPOINT=https://api.ipswamp.com/api
 
       # Basic configuration
