@@ -1,34 +1,36 @@
-// Hauptdatei des Honeypot-Services
 const express = require("express");
-const winston = require("winston");
-const { CronJob } = require("cron");
+const fs = require("fs");
+const path = require("path");
 const ip = require("ip");
-
-// Module importieren
 const { setupHTTPHoneypot } = require("./modules/http-honeypot");
+const { setupFTPHoneypot } = require("./modules/ftp-honeypot");
 const { setupSSHHoneypot } = require("./modules/ssh-honeypot");
-// Neues FTP-Modul importieren (optional)
-let setupFTPHoneypot;
-try {
-  setupFTPHoneypot = require("./modules/ftp-honeypot").setupFTPHoneypot;
-} catch (error) {
-  // Das Modul ist optional und kann fehlen
-  console.warn(
-    "FTP-Honeypot-Modul konnte nicht geladen werden:",
-    error.message
-  );
-}
-
+const { setupHTTPSHoneypot } = require("./modules/https-honeypot");
+const { setupMailHoneypot } = require("./modules/mail-honeypot");
+const { setupMySQLHoneypot } = require("./modules/mysql-honeypot");
 const {
   sendHeartbeat,
   reportAttack,
-  testApiConnection,
-  getLastHeartbeatInfo,
-  uploadStoredAttacks,
+  getLastHeartbeatRequest,
+  getLastHeartbeatResponse,
 } = require("./services/api-service");
 const { setupLogger } = require("./utils/logger");
 
-// Konfiguration laden
+// Setup logger
+const logger = setupLogger();
+
+// Create express app
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Create logs directory if it doesn't exist
+const logsDir = path.join(process.cwd(), "logs");
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
+
+// Configuration object
 const config = {
   honeypotId: process.env.HONEYPOT_ID || "test",
   apiKey:
@@ -37,6 +39,14 @@ const config = {
   apiEndpoint: process.env.API_ENDPOINT || "http://localhost:3000/api",
   heartbeatInterval: parseInt(process.env.HEARTBEAT_INTERVAL || "60000"),
   httpPort: parseInt(process.env.HTTP_PORT || "8080"),
+  httpsPort: parseInt(process.env.HTTPS_PORT || "8443"),
+  sshPort: parseInt(process.env.SSH_PORT || "2222"),
+  ftpPort: parseInt(process.env.FTP_PORT || "21"),
+  smtpPort: parseInt(process.env.SMTP_PORT || "25"),
+  smtpSubmissionPort: parseInt(process.env.SMTP_SUBMISSION_PORT || "587"),
+  pop3Port: parseInt(process.env.POP3_PORT || "110"),
+  imapPort: parseInt(process.env.IMAP_PORT || "143"),
+  mysqlPort: parseInt(process.env.MYSQL_PORT || "3306"),
   hostIP: process.env.HOST_IP || ip.address(),
   debugMode:
     process.env.NODE_ENV === "development" || process.env.DEBUG === "true",
@@ -44,154 +54,191 @@ const config = {
   heartbeatRetryDelay: parseInt(process.env.HEARTBEAT_RETRY_DELAY || "5000"),
   offlineMode: process.env.OFFLINE_MODE === "true", // Add offline mode option
   offlineAttackSync: parseInt(process.env.OFFLINE_ATTACK_SYNC || "300000"), // Sync every 5 minutes by default
-  // Konfiguration für IP-Report-Throttling
+
+  // Module enablement configuration
+  enableHTTP: process.env.ENABLE_HTTP !== "false", // Enable by default
+  enableHTTPS: process.env.ENABLE_HTTPS === "true",
+  enableSSH: process.env.ENABLE_SSH === "true",
+  enableFTP: process.env.ENABLE_FTP === "true",
+  enableMail: process.env.ENABLE_MAIL === "true",
+  enableMySQL: process.env.ENABLE_MYSQL === "true",
+
+  // IP throttling configuration
+  maxReportsPerIP: parseInt(process.env.MAX_REPORTS_PER_IP || "5"),
+  ipCacheTTL: parseInt(process.env.IP_CACHE_TTL || "3600000"), // 1 hour
   storeThrottledAttacks: process.env.STORE_THROTTLED_ATTACKS === "true",
-  maxReportsPerIPPerHour: parseInt(process.env.MAX_REPORTS_PER_IP || "5"),
-  ipCacheTTL: parseInt(process.env.IP_CACHE_TTL || "3600000"), // 1 Stunde
+  reportUniqueTypesOnly: process.env.REPORT_UNIQUE_TYPES_ONLY === "true",
 };
 
-// Logger einrichten
-const logger = setupLogger();
-
-// Express-App erstellen
-const app = express();
-
-// Middleware für JSON-Parsing
-app.use(express.json());
-
-// Status des letzten Heartbeats
-let lastHeartbeatSuccess = null;
-let consecutiveHeartbeatFailures = 0;
-
-// Heartbeat-Funktion einrichten
-async function performHeartbeat() {
-  try {
-    logger.info("Sende Heartbeat an API-Server...");
-    const response = await sendHeartbeat(config, logger);
-    logger.info("Heartbeat erfolgreich gesendet", { response });
-
-    // Erfolgreicher Heartbeat, setze Fehler-Counter zurück
-    lastHeartbeatSuccess = new Date().toISOString();
-    consecutiveHeartbeatFailures = 0;
-  } catch (error) {
-    consecutiveHeartbeatFailures++;
-
-    logger.error(
-      `Fehler beim Senden des Heartbeats (Versuch ${consecutiveHeartbeatFailures})`,
-      {
-        error: error.message,
-        statusCode: error.response?.status,
-        responseData: error.response?.data,
-      }
-    );
-
-    // Bei 403 Forbidden, könnte es ein API-Key-Problem sein
-    if (error.response && error.response.status === 403) {
-      logger.warn("403 Forbidden - Überprüfe API-Key und Berechtigungen", {
-        apiEndpoint: config.apiEndpoint,
-        honeypotId: config.honeypotId,
-        // Zeige verkürzte Version des API-Keys für Debug-Zwecke
-        apiKeyPrefix: config.apiKey.substring(0, 8) + "...",
-      });
-    }
-
-    // Bei mehreren aufeinanderfolgenden Fehlern, versuche eine Wiederholung
-    if (
-      config.debugMode &&
-      consecutiveHeartbeatFailures <= config.heartbeatRetryCount
-    ) {
-      logger.info(
-        `Versuche Heartbeat erneut in ${
-          config.heartbeatRetryDelay / 1000
-        } Sekunden...`
-      );
-
-      // Sofortiger erneuter Versuch im Debug-Modus
-      setTimeout(async () => {
-        try {
-          logger.debug("Erneuter Heartbeat-Versuch nach Fehler...");
-          await sendHeartbeat(config, logger);
-          logger.info("Erneuter Heartbeat-Versuch erfolgreich");
-          lastHeartbeatSuccess = new Date().toISOString();
-          consecutiveHeartbeatFailures = 0;
-        } catch (retryError) {
-          logger.error("Auch erneuter Heartbeat-Versuch fehlgeschlagen", {
-            error: retryError.message,
-          });
-        }
-      }, config.heartbeatRetryDelay);
-    }
-
-    // Bei anhaltenden Fehlern, teste die API-Verbindung
-    if (consecutiveHeartbeatFailures === 3) {
-      logger.warn("Mehrere Heartbeat-Fehler - teste API-Verbindung...");
-      testApiConnection(config, logger).then((result) => {
-        if (!result.success) {
-          logger.error(
-            "API-Verbindung fehlgeschlagen - möglicherweise Server-Problem"
-          );
-        }
-      });
-    }
-  }
-}
-
-// Heartbeat beim Start ausführen - mit kurzer Verzögerung
-setTimeout(() => {
-  performHeartbeat();
-}, 2000);
-
-// Cron-Job für regelmäßige Heartbeats einrichten (jede Minute)
-const heartbeatJob = new CronJob("* * * * *", performHeartbeat);
-heartbeatJob.start();
-
-// Aktive Module verfolgen
-const activeModules = [];
-
-// Haupt-Honeypot-Module einrichten
-setupHTTPHoneypot(app, logger, config, reportAttack);
-activeModules.push({
-  name: "http",
-  port: config.httpPort,
-  status: "running",
+logger.info("Honeypot starting up...", {
+  honeypotId: config.honeypotId,
+  apiEndpoint: config.apiEndpoint,
+  hostIP: config.hostIP,
+  debugMode: config.debugMode,
+  offlineMode: config.offlineMode,
 });
 
-// SSH-Honeypot einrichten
-try {
-  const sshPort = parseInt(process.env.SSH_PORT || "2222");
-  const sshServer = setupSSHHoneypot(logger, config, reportAttack);
-  activeModules.push({
-    name: "ssh",
-    port: sshPort,
-    status: "running",
-  });
-} catch (error) {
-  logger.error("Fehler beim Starten des SSH-Honeypots", {
-    error: error.message,
-  });
-  activeModules.push({
-    name: "ssh",
-    status: "error",
-    error: error.message,
-  });
-}
+// Track active honeypot modules
+const activeModules = [];
 
-// FTP-Honeypot einrichten (wenn verfügbar)
-if (setupFTPHoneypot) {
+// Setup HTTP honeypot module
+if (config.enableHTTP) {
   try {
-    const ftpPort = parseInt(process.env.FTP_PORT || "21");
-    const ftpServer = setupFTPHoneypot(logger, config, reportAttack);
+    setupHTTPHoneypot(app, logger, config, reportAttack);
     activeModules.push({
-      name: "ftp",
-      port: ftpPort,
+      name: "http",
+      port: config.httpPort,
       status: "running",
     });
   } catch (error) {
-    logger.error("Fehler beim Starten des FTP-Honeypots", {
+    logger.error("Error starting HTTP honeypot", {
+      error: error.message,
+    });
+    activeModules.push({
+      name: "http",
+      status: "error",
+      error: error.message,
+    });
+  }
+}
+
+// Setup SSH honeypot module if enabled
+if (config.enableSSH) {
+  try {
+    const sshServer = setupSSHHoneypot(logger, config, reportAttack);
+    activeModules.push({
+      name: "ssh",
+      port: config.sshPort,
+      status: "running",
+    });
+  } catch (error) {
+    logger.error("Error starting SSH honeypot", {
+      error: error.message,
+    });
+    activeModules.push({
+      name: "ssh",
+      status: "error",
+      error: error.message,
+    });
+  }
+}
+
+// Setup FTP honeypot module if enabled
+if (config.enableFTP) {
+  try {
+    const ftpServer = setupFTPHoneypot(logger, config, reportAttack);
+    activeModules.push({
+      name: "ftp",
+      port: config.ftpPort,
+      status: "running",
+    });
+  } catch (error) {
+    logger.error("Error starting FTP honeypot", {
       error: error.message,
     });
     activeModules.push({
       name: "ftp",
+      status: "error",
+      error: error.message,
+    });
+  }
+}
+
+// Setup HTTPS honeypot module if enabled
+if (config.enableHTTPS) {
+  try {
+    setupHTTPSHoneypot(config, logger)
+      .then((servers) => {
+        activeModules.push({
+          name: "https",
+          port: config.httpsPort,
+          status: "running",
+        });
+      })
+      .catch((error) => {
+        logger.error("Error starting HTTPS honeypot", {
+          error: error.message,
+        });
+        activeModules.push({
+          name: "https",
+          status: "error",
+          error: error.message,
+        });
+      });
+  } catch (error) {
+    logger.error("Error setting up HTTPS honeypot", {
+      error: error.message,
+    });
+    activeModules.push({
+      name: "https",
+      status: "error",
+      error: error.message,
+    });
+  }
+}
+
+// Setup Mail honeypots (SMTP, POP3, IMAP) if enabled
+if (config.enableMail) {
+  try {
+    setupMailHoneypot(config, logger)
+      .then((mailServers) => {
+        for (const server of mailServers) {
+          activeModules.push({
+            name: server.name.toLowerCase(),
+            port: server.port,
+            status: "running",
+          });
+        }
+      })
+      .catch((error) => {
+        logger.error("Error starting Mail honeypots", {
+          error: error.message,
+        });
+        activeModules.push({
+          name: "mail",
+          status: "error",
+          error: error.message,
+        });
+      });
+  } catch (error) {
+    logger.error("Error setting up Mail honeypots", {
+      error: error.message,
+    });
+    activeModules.push({
+      name: "mail",
+      status: "error",
+      error: error.message,
+    });
+  }
+}
+
+// Setup MySQL honeypot if enabled
+if (config.enableMySQL) {
+  try {
+    setupMySQLHoneypot(config, logger)
+      .then((mysqlServers) => {
+        activeModules.push({
+          name: "mysql",
+          port: config.mysqlPort,
+          status: "running",
+        });
+      })
+      .catch((error) => {
+        logger.error("Error starting MySQL honeypot", {
+          error: error.message,
+        });
+        activeModules.push({
+          name: "mysql",
+          status: "error",
+          error: error.message,
+        });
+      });
+  } catch (error) {
+    logger.error("Error setting up MySQL honeypot", {
+      error: error.message,
+    });
+    activeModules.push({
+      name: "mysql",
       status: "error",
       error: error.message,
     });
@@ -207,247 +254,110 @@ app.get("/monitor", (req, res) => {
   const minutes = Math.floor((uptime % 3600) / 60);
   const seconds = Math.floor(uptime % 60);
 
-  const formattedUptime = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  const uptimeString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-  const memoryUsage = process.memoryUsage();
+  const lastHeartbeat = getLastHeartbeatResponse();
+  const lastHeartbeatRequest = getLastHeartbeatRequest();
 
-  res.status(200).json({
-    status: "running",
-    honeypotId: config.honeypotId,
-    modules: activeModules,
-    uptime: formattedUptime,
-    uptimeSeconds: uptime,
-    heartbeat: {
-      lastSuccess: lastHeartbeatSuccess,
-      consecutiveFailures: consecutiveHeartbeatFailures,
-      status: lastHeartbeatSuccess
-        ? consecutiveHeartbeatFailures > 0
-          ? "warning"
-          : "ok"
-        : "error",
-    },
-    memoryUsage: {
-      rss: `${Math.round(memoryUsage.rss / 1024 / 1024)} MB`,
-      heapTotal: `${Math.round(memoryUsage.heapTotal / 1024 / 1024)} MB`,
-      heapUsed: `${Math.round(memoryUsage.heapUsed / 1024 / 1024)} MB`,
-    },
-    system: {
-      nodeVersion: process.version,
-      platform: process.platform,
-      hostname: require("os").hostname(),
-    },
-    config: config.debugMode
-      ? {
-          honeypotId: config.honeypotId,
-          apiEndpoint: config.apiEndpoint,
-          hostIP: config.hostIP,
-          httpPort: config.httpPort,
-          debugMode: config.debugMode,
-        }
-      : "Debug-Informationen deaktiviert",
-  });
-});
-
-// Modified reportAttack wrapper to handle errors gracefully
-function safeReportAttack(attackData) {
-  reportAttack(config, attackData, logger).catch((error) => {
-    // Already logged inside reportAttack function
-    if (consecutiveReportFailures++ === 0) {
-      logger.warn(
-        "API-Verbindungsprobleme: Weitere Angriffe werden nur lokal gespeichert",
-        {
-          honeypotId: config.honeypotId,
-        }
-      );
-    }
-  });
-}
-
-// Track report failures
-let consecutiveReportFailures = 0;
-
-// Offline attack sync job
-if (!config.offlineMode) {
-  const syncJob = new CronJob("*/5 * * * *", async () => {
-    if (consecutiveReportFailures > 0) {
-      logger.info(
-        "Versuche offline gespeicherte Angriffe zu synchronisieren..."
-      );
-      try {
-        const result = await uploadStoredAttacks(config, logger);
-        if (result.uploaded > 0) {
-          logger.info(
-            `${result.uploaded} Angriffe erfolgreich synchronisiert, ${
-              result.remaining || 0
-            } verbleibend`
-          );
-          if (result.remaining === 0) {
-            consecutiveReportFailures = 0;
-          }
-        }
-      } catch (error) {
-        logger.error("Fehler bei der Angriffs-Synchronisation", {
-          error: error.message,
-        });
-      }
-    }
-  });
-  syncJob.start();
-}
-
-// Debug-Endpunkt für Entwicklung und Tests
-if (config.debugMode) {
-  app.get("/debug", (req, res) => {
-    // Diese Route nur im Debug-Modus verfügbar machen
-    res.status(200).json({
-      activeModules,
-      lastRequests: [], // Hier könnten die letzten Anfragen angezeigt werden
-      config: {
-        ...config,
-        apiKey: "***redacted***", // API-Key nicht anzeigen
-      },
-      environment: process.env,
-      heartbeatInfo: getLastHeartbeatInfo(),
-    });
-  });
-
-  // API-Diagnose-Endpunkt
-  app.get("/api-diagnostics", async (req, res) => {
-    // Führe API-Verbindungstest durch
-    const testResult = await testApiConnection(config, logger);
-
-    // Stelle Diagnoseinformationen bereit
-    res.status(200).json({
-      apiEndpoint: config.apiEndpoint,
-      honeypotId: config.honeypotId,
-      heartbeat: {
-        lastSuccess: lastHeartbeatSuccess,
-        consecutiveFailures: consecutiveHeartbeatFailures,
-        status: lastHeartbeatSuccess
-          ? consecutiveHeartbeatFailures > 0
-            ? "warning"
-            : "ok"
-          : "error",
-      },
-      connectionTest: testResult,
-      lastHeartbeat: getLastHeartbeatInfo(),
-    });
-  });
-
-  // Heartbeat-Test-Endpunkt
-  app.get("/test-heartbeat", async (req, res) => {
-    try {
-      logger.debug("Manueller Heartbeat-Test gestartet...");
-      const result = await sendHeartbeat(config, logger);
-      res.status(200).json({
-        success: true,
-        message: "Heartbeat erfolgreich gesendet",
-        result,
-        timestamp: new Date().toISOString(),
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Heartbeat fehlgeschlagen",
-        error: error.message,
-        response: error.response
+  // Create a nice status response
+  const status = {
+    honeypot: {
+      id: config.honeypotId,
+      version: require("../package.json").version,
+      uptime: uptimeString,
+      uptimeSeconds: uptime,
+      api: {
+        endpoint: config.apiEndpoint,
+        lastHeartbeat: lastHeartbeat
           ? {
-              status: error.response.status,
-              data: error.response.data,
+              timestamp: lastHeartbeat.timestamp,
+              success: lastHeartbeat.success,
+              message: lastHeartbeat.message,
             }
           : null,
-        timestamp: new Date().toISOString(),
-      });
-    }
-  });
-
-  // Offline attacks management endpoint
-  app.get("/offline-attacks", async (req, res) => {
-    const fs = require("fs");
-    const path = require("path");
-
-    const offlineAttacksFile = path.join(
-      process.cwd(),
-      "logs",
-      "offline_attacks.json"
-    );
-
-    if (!fs.existsSync(offlineAttacksFile)) {
-      return res.json({ attacks: [], count: 0 });
-    }
-
-    try {
-      const content = fs.readFileSync(offlineAttacksFile, "utf8");
-      const attacks = JSON.parse(content);
-      res.json({
-        attacks,
-        count: attacks.length,
-        pending: attacks.filter((a) => a.pending_upload).length,
-      });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  app.post("/upload-offline-attacks", async (req, res) => {
-    try {
-      const result = await uploadStoredAttacks(config, logger);
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  // Neuer Endpunkt für Anzeige des IP-Report-Caches
-  app.get("/report-cache", (req, res) => {
-    const cacheStats = getReportCacheStats();
-    res.status(200).json({
-      cache_stats: cacheStats,
-      config: {
-        maxReportsPerIPPerHour: config.maxReportsPerIPPerHour,
-        ipCacheTTL: `${config.ipCacheTTL / 60000} minutes`,
-        storeThrottledAttacks: config.storeThrottledAttacks,
+        lastRequest: lastHeartbeatRequest,
+        offlineMode: config.offlineMode,
       },
-    });
-  });
+      modules: activeModules,
+    },
+  };
 
-  // Endpunkt zum Löschen des Caches (für Tests)
-  app.post("/clear-report-cache", (req, res) => {
-    clearReportCache();
-    res.status(200).json({
+  res.json(status);
+});
+
+// API diagnostics endpoint for troubleshooting
+app.get("/api-diagnostics", (req, res) => {
+  const diagnostics = {
+    config: {
+      honeypotId: config.honeypotId,
+      apiEndpoint: config.apiEndpoint,
+      heartbeatInterval: config.heartbeatInterval,
+      offlineMode: config.offlineMode,
+    },
+    lastHeartbeatRequest: getLastHeartbeatRequest(),
+    lastHeartbeatResponse: getLastHeartbeatResponse(),
+    activeModules: activeModules,
+  };
+
+  res.json(diagnostics);
+});
+
+// Manual heartbeat test
+app.get("/test-heartbeat", async (req, res) => {
+  try {
+    const result = await sendHeartbeat(config, logger);
+    res.json({
       success: true,
-      message: "Report cache cleared",
-      timestamp: new Date().toISOString(),
+      message: "Heartbeat sent successfully",
+      response: result,
     });
-  });
-
-  logger.info("Debug-Modus aktiviert. Debug-Endpunkte verfügbar.");
-}
-
-// Server starten
-app.listen(config.httpPort, () => {
-  logger.info(`Honeypot-Server gestartet auf Port ${config.httpPort}`);
-  logger.info(
-    `Konfiguration: ${JSON.stringify(
-      {
-        ...config,
-        apiKey: "***redacted***", // API-Key aus Logs entfernen
-      },
-      null,
-      2
-    )}`
-  );
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Heartbeat failed",
+      error: error.message,
+    });
+  }
 });
 
-// Graceful Shutdown
-process.on("SIGTERM", () => {
-  logger.info("SIGTERM Signal empfangen. Beende Anwendung...");
-  heartbeatJob.stop();
-  process.exit(0);
+// Start server
+const server = app.listen(config.httpPort, () => {
+  logger.info(`HTTP server started on port ${config.httpPort}`);
+
+  // Start heartbeat interval if not in offline mode
+  if (!config.offlineMode) {
+    // Initial heartbeat
+    sendHeartbeat(config, logger)
+      .then(() => {
+        logger.info("Initial heartbeat sent successfully");
+      })
+      .catch((error) => {
+        logger.error("Error sending initial heartbeat", {
+          error: error.message,
+        });
+      });
+
+    // Regular heartbeat interval
+    setInterval(() => {
+      sendHeartbeat(config, logger).catch((error) => {
+        logger.error("Error sending heartbeat", {
+          error: error.message,
+        });
+      });
+    }, config.heartbeatInterval);
+  } else {
+    logger.info("Running in offline mode - heartbeat disabled");
+  }
 });
 
+// Handle shutdown gracefully
 process.on("SIGINT", () => {
-  logger.info("SIGINT Signal empfangen. Beende Anwendung...");
-  heartbeatJob.stop();
-  process.exit(0);
+  logger.info("Shutting down honeypot...");
+  server.close(() => {
+    logger.info("HTTP server closed");
+    process.exit(0);
+  });
 });
+
+// Export for testing
+module.exports = { app, server };

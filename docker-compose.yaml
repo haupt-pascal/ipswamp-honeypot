@@ -10,8 +10,15 @@ services:
     ports:
       - "8080:8080"
       - "2222:2222"
-      - "21:21" # FTP Port hinzugefügt
-      - "1025-1050:1025-1050" # Passive FTP-Ports
+      - "21:21"
+      - "1025-1050:1025-1050"
+      # Additional honeypot ports
+      - "8443:8443" # HTTPS management portal honeypot
+      - "25:25" # SMTP mail honeypot
+      - "587:587" # SMTP submission honeypot
+      - "110:110" # POP3 mail honeypot
+      - "143:143" # IMAP mail honeypot
+      - "3306:3306" # MySQL honeypot
     environment:
       - NODE_ENV=production
       - HONEYPOT_ID=2
@@ -23,23 +30,39 @@ services:
       # Basic configuration
       - HEARTBEAT_INTERVAL=60000
       - HTTP_PORT=8080
+      - HTTPS_PORT=8443
       - SSH_PORT=2222
       - FTP_PORT=21
+      - SMTP_PORT=25
+      - SMTP_SUBMISSION_PORT=587
+      - POP3_PORT=110
+      - IMAP_PORT=143
+      - MYSQL_PORT=3306
       - HEARTBEAT_RETRY_COUNT=3
       - HEARTBEAT_RETRY_DELAY=5000
+
+      # Honeypot modules to enable (set to "true" to enable)
+      - ENABLE_HTTP=true
+      - ENABLE_HTTPS=true
+      - ENABLE_SSH=true
+      - ENABLE_FTP=true
+      - ENABLE_MAIL=true
+      - ENABLE_MYSQL=true
 
       # IP throttling configuration to avoid flooding the API
       - MAX_REPORTS_PER_IP=5
       - IP_CACHE_TTL=3600000
       - STORE_THROTTLED_ATTACKS=true
+      - REPORT_UNIQUE_TYPES_ONLY=true
     volumes:
       - ./logs:/app/logs
       - ./ftp:/app/ftp # FTP-Verzeichnis einbinden
+      - ./mail:/app/mail # Mail-Verzeichnis einbinden
+      - ./mysql:/app/mysql # MySQL-Verzeichnis einbinden
     extra_hosts:
       - "host.docker.internal:host-gateway"
       - "hono:host-gateway" # Map hono hostname to host gateway
     networks:
-      - honeypot-network
       - ipswamp-api-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/monitor"]
@@ -51,5 +74,3 @@ services:
 networks:
   honeypot-network:
     driver: bridge
-  ipswamp-api-network:
-    external: true

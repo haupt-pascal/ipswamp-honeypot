@@ -1,6 +1,9 @@
 // API-Service für die Kommunikation mit dem Backend
 const axios = require("axios");
 
+// Import the attack pattern adapter
+const { enhanceAttackData } = require("../utils/attack-pattern-adapter");
+
 // Speichere die letzte Heartbeat-Anfrage und -Antwort für Debugging
 let lastHeartbeatRequest = null;
 let lastHeartbeatResponse = null;
@@ -147,17 +150,21 @@ async function sendHeartbeat(config, logger) {
 async function reportAttack(config, attackData, logger) {
   const log = logger || console;
 
-  // Extrahiere IP und Angriffstyp
-  const { ip_address, attack_type } = attackData;
+  // Enhance attack data with standardized types and severity
+  const enhancedData = enhanceAttackData(attackData);
 
-  // Überprüfe, ob diese IP kürzlich gemeldet wurde
+  // Extrahiere IP und Angriffstyp
+  const { ip_address, attack_type } = enhancedData;
+
+  // Überprüfe, ob diese IP mit diesem Angriffstyp kürzlich gemeldet wurde
   if (shouldThrottleReport(ip_address, attack_type)) {
     if (config.debugMode) {
       log.debug(
-        `IP ${ip_address} wurde kürzlich gemeldet - Bericht gedrosselt`,
+        `IP ${ip_address} wurde kürzlich mit Angriffstyp ${attack_type} gemeldet - Bericht gedrosselt`,
         {
           ip: ip_address,
           attack_type: attack_type,
+          original_type: attackData.attack_type,
           cache_info: reportedIPCache.get(ip_address),
         }
       );
@@ -169,7 +176,7 @@ async function reportAttack(config, attackData, logger) {
     // Speichere trotzdem lokal, falls gewünscht
     if (config.storeThrottledAttacks) {
       storeAttackLocally({
-        ...attackData,
+        ...enhancedData,
         throttled: true,
       });
     }
@@ -177,8 +184,7 @@ async function reportAttack(config, attackData, logger) {
     return {
       status: "throttled",
       timestamp: new Date().toISOString(),
-      message:
-        "IP was recently reported, throttling to avoid duplicate reports",
+      message: `IP was recently reported with attack type ${attack_type}, throttling to avoid duplicate reports`,
     };
   }
 
@@ -188,10 +194,10 @@ async function reportAttack(config, attackData, logger) {
   // Check if we're in offline mode
   if (config.offlineMode) {
     log.info("Offline-Modus: Angriff lokal gespeichert", {
-      attack_type: attackData.attack_type,
-      ip_address: attackData.ip_address,
+      attack_type: enhancedData.attack_type,
+      ip_address: enhancedData.ip_address,
     });
-    storeAttackLocally(attackData);
+    storeAttackLocally(enhancedData);
     return { status: "stored_locally", timestamp: new Date().toISOString() };
   }
 
@@ -199,12 +205,12 @@ async function reportAttack(config, attackData, logger) {
     if (config.debugMode) {
       log.debug("Melde Angriff an API", {
         endpoint: `${config.apiEndpoint}/honeypot/report-ip`,
-        type: attackData.attack_type,
+        type: enhancedData.attack_type,
       });
     }
 
     // Format evidence as array if it's a string
-    let evidence = attackData.evidence;
+    let evidence = enhancedData.evidence;
     if (typeof evidence === "string") {
       try {
         // Try to parse JSON string
@@ -221,10 +227,13 @@ async function reportAttack(config, attackData, logger) {
 
     // Prepare the request body according to the API specification
     const requestBody = {
-      ip_address: attackData.ip_address,
-      attack_type: attackData.attack_type,
-      description: attackData.description,
+      ip_address: enhancedData.ip_address,
+      attack_type: enhancedData.attack_type,
+      description: enhancedData.description,
       evidence: evidence,
+      severity: enhancedData.severity,
+      category: enhancedData.category,
+      source: "honeypot",
     };
 
     // Create a custom axios instance for this request with specific config
@@ -253,7 +262,7 @@ async function reportAttack(config, attackData, logger) {
 
     log.debug("Angriff erfolgreich gemeldet", {
       status: response.status,
-      attack_type: attackData.attack_type,
+      attack_type: enhancedData.attack_type,
       score: response.data?.current_score,
       ip_id: response.data?.ip_id,
     });
@@ -263,7 +272,7 @@ async function reportAttack(config, attackData, logger) {
     // More detailed error logging
     const errorDetails = {
       error: error.message,
-      attackType: attackData.attack_type,
+      attackType: enhancedData.attack_type,
       statusCode: error.response?.status,
       statusText: error.response?.statusText,
       data: error.response?.data,
@@ -280,7 +289,7 @@ async function reportAttack(config, attackData, logger) {
     }
 
     // Store locally when API is unreachable
-    storeAttackLocally(attackData);
+    storeAttackLocally(enhancedData);
 
     throw error;
   }
@@ -312,8 +321,19 @@ function shouldThrottleReport(ip, attackType) {
     return false; // Neuer Angriffstyp, nicht drosseln
   }
 
+  // Check if we've configured unique types only
+  if (
+    process.env.REPORT_UNIQUE_TYPES_ONLY === "true" &&
+    cacheInfo.attack_types.has(attackType)
+  ) {
+    return true; // Already reported this type, throttle it
+  }
+
   // Prüfen, ob maximale Anzahl an Berichten erreicht ist
-  return cacheInfo.reported_count >= MAX_REPORTS_PER_IP_PER_HOUR;
+  return (
+    cacheInfo.reported_count >=
+    (parseInt(process.env.MAX_REPORTS_PER_IP) || MAX_REPORTS_PER_IP_PER_HOUR)
+  );
 }
 
 /**
@@ -373,6 +393,11 @@ function storeAttackLocally(attackData) {
   try {
     const logsDir = path.join(process.cwd(), "logs");
     const offlineAttacksFile = path.join(logsDir, "offline_attacks.json");
+
+    // Create logs directory if it doesn't exist
+    if (!fs.existsSync(logsDir)) {
+      fs.mkdirSync(logsDir, { recursive: true });
+    }
 
     // Create an entry with timestamp
     const entry = {
@@ -446,8 +471,16 @@ async function uploadStoredAttacks(config, logger) {
       if (!attack.pending_upload) continue;
 
       try {
+        // Make sure the attack has the standardized format
+        const enhancedAttack =
+          attack.attack_type.startsWith("SQLI_") ||
+          attack.attack_type.startsWith("XSS_") ||
+          attack.attack_type.startsWith("PORT_")
+            ? attack
+            : enhanceAttackData(attack);
+
         // Format evidence as array if it's a string
-        let evidence = attack.evidence;
+        let evidence = enhancedAttack.evidence;
         if (typeof evidence === "string") {
           try {
             // Try to parse JSON string
@@ -466,10 +499,13 @@ async function uploadStoredAttacks(config, logger) {
 
         // Prepare the request body according to the API specification
         const requestBody = {
-          ip_address: attack.ip_address,
-          attack_type: attack.attack_type,
-          description: attack.description,
+          ip_address: enhancedAttack.ip_address,
+          attack_type: enhancedAttack.attack_type,
+          description: enhancedAttack.description,
           evidence: evidence,
+          severity: enhancedAttack.severity,
+          category: enhancedAttack.category,
+          source: "honeypot",
         };
 
         // Use the instance for the request
@@ -515,69 +551,81 @@ async function uploadStoredAttacks(config, logger) {
 
 // Funktion zum Überprüfen, ob eine IP-Adresse bereits als verdächtig bekannt ist
 async function checkIP(config, ipAddress, logger) {
+  // Optionaler logger-Parameter für mehr Details
   const log = logger || console;
 
   try {
-    const response = await axios.get(`${config.apiEndpoint}/get`, {
+    if (config.debugMode) {
+      log.debug(`Überprüfe IP ${ipAddress} bei der API...`);
+    }
+
+    // Create a custom axios instance for this request with specific config
+    const instance = axios.create({
+      timeout: 5000, // 5 seconds timeout
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const response = await instance.get(`${config.apiEndpoint}/get`, {
       params: {
         api_key: config.apiKey,
         ip: ipAddress,
       },
-      timeout: 5000, // 5 Sekunden Timeout
     });
 
-    return response.data;
+    return {
+      success: true,
+      data: response.data,
+      status: response.status,
+    };
   } catch (error) {
-    log.error("Fehler beim Überprüfen der IP-Adresse", {
+    log.error(`Fehler beim Überprüfen der IP ${ipAddress}`, {
       error: error.message,
-      ip: ipAddress,
-      response: error.response
-        ? {
-            status: error.response.status,
-            data: error.response.data,
-          }
-        : null,
+      statusCode: error.response?.status,
     });
-    throw error;
+
+    return {
+      success: false,
+      error: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+    };
   }
 }
 
 // Funktion zum Testen der API-Verbindung
 async function testApiConnection(config, logger) {
+  // Optionaler logger-Parameter für mehr Details
   const log = logger || console;
 
-  log.info("Teste API-Verbindung...");
-
   try {
-    // Versuche eine einfache Anfrage an den API-Server
-    const response = await axios.get(`${config.apiEndpoint}/ping`, {
+    log.debug("Teste API-Verbindung...");
+
+    // Create a custom axios instance for this request with specific config
+    const instance = axios.create({
+      timeout: 5000, // 5 seconds timeout
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const response = await instance.get(`${config.apiEndpoint}/ping`, {
       params: {
         api_key: config.apiKey,
       },
-      timeout: 5000,
-    });
-
-    log.info("API-Verbindung erfolgreich", {
-      endpoint: `${config.apiEndpoint}/ping`,
-      status: response.status,
-      data: response.data,
     });
 
     return {
       success: true,
-      status: response.status,
       data: response.data,
+      status: response.status,
+      message: "API-Verbindung erfolgreich",
     };
   } catch (error) {
     log.error("API-Verbindungstest fehlgeschlagen", {
       error: error.message,
-      endpoint: `${config.apiEndpoint}/ping`,
-      response: error.response
-        ? {
-            status: error.response.status,
-            data: error.response.data,
-          }
-        : null,
+      statusCode: error.response?.status,
     });
 
     return {
