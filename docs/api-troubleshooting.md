@@ -236,3 +236,22 @@ Der Honeypot verwendet folgende API-Endpunkte zur Kommunikation mit dem Backend:
    ```bash
    DEBUG=axios NODE_ENV=development npm run dev
    ```
+
+## IP-Report Throttling
+
+Um zu verhindern, dass der Honeypot die API mit doppelten Meldungen für dieselben IP-Adressen überflutet, wurde ein Throttling-Mechanismus implementiert.
+
+### Funktionsweise
+
+- Jede gemeldete IP wird in einem Cache gespeichert
+- Für jede IP wird gezählt, wie oft sie in einem bestimmten Zeitraum gemeldet wurde
+- IPs werden nur bis zu einer maximalen Anzahl pro Zeitraum gemeldet
+- Standardmäßig werden neue Angriffstypen von bereits gemeldeten IPs trotzdem gemeldet
+
+### Konfiguration
+
+Sie können das IP-Throttling mit den folgenden Umgebungsvariablen anpassen:
+
+```
+
+```

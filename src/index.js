@@ -44,6 +44,10 @@ const config = {
   heartbeatRetryDelay: parseInt(process.env.HEARTBEAT_RETRY_DELAY || "5000"),
   offlineMode: process.env.OFFLINE_MODE === "true", // Add offline mode option
   offlineAttackSync: parseInt(process.env.OFFLINE_ATTACK_SYNC || "300000"), // Sync every 5 minutes by default
+  // Konfiguration für IP-Report-Throttling
+  storeThrottledAttacks: process.env.STORE_THROTTLED_ATTACKS === "true",
+  maxReportsPerIPPerHour: parseInt(process.env.MAX_REPORTS_PER_IP || "5"),
+  ipCacheTTL: parseInt(process.env.IP_CACHE_TTL || "3600000"), // 1 Stunde
 };
 
 // Logger einrichten
@@ -392,6 +396,29 @@ if (config.debugMode) {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  });
+
+  // Neuer Endpunkt für Anzeige des IP-Report-Caches
+  app.get("/report-cache", (req, res) => {
+    const cacheStats = getReportCacheStats();
+    res.status(200).json({
+      cache_stats: cacheStats,
+      config: {
+        maxReportsPerIPPerHour: config.maxReportsPerIPPerHour,
+        ipCacheTTL: `${config.ipCacheTTL / 60000} minutes`,
+        storeThrottledAttacks: config.storeThrottledAttacks,
+      },
+    });
+  });
+
+  // Endpunkt zum Löschen des Caches (für Tests)
+  app.post("/clear-report-cache", (req, res) => {
+    clearReportCache();
+    res.status(200).json({
+      success: true,
+      message: "Report cache cleared",
+      timestamp: new Date().toISOString(),
+    });
   });
 
   logger.info("Debug-Modus aktiviert. Debug-Endpunkte verfügbar.");

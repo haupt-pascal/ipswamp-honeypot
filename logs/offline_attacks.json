@@ -62,5 +62,181 @@
     "evidence": "{\"timestamp\":\"2025-03-25T18:30:19.567Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
     "stored_at": "2025-03-25T18:30:19.757Z",
     "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:07:26.349Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:07:26.489Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:15:07.990Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:15:08.157Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::ffff:192.168.65.1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: POST /upload-offline-attacks",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:20:12.221Z\",\"method\":\"POST\",\"path\":\"/upload-offline-attacks\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.7.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::ffff:192.168.65.1\"}",
+    "stored_at": "2025-03-26T07:20:12.354Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::ffff:192.168.65.1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: POST /upload-offline-attacks",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:20:59.491Z\",\"method\":\"POST\",\"path\":\"/upload-offline-attacks\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.7.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::ffff:192.168.65.1\"}",
+    "stored_at": "2025-03-26T07:20:59.603Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:33:14.846Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:33:14.853Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:33:43.165Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:33:43.255Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::ffff:192.168.65.1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: POST /upload-offline-attacks",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:33:59.261Z\",\"method\":\"POST\",\"path\":\"/upload-offline-attacks\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.7.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::ffff:192.168.65.1\"}",
+    "stored_at": "2025-03-26T07:33:59.330Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:56:22.811Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:56:22.873Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:56:52.849Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:56:52.942Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:57:22.891Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:57:22.893Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:57:52.942Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:57:52.944Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:58:22.992Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:58:22.996Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:58:53.030Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:58:53.032Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T07:59:23.069Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T07:59:23.072Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T08:00:30.480Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T08:00:30.565Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T08:06:31.067Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T08:06:31.154Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T08:12:11.803Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T08:12:11.907Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T08:18:18.630Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T08:18:18.753Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T08:23:16.790Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T08:23:16.872Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T08:23:46.845Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T08:23:46.948Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T08:30:23.358Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T08:30:23.454Z",
+    "pending_upload": true
+  },
+  {
+    "ip_address": "::1",
+    "attack_type": "SUSPICIOUS_USER_AGENT",
+    "description": "Honeypot hat einen SUSPICIOUS_USER_AGENT-Angriff erkannt: GET /monitor",
+    "evidence": "{\"timestamp\":\"2025-03-26T08:30:53.407Z\",\"method\":\"GET\",\"path\":\"/monitor\",\"query\":{},\"headers\":{\"host\":\"localhost:8080\",\"user-agent\":\"curl/8.12.1\",\"accept\":\"*/*\"},\"body\":{},\"ip\":\"::1\"}",
+    "stored_at": "2025-03-26T08:30:53.526Z",
+    "pending_upload": true
   }
 ]

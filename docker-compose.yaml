@@ -16,18 +16,31 @@ services:
       - NODE_ENV=production
       - HONEYPOT_ID=2
       - API_KEY=e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a
-      - API_ENDPOINT=https://api.ipswamp.com/api
+      # Configurable API endpoint - uncomment one of these lines
+      - API_ENDPOINT=http://hono:3001/api
+      #- API_ENDPOINT=https://api.ipswamp.com/api
+
+      # Basic configuration
       - HEARTBEAT_INTERVAL=60000
       - HTTP_PORT=8080
       - SSH_PORT=2222
       - FTP_PORT=21
       - HEARTBEAT_RETRY_COUNT=3
       - HEARTBEAT_RETRY_DELAY=5000
+
+      # IP throttling configuration to avoid flooding the API
+      - MAX_REPORTS_PER_IP=5
+      - IP_CACHE_TTL=3600000
+      - STORE_THROTTLED_ATTACKS=true
     volumes:
       - ./logs:/app/logs
       - ./ftp:/app/ftp # FTP-Verzeichnis einbinden
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "hono:host-gateway" # Map hono hostname to host gateway
     networks:
       - honeypot-network
+      - ipswamp-api-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/monitor"]
       interval: 30s
@@ -38,3 +51,5 @@ services:
 networks:
   honeypot-network:
     driver: bridge
+  ipswamp-api-network:
+    external: true

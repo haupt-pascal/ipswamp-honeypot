@@ -13,3 +13,83 @@
 {"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:29:19.636Z"}
 {"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:29:49.715Z"}
 {"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:30:19.762Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:07:26.494Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:15:08.161Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED ::1:3001","timestamp":"2025-03-26T07:15:36.538Z"}
+{"error":"connect ECONNREFUSED ::1:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:15:36.538Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED ::1:3001","timestamp":"2025-03-26T07:15:41.549Z"}
+{"error":"connect ECONNREFUSED ::1:3001","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:15:41.549Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:19:25.141Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:19:25.141Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:19:30.264Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:19:30.265Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:20:00.080Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T07:20:00.080Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:20:05.185Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:20:05.185Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:20:12.356Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:20:59.604Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:21:00.103Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 3)","timestamp":"2025-03-26T07:21:00.103Z"}
+{"endpoint":"http://host.docker.internal:3001/api/ping","error":"Parse Error: Expected HTTP/","level":"error","message":"API-Verbindungstest fehlgeschlagen","response":null,"timestamp":"2025-03-26T07:21:00.175Z"}
+{"level":"error","message":"API-Verbindung fehlgeschlagen - möglicherweise Server-Problem","timestamp":"2025-03-26T07:21:00.176Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:21:05.171Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:21:05.172Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:31:53.817Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:31:53.817Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:32:00.086Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T07:32:00.087Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:32:03.910Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:32:03.910Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:32:10.196Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:32:10.196Z"}
+{"code":"ENOTFOUND","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten getaddrinfo ENOTFOUND hono","timestamp":"2025-03-26T07:33:11.933Z"}
+{"error":"getaddrinfo ENOTFOUND hono","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:33:11.933Z"}
+{"error":"getaddrinfo ENOTFOUND hono","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:33:14.855Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:33:40.610Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:33:40.611Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:33:43.256Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:33:59.332Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:34:00.209Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T07:34:00.210Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:56:20.435Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:56:20.435Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:56:22.875Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:56:52.945Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T07:57:00.014Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T07:57:00.015Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:57:22.895Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:57:52.947Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T07:58:00.021Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 3)","timestamp":"2025-03-26T07:58:00.021Z"}
+{"endpoint":"http://hono:3001/api/ping","error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"API-Verbindungstest fehlgeschlagen","response":null,"timestamp":"2025-03-26T07:58:00.023Z"}
+{"level":"error","message":"API-Verbindung fehlgeschlagen - möglicherweise Server-Problem","timestamp":"2025-03-26T07:58:00.023Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:58:22.997Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:58:53.034Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T07:59:00.014Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 4)","timestamp":"2025-03-26T07:59:00.015Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:59:23.074Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:00:28.114Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:00:28.114Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:00:30.566Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:06:28.591Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:06:28.591Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:06:31.155Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:12:09.364Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:12:09.364Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:12:11.910Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:18:16.137Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:18:16.138Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:18:18.754Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:23:14.266Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:23:14.266Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:23:16.873Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:23:46.949Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:24:00.266Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T08:24:00.266Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:30:20.928Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:30:20.928Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:30:23.455Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:30:53.528Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T08:31:00.020Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T08:31:00.021Z"}

@@ -164,3 +164,323 @@
 {"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-25T18:30:19.567Z"},"timestamp":"2025-03-25T18:30:19.570Z"}
 {"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-25T18:30:19.761Z"}
 {"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-25T18:30:39.844Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T07:07:21.420Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:07:21.433Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T07:07:21.434Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:07:21.434Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:07:21.436Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T07:07:21.437Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T07:07:21.438Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T07:07:21.438Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T07:07:21.438Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:07:23.423Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-26T07:07:23.839+00:00","name":"test","updated_at":"2025-03-26T07:07:23.839+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-26T07:07:23.839Z"},"timestamp":"2025-03-26T07:07:23.882Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:07:26.349Z"},"timestamp":"2025-03-26T07:07:26.349Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:07:26.349Z"},"timestamp":"2025-03-26T07:07:26.350Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:07:26.494Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T07:07:30.947Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T07:15:03.095Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:15:03.108Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T07:15:03.108Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:15:03.109Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:15:03.111Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T07:15:03.111Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T07:15:03.113Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"https://api.ipswamp.com/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T07:15:03.113Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T07:15:03.113Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:15:05.099Z"}
+{"level":"info","message":"Heartbeat erfolgreich gesendet","response":{"honeypot":{"id":2,"last_heartbeat":"2025-03-26T07:15:05.488+00:00","name":"test","updated_at":"2025-03-26T07:15:05.488+00:00"},"message":"Heartbeat successfully updated via Supabase","status":"ok","timestamp":"2025-03-26T07:15:05.488Z"},"timestamp":"2025-03-26T07:15:05.525Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:15:07.990Z"},"timestamp":"2025-03-26T07:15:07.990Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:15:07.990Z"},"timestamp":"2025-03-26T07:15:07.992Z"}
+{"error":"Request failed with status code 500","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:15:08.161Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T07:15:15.701Z"}
+{"environment":"development","level":"info","logLevel":"debug","message":"Logger initialisiert mit Level: debug","timestamp":"2025-03-26T07:15:34.521Z","transports":["console","file","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:15:34.533Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T07:15:34.533Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:15:34.534Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:15:34.537Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T07:15:34.537Z"}
+{"level":"info","message":"Debug-Modus aktiviert. Debug-Endpunkte verfügbar.","timestamp":"2025-03-26T07:15:34.538Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T07:15:34.539Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"dev\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://localhost:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.2\",\n  \"debugMode\": true,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T07:15:34.539Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T07:15:34.539Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:15:36.526Z"}
+{"endpoint":"http://localhost:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:15:36.528Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED ::1:3001","timestamp":"2025-03-26T07:15:36.538Z"}
+{"error":"connect ECONNREFUSED ::1:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:15:36.538Z"}
+{"level":"info","message":"Versuche Heartbeat erneut in 5 Sekunden...","timestamp":"2025-03-26T07:15:36.538Z"}
+{"level":"debug","message":"Erneuter Heartbeat-Versuch nach Fehler...","timestamp":"2025-03-26T07:15:41.547Z"}
+{"endpoint":"http://localhost:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:15:41.548Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED ::1:3001","timestamp":"2025-03-26T07:15:41.549Z"}
+{"error":"connect ECONNREFUSED ::1:3001","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:15:41.549Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T07:15:43.071Z"}
+{"environment":"development","level":"info","logLevel":"debug","message":"Logger initialisiert mit Level: debug","timestamp":"2025-03-26T07:19:22.775Z","transports":["console","file","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:19:22.788Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T07:19:22.788Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:19:22.788Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:19:22.791Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T07:19:22.792Z"}
+{"level":"info","message":"Debug-Modus aktiviert. Debug-Endpunkte verfügbar.","timestamp":"2025-03-26T07:19:22.792Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T07:19:22.793Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"dev\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://host.docker.internal:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.20.0.2\",\n  \"debugMode\": true,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T07:19:22.793Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T07:19:22.793Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:19:24.779Z"}
+{"endpoint":"http://host.docker.internal:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:19:24.781Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:19:25.140Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:19:25.141Z"}
+{"level":"info","message":"Versuche Heartbeat erneut in 5 Sekunden...","timestamp":"2025-03-26T07:19:25.141Z"}
+{"level":"debug","message":"Erneuter Heartbeat-Versuch nach Fehler...","timestamp":"2025-03-26T07:19:30.148Z"}
+{"endpoint":"http://host.docker.internal:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:19:30.150Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:19:30.264Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:19:30.265Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:20:00.002Z"}
+{"endpoint":"http://host.docker.internal:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:20:00.002Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:20:00.080Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T07:20:00.080Z"}
+{"level":"info","message":"Versuche Heartbeat erneut in 5 Sekunden...","timestamp":"2025-03-26T07:20:00.080Z"}
+{"level":"debug","message":"Erneuter Heartbeat-Versuch nach Fehler...","timestamp":"2025-03-26T07:20:05.082Z"}
+{"endpoint":"http://host.docker.internal:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:20:05.082Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:20:05.185Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:20:05.185Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/upload-offline-attacks","query":{},"timestamp":"2025-03-26T07:20:12.221Z"},"timestamp":"2025-03-26T07:20:12.222Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/upload-offline-attacks","query":{},"timestamp":"2025-03-26T07:20:12.221Z"},"timestamp":"2025-03-26T07:20:12.225Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:20:12.356Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/upload-offline-attacks","query":{},"timestamp":"2025-03-26T07:20:59.491Z"},"timestamp":"2025-03-26T07:20:59.491Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/upload-offline-attacks","query":{},"timestamp":"2025-03-26T07:20:59.491Z"},"timestamp":"2025-03-26T07:20:59.492Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:20:59.604Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:21:00.006Z"}
+{"endpoint":"http://host.docker.internal:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:21:00.007Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:21:00.103Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 3)","timestamp":"2025-03-26T07:21:00.103Z"}
+{"level":"info","message":"Versuche Heartbeat erneut in 5 Sekunden...","timestamp":"2025-03-26T07:21:00.104Z"}
+{"level":"warn","message":"Mehrere Heartbeat-Fehler - teste API-Verbindung...","timestamp":"2025-03-26T07:21:00.104Z"}
+{"level":"info","message":"Teste API-Verbindung...","timestamp":"2025-03-26T07:21:00.104Z"}
+{"endpoint":"http://host.docker.internal:3001/api/ping","error":"Parse Error: Expected HTTP/","level":"error","message":"API-Verbindungstest fehlgeschlagen","response":null,"timestamp":"2025-03-26T07:21:00.175Z"}
+{"level":"error","message":"API-Verbindung fehlgeschlagen - möglicherweise Server-Problem","timestamp":"2025-03-26T07:21:00.176Z"}
+{"level":"debug","message":"Erneuter Heartbeat-Versuch nach Fehler...","timestamp":"2025-03-26T07:21:05.104Z"}
+{"endpoint":"http://host.docker.internal:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:21:05.104Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:21:05.171Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:21:05.172Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T07:21:14.071Z"}
+{"environment":"development","level":"info","logLevel":"debug","message":"Logger initialisiert mit Level: debug","timestamp":"2025-03-26T07:31:51.481Z","transports":["console","file","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:31:51.493Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T07:31:51.494Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:31:51.495Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:31:51.497Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T07:31:51.498Z"}
+{"level":"info","message":"Debug-Modus aktiviert. Debug-Endpunkte verfügbar.","timestamp":"2025-03-26T07:31:51.499Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T07:31:51.500Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"dev\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.5\",\n  \"debugMode\": true,\n  \"heartbeatRetryCount\": 5,\n  \"heartbeatRetryDelay\": 10000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T07:31:51.501Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T07:31:51.501Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:31:53.486Z"}
+{"endpoint":"http://hono:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:31:53.488Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:31:53.817Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:31:53.817Z"}
+{"level":"info","message":"Versuche Heartbeat erneut in 10 Sekunden...","timestamp":"2025-03-26T07:31:53.817Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:32:00.001Z"}
+{"endpoint":"http://hono:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:32:00.001Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:32:00.086Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T07:32:00.087Z"}
+{"level":"info","message":"Versuche Heartbeat erneut in 10 Sekunden...","timestamp":"2025-03-26T07:32:00.087Z"}
+{"level":"debug","message":"Erneuter Heartbeat-Versuch nach Fehler...","timestamp":"2025-03-26T07:32:03.820Z"}
+{"endpoint":"http://hono:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:32:03.821Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:32:03.910Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:32:03.910Z"}
+{"level":"debug","message":"Erneuter Heartbeat-Versuch nach Fehler...","timestamp":"2025-03-26T07:32:10.111Z"}
+{"endpoint":"http://hono:3001/api/honeypot/heartbeat","headers":{"Content-Type":"application/json","User-Agent":"IPSwamp-Honeypot/1.0.0"},"honeypot_id":"dev","level":"debug","message":"Sende Heartbeat-Anfrage","timestamp":"2025-03-26T07:32:10.112Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:32:10.196Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Auch erneuter Heartbeat-Versuch fehlgeschlagen","timestamp":"2025-03-26T07:32:10.196Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T07:32:45.854Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T07:33:09.907Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:33:09.920Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T07:33:09.920Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:33:09.920Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:33:09.923Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T07:33:09.924Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T07:33:09.925Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.20.0.2\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T07:33:09.925Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T07:33:09.925Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:33:11.918Z"}
+{"code":"ENOTFOUND","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten getaddrinfo ENOTFOUND hono","timestamp":"2025-03-26T07:33:11.933Z"}
+{"error":"getaddrinfo ENOTFOUND hono","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:33:11.933Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:33:14.846Z"},"timestamp":"2025-03-26T07:33:14.847Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:33:14.846Z"},"timestamp":"2025-03-26T07:33:14.848Z"}
+{"error":"getaddrinfo ENOTFOUND hono","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:33:14.855Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T07:33:19.887Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T07:33:38.235Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:33:38.247Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T07:33:38.247Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:33:38.247Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:33:38.251Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T07:33:38.251Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T07:33:38.252Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.5\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T07:33:38.253Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T07:33:38.253Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:33:40.237Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:33:40.610Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:33:40.611Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:33:43.165Z"},"timestamp":"2025-03-26T07:33:43.166Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:33:43.165Z"},"timestamp":"2025-03-26T07:33:43.167Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:33:43.256Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/upload-offline-attacks","query":{},"timestamp":"2025-03-26T07:33:59.261Z"},"timestamp":"2025-03-26T07:33:59.261Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/upload-offline-attacks","query":{},"timestamp":"2025-03-26T07:33:59.261Z"},"timestamp":"2025-03-26T07:33:59.262Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:33:59.332Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:34:00.010Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:34:00.209Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T07:34:00.210Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T07:34:05.891Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T07:56:17.954Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:56:17.968Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T07:56:17.968Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:56:17.968Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T07:56:17.971Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T07:56:17.972Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T07:56:17.973Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.20.0.2\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T07:56:17.973Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T07:56:17.973Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:56:19.959Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T07:56:20.435Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T07:56:20.435Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:56:22.811Z"},"timestamp":"2025-03-26T07:56:22.811Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:56:22.811Z"},"timestamp":"2025-03-26T07:56:22.812Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:56:22.874Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:56:52.849Z"},"timestamp":"2025-03-26T07:56:52.849Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:56:52.849Z"},"timestamp":"2025-03-26T07:56:52.852Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:56:52.945Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:57:00.010Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T07:57:00.014Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T07:57:00.015Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:57:22.891Z"},"timestamp":"2025-03-26T07:57:22.891Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:57:22.891Z"},"timestamp":"2025-03-26T07:57:22.892Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:57:22.895Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:57:52.942Z"},"timestamp":"2025-03-26T07:57:52.942Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:57:52.942Z"},"timestamp":"2025-03-26T07:57:52.943Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:57:52.947Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:58:00.016Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T07:58:00.021Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 3)","timestamp":"2025-03-26T07:58:00.021Z"}
+{"level":"warn","message":"Mehrere Heartbeat-Fehler - teste API-Verbindung...","timestamp":"2025-03-26T07:58:00.021Z"}
+{"level":"info","message":"Teste API-Verbindung...","timestamp":"2025-03-26T07:58:00.021Z"}
+{"endpoint":"http://hono:3001/api/ping","error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"API-Verbindungstest fehlgeschlagen","response":null,"timestamp":"2025-03-26T07:58:00.023Z"}
+{"level":"error","message":"API-Verbindung fehlgeschlagen - möglicherweise Server-Problem","timestamp":"2025-03-26T07:58:00.023Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:58:22.992Z"},"timestamp":"2025-03-26T07:58:22.992Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:58:22.992Z"},"timestamp":"2025-03-26T07:58:22.993Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:58:22.997Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:58:53.030Z"},"timestamp":"2025-03-26T07:58:53.030Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:58:53.030Z"},"timestamp":"2025-03-26T07:58:53.031Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:58:53.034Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T07:59:00.009Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T07:59:00.014Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 4)","timestamp":"2025-03-26T07:59:00.014Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:59:23.069Z"},"timestamp":"2025-03-26T07:59:23.069Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T07:59:23.069Z"},"timestamp":"2025-03-26T07:59:23.070Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T07:59:23.074Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T07:59:26.831Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T08:00:25.613Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:00:25.625Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T08:00:25.626Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:00:25.626Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:00:25.629Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T08:00:25.630Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T08:00:25.631Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.20.0.2\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T08:00:25.631Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T08:00:25.631Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T08:00:27.619Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:00:28.114Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:00:28.114Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:00:30.480Z"},"timestamp":"2025-03-26T08:00:30.480Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:00:30.480Z"},"timestamp":"2025-03-26T08:00:30.481Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:00:30.566Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T08:00:39.577Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T08:06:26.157Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:06:26.170Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T08:06:26.170Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:06:26.170Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:06:26.173Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T08:06:26.174Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T08:06:26.175Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.5\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T08:06:26.175Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T08:06:26.175Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T08:06:28.167Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:06:28.591Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:06:28.591Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:06:31.067Z"},"timestamp":"2025-03-26T08:06:31.067Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:06:31.067Z"},"timestamp":"2025-03-26T08:06:31.069Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:06:31.155Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T08:06:46.230Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T08:12:06.905Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:12:06.918Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T08:12:06.918Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:12:06.919Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:12:06.922Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T08:12:06.922Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T08:12:06.924Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.5\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T08:12:06.924Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T08:12:06.924Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T08:12:08.914Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:12:09.364Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:12:09.364Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:12:11.803Z"},"timestamp":"2025-03-26T08:12:11.803Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:12:11.803Z"},"timestamp":"2025-03-26T08:12:11.805Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:12:11.910Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T08:12:16.870Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T08:18:13.696Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:18:13.711Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T08:18:13.711Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:18:13.712Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:18:13.717Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T08:18:13.718Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T08:18:13.719Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.5\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T08:18:13.719Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T08:18:13.719Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T08:18:15.704Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:18:16.137Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:18:16.137Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:18:18.630Z"},"timestamp":"2025-03-26T08:18:18.630Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:18:18.630Z"},"timestamp":"2025-03-26T08:18:18.631Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:18:18.754Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T08:18:21.814Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T08:23:11.845Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:23:11.857Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T08:23:11.857Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:23:11.857Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:23:11.860Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T08:23:11.861Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T08:23:11.862Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.5\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000\n}","timestamp":"2025-03-26T08:23:11.862Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T08:23:11.862Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T08:23:13.848Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:23:14.266Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:23:14.266Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:23:16.790Z"},"timestamp":"2025-03-26T08:23:16.791Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:23:16.790Z"},"timestamp":"2025-03-26T08:23:16.792Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:23:16.873Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:23:46.845Z"},"timestamp":"2025-03-26T08:23:46.845Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:23:46.845Z"},"timestamp":"2025-03-26T08:23:46.847Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:23:46.949Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T08:24:00.012Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:24:00.266Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T08:24:00.266Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T08:24:15.769Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T08:30:18.431Z","transports":["console","file","file","file"]}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:30:18.445Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T08:30:18.445Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:30:18.446Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T08:30:18.450Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T08:30:18.450Z"}
+{"level":"info","message":"Honeypot-Server gestartet auf Port 8080","timestamp":"2025-03-26T08:30:18.452Z"}
+{"level":"info","message":"Konfiguration: {\n  \"honeypotId\": \"2\",\n  \"apiKey\": \"***redacted***\",\n  \"apiEndpoint\": \"http://hono:3001/api\",\n  \"heartbeatInterval\": 60000,\n  \"httpPort\": 8080,\n  \"hostIP\": \"172.18.0.5\",\n  \"debugMode\": false,\n  \"heartbeatRetryCount\": 3,\n  \"heartbeatRetryDelay\": 5000,\n  \"offlineMode\": false,\n  \"offlineAttackSync\": 300000,\n  \"storeThrottledAttacks\": true,\n  \"maxReportsPerIPPerHour\": 5,\n  \"ipCacheTTL\": 3600000\n}","timestamp":"2025-03-26T08:30:18.453Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T08:30:18.453Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T08:30:20.435Z"}
+{"code":"HPE_INVALID_CONSTANT","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten Parse Error: Expected HTTP/","timestamp":"2025-03-26T08:30:20.928Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 1)","timestamp":"2025-03-26T08:30:20.928Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:30:23.358Z"},"timestamp":"2025-03-26T08:30:23.358Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:30:23.358Z"},"timestamp":"2025-03-26T08:30:23.359Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:30:23.455Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:30:53.407Z"},"timestamp":"2025-03-26T08:30:53.407Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T08:30:53.407Z"},"timestamp":"2025-03-26T08:30:53.408Z"}
+{"error":"Parse Error: Expected HTTP/","level":"error","message":"Fehler beim Melden des Angriffs","timestamp":"2025-03-26T08:30:53.528Z"}
+{"level":"info","message":"Sende Heartbeat an API-Server...","timestamp":"2025-03-26T08:31:00.016Z"}
+{"code":"ECONNREFUSED","level":"error","message":"Heartbeat-Fehler: Keine Antwort vom Server erhalten connect ECONNREFUSED 192.168.65.254:3001","timestamp":"2025-03-26T08:31:00.020Z"}
+{"error":"connect ECONNREFUSED 192.168.65.254:3001","level":"error","message":"Fehler beim Senden des Heartbeats (Versuch 2)","timestamp":"2025-03-26T08:31:00.021Z"}
+{"level":"info","message":"SIGTERM Signal empfangen. Beende Anwendung...","timestamp":"2025-03-26T08:31:04.204Z"}

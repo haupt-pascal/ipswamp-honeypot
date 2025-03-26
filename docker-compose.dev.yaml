@@ -14,23 +14,35 @@ services:
       - "9229:9229" # Node.js debug port
     environment:
       - NODE_ENV=development
-      - HONEYPOT_ID=dev
+      - HONEYPOT_ID=2
       - API_KEY=e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a
-      - API_ENDPOINT=https://api.ipswamp.com/api
+      - API_ENDPOINT=http://hono:3001/api
       - HEARTBEAT_INTERVAL=60000
+      - HEARTBEAT_RETRY_COUNT=5
+      - HEARTBEAT_RETRY_DELAY=10000
       - HTTP_PORT=8080
       - SSH_PORT=2222
       - FTP_PORT=21
       - LOG_LEVEL=debug
       - DEBUG=true
+      # IP-Report-Throttling-Konfiguration
+      - MAX_REPORTS_PER_IP=5
+      - IP_CACHE_TTL=3600000
+      - STORE_THROTTLED_ATTACKS=true
     volumes:
       - ./src:/app/src
       - ./logs:/app/logs
       - ./ftp:/app/ftp
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "hono:host-gateway" # Map hono hostname to host gateway
     networks:
       - honeypot-network
+      - ipswamp-api-network
     command: node --inspect=0.0.0.0:9229 src/index.js
 
 networks:
   honeypot-network:
     driver: bridge
+  ipswamp-api-network:
+    external: true

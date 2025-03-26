@@ -6,6 +6,15 @@ let lastHeartbeatRequest = null;
 let lastHeartbeatResponse = null;
 let lastHeartbeatError = null;
 
+// Cache für gemeldete IP-Adressen
+// Format: { ip_address: { timestamp: Date, attack_types: Set, reported_count: number } }
+const reportedIPCache = new Map();
+
+// Konfiguration für das IP-Reporting-Throttling
+const IP_CACHE_TTL = 3600000; // 1 Stunde in Millisekunden
+const MAX_REPORTS_PER_IP_PER_HOUR = 5; // Maximal 5 Berichte pro IP pro Stunde
+const REPORT_TYPES_THROTTLE = true; // Nur neue Angriffstypen für bereits gemeldete IPs berichten
+
 // Heartbeat-Funktion zum Registrieren des Honeypots bei der API
 async function sendHeartbeat(config, logger) {
   // Optionaler logger-Parameter für mehr Details
@@ -48,9 +57,26 @@ async function sendHeartbeat(config, logger) {
       });
     }
 
-    const response = await axios({
-      ...requestConfig,
-      timeout: 10000, // 10 Sekunden Timeout
+    // Create a custom axios instance for this request with specific config
+    const instance = axios.create({
+      timeout: 10000,
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+      decompress: true,
+      maxRedirects: 5,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Use the instance for the request
+    const response = await instance({
+      url: requestConfig.url,
+      method: requestConfig.method,
+      params: requestConfig.params,
+      data: requestConfig.data,
+      headers: requestConfig.headers,
     });
 
     // Speichere Antwort für Debugging
@@ -121,6 +147,44 @@ async function sendHeartbeat(config, logger) {
 async function reportAttack(config, attackData, logger) {
   const log = logger || console;
 
+  // Extrahiere IP und Angriffstyp
+  const { ip_address, attack_type } = attackData;
+
+  // Überprüfe, ob diese IP kürzlich gemeldet wurde
+  if (shouldThrottleReport(ip_address, attack_type)) {
+    if (config.debugMode) {
+      log.debug(
+        `IP ${ip_address} wurde kürzlich gemeldet - Bericht gedrosselt`,
+        {
+          ip: ip_address,
+          attack_type: attack_type,
+          cache_info: reportedIPCache.get(ip_address),
+        }
+      );
+    }
+
+    // Inkrementiere Zähler, auch wenn nicht gemeldet wird
+    updateReportCache(ip_address, attack_type);
+
+    // Speichere trotzdem lokal, falls gewünscht
+    if (config.storeThrottledAttacks) {
+      storeAttackLocally({
+        ...attackData,
+        throttled: true,
+      });
+    }
+
+    return {
+      status: "throttled",
+      timestamp: new Date().toISOString(),
+      message:
+        "IP was recently reported, throttling to avoid duplicate reports",
+    };
+  }
+
+  // Aktualisiere den Cache mit dieser Meldung
+  updateReportCache(ip_address, attack_type);
+
   // Check if we're in offline mode
   if (config.offlineMode) {
     log.info("Offline-Modus: Angriff lokal gespeichert", {
@@ -163,15 +227,27 @@ async function reportAttack(config, attackData, logger) {
       evidence: evidence,
     };
 
-    // Use the new endpoint with properly formatted body
-    const response = await axios.post(
+    // Create a custom axios instance for this request with specific config
+    const instance = axios.create({
+      timeout: 5000,
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+      decompress: true,
+      maxRedirects: 5,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Use the instance for the request
+    const response = await instance.post(
       `${config.apiEndpoint}/honeypot/report-ip`,
       requestBody,
       {
         params: {
           api_key: config.apiKey,
         },
-        timeout: 5000, // 5 Sekunden Timeout
       }
     );
 
@@ -209,6 +285,85 @@ async function reportAttack(config, attackData, logger) {
     throw error;
   }
 }
+
+/**
+ * Überprüft, ob ein Bericht gedrosselt werden sollte
+ * @param {string} ip IP-Adresse
+ * @param {string} attackType Angriffstyp
+ * @returns {boolean} True, wenn gedrosselt werden sollte
+ */
+function shouldThrottleReport(ip, attackType) {
+  // Wenn IP nicht im Cache, nicht drosseln
+  if (!reportedIPCache.has(ip)) {
+    return false;
+  }
+
+  const cacheInfo = reportedIPCache.get(ip);
+  const now = Date.now();
+
+  // Cache-Eintrag abgelaufen
+  if (now - cacheInfo.timestamp > IP_CACHE_TTL) {
+    reportedIPCache.delete(ip);
+    return false;
+  }
+
+  // Wenn wir nach Angriffstyp drosseln, prüfen, ob dieser Typ neu ist
+  if (REPORT_TYPES_THROTTLE && !cacheInfo.attack_types.has(attackType)) {
+    return false; // Neuer Angriffstyp, nicht drosseln
+  }
+
+  // Prüfen, ob maximale Anzahl an Berichten erreicht ist
+  return cacheInfo.reported_count >= MAX_REPORTS_PER_IP_PER_HOUR;
+}
+
+/**
+ * Aktualisiert den Cache mit einem neuen Bericht
+ * @param {string} ip IP-Adresse
+ * @param {string} attackType Angriffstyp
+ */
+function updateReportCache(ip, attackType) {
+  const now = Date.now();
+
+  if (!reportedIPCache.has(ip)) {
+    reportedIPCache.set(ip, {
+      timestamp: now,
+      attack_types: new Set([attackType]),
+      reported_count: 1,
+    });
+    return;
+  }
+
+  const cacheInfo = reportedIPCache.get(ip);
+
+  // Wenn Cache-Eintrag abgelaufen, zurücksetzen
+  if (now - cacheInfo.timestamp > IP_CACHE_TTL) {
+    reportedIPCache.set(ip, {
+      timestamp: now,
+      attack_types: new Set([attackType]),
+      reported_count: 1,
+    });
+    return;
+  }
+
+  // Sonst aktualisieren
+  cacheInfo.attack_types.add(attackType);
+  cacheInfo.reported_count++;
+}
+
+/**
+ * Löscht abgelaufene Cache-Einträge
+ */
+function cleanupReportCache() {
+  const now = Date.now();
+  for (const [ip, info] of reportedIPCache.entries()) {
+    if (now - info.timestamp > IP_CACHE_TTL) {
+      reportedIPCache.delete(ip);
+    }
+  }
+}
+
+// Cache bereinigen alle 10 Minuten
+setInterval(cleanupReportCache, 600000);
 
 // Helper function to store attacks locally when API is unreachable
 function storeAttackLocally(attackData) {
@@ -274,6 +429,19 @@ async function uploadStoredAttacks(config, logger) {
     let uploadedCount = 0;
     const remainingAttacks = [];
 
+    // Create the same custom axios instance here
+    const instance = axios.create({
+      timeout: 5000,
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+      decompress: true,
+      maxRedirects: 5,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
     for (const attack of attacks) {
       if (!attack.pending_upload) continue;
 
@@ -304,13 +472,12 @@ async function uploadStoredAttacks(config, logger) {
           evidence: evidence,
         };
 
-        // Use the new endpoint with properly formatted body
-        await axios.post(
+        // Use the instance for the request
+        await instance.post(
           `${config.apiEndpoint}/honeypot/report-ip`,
           requestBody,
           {
             params: { api_key: config.apiKey },
-            timeout: 5000,
           }
         );
 
@@ -432,6 +599,29 @@ function getLastHeartbeatInfo() {
   };
 }
 
+// Gibt Statistiken zum IP-Reporting-Cache zurück
+function getReportCacheStats() {
+  const stats = {
+    total_cached_ips: reportedIPCache.size,
+    ip_details: {},
+  };
+
+  // Begrenzte Details für die TOP 10 am häufigsten gemeldeten IPs
+  const sortedEntries = [...reportedIPCache.entries()]
+    .sort((a, b) => b[1].reported_count - a[1].reported_count)
+    .slice(0, 10);
+
+  for (const [ip, info] of sortedEntries) {
+    stats.ip_details[ip] = {
+      attack_types: [...info.attack_types],
+      reported_count: info.reported_count,
+      first_seen: new Date(info.timestamp).toISOString(),
+    };
+  }
+
+  return stats;
+}
+
 module.exports = {
   sendHeartbeat,
   reportAttack,
@@ -440,4 +630,7 @@ module.exports = {
   getLastHeartbeatInfo,
   uploadStoredAttacks,
   storeAttackLocally,
+  getReportCacheStats,
+  // Export für Tests/Debugging
+  clearReportCache: () => reportedIPCache.clear(),
 };
