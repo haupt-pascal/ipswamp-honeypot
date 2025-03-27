@@ -20,11 +20,16 @@ EXPOSE 2222
 EXPOSE 21
 EXPOSE 9229
 
+# Define build arguments for sensitive values - no defaults for security
+ARG HONEYPOT_ID
+ARG API_KEY
+ARG API_ENDPOINT
+
 # Umgebungsvariablen setzen
 ENV NODE_ENV=production \
-    HONEYPOT_ID="test" \
-    API_KEY="e309bbf470b3e57d10082aa69325173e3c012e83ed6452a0d995bbb721c02f4a" \
-    API_ENDPOINT="https://api.ipswamp.com/api" \
+    HONEYPOT_ID=${HONEYPOT_ID} \
+    API_KEY=${API_KEY} \
+    API_ENDPOINT=${API_ENDPOINT} \
     HEARTBEAT_INTERVAL=60000 \
     HEARTBEAT_RETRY_COUNT=3 \
     HEARTBEAT_RETRY_DELAY=5000
