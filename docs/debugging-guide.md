@@ -1,4 +1,4 @@
-# IPSwamp Honeypot - Debugging and Development Guide
+# IPSwamp Honeypot - Comprehensive Debugging and Development Guide
 
 This document provides comprehensive instructions for debugging, developing, and extending the IPSwamp Honeypot system.
 
@@ -11,6 +11,9 @@ This document provides comprehensive instructions for debugging, developing, and
 5. [Environment Variables Reference](#environment-variables-reference)
 6. [Troubleshooting Common Issues](#troubleshooting-common-issues)
 7. [Simulating Attacks for Testing](#simulating-attacks-for-testing)
+8. [Monitoring & Troubleshooting](#monitoring--troubleshooting)
+9. [Module-Specific Debugging](#module-specific-debugging)
+10. [API Communication Debugging](#api-communication-debugging)
 
 ## Setup Development Environment
 
@@ -79,6 +82,11 @@ tail -f logs/attacks.log
 
 # Use grep to filter logs
 tail -f logs/honeypot.log | grep "SSH"
+
+# Filter logs by module type
+tail -f logs/honeypot.log | grep "HTTP"
+tail -f logs/honeypot.log | grep "FTP"
+tail -f logs/honeypot.log | grep "MySQL"
 ```
 
 ### Using Debug Endpoint
@@ -308,6 +316,117 @@ Then only enable it in development or testing environments:
 # Only enable monitor in development
 docker run -e ENABLE_MONITOR=true -e NODE_ENV=development -p 8080:8080 honeypot
 ```
+
+## Module-Specific Debugging
+
+### HTTP Module Debugging
+
+To debug the HTTP module, follow these steps:
+
+1. Enable debug logging for HTTP:
+
+   ```bash
+   LOG_LEVEL=debug npm run dev
+   ```
+
+2. Monitor HTTP-specific logs:
+
+   ```bash
+   tail -f logs/honeypot.log | grep "HTTP"
+   ```
+
+3. Use the monitor endpoint to check HTTP service status:
+   ```bash
+   curl http://localhost:8080/monitor
+   ```
+
+### SSH Module Debugging
+
+To debug the SSH module, follow these steps:
+
+1. Enable debug logging for SSH:
+
+   ```bash
+   LOG_LEVEL=debug npm run dev
+   ```
+
+2. Monitor SSH-specific logs:
+
+   ```bash
+   tail -f logs/honeypot.log | grep "SSH"
+   ```
+
+3. Use the monitor endpoint to check SSH service status:
+   ```bash
+   curl http://localhost:8080/monitor
+   ```
+
+### FTP Module Debugging
+
+To debug the FTP module, follow these steps:
+
+1. Enable debug logging for FTP:
+
+   ```bash
+   LOG_LEVEL=debug npm run dev
+   ```
+
+2. Monitor FTP-specific logs:
+
+   ```bash
+   tail -f logs/honeypot.log | grep "FTP"
+   ```
+
+3. Use the monitor endpoint to check FTP service status:
+   ```bash
+   curl http://localhost:8080/monitor
+   ```
+
+### MySQL Module Debugging
+
+To debug the MySQL module, follow these steps:
+
+1. Enable debug logging for MySQL:
+
+   ```bash
+   LOG_LEVEL=debug npm run dev
+   ```
+
+2. Monitor MySQL-specific logs:
+
+   ```bash
+   tail -f logs/honeypot.log | grep "MySQL"
+   ```
+
+3. Use the monitor endpoint to check MySQL service status:
+   ```bash
+   curl http://localhost:8080/monitor
+   ```
+
+## API Communication Debugging
+
+### Debugging API Communication
+
+To debug API communication issues, follow these steps:
+
+1. Verify the `API_ENDPOINT` and `API_KEY` settings in your environment variables.
+
+2. Enable debug logging for API communication:
+
+   ```bash
+   LOG_LEVEL=debug npm run dev
+   ```
+
+3. Monitor API-specific logs:
+
+   ```bash
+   tail -f logs/honeypot.log | grep "API"
+   ```
+
+4. Use the monitor endpoint to check API communication status:
+   ```bash
+   curl http://localhost:8080/monitor
+   ```
 
 ## Testing Your Development Setup
 

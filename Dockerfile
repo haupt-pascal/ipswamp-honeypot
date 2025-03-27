@@ -8,6 +8,8 @@ RUN apk add --no-cache curl iputils bind-tools netcat-openbsd
 # Abhängigkeiten installieren
 COPY package*.json ./
 RUN npm install
+# Add the missing dependency
+RUN npm install node-forge
 
 # Anwendungscode kopieren
 COPY . .

@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   honeypot:
     build:
@@ -63,7 +61,7 @@ services:
       - "host.docker.internal:host-gateway"
       - "hono:host-gateway" # Map hono hostname to host gateway
     networks:
-      - ipswamp-api-network
+      - honeypot-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/monitor"]
       interval: 30s

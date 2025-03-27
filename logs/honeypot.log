@@ -1,0 +1,195 @@
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T11:54:44.501Z","transports":["console","file","file","file"]}
+{"apiEndpoint":"https://api.ipswamp.com/api","debugMode":false,"honeypotId":"2","hostIP":"172.18.0.2","level":"info","message":"Honeypot starting up...","offlineMode":false,"timestamp":"2025-03-26T11:54:44.503Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T11:54:44.503Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T11:54:44.504Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T11:54:44.504Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T11:54:44.506Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T11:54:44.506Z"}
+{"level":"info","message":"Generating self-signed certificate for HTTPS honeypot...","timestamp":"2025-03-26T11:54:44.507Z"}
+{"level":"info","message":"SMTP honeypot server started on port 25","timestamp":"2025-03-26T11:54:44.508Z"}
+{"level":"info","message":"SMTP Submission honeypot server started on port 587","timestamp":"2025-03-26T11:54:44.509Z"}
+{"level":"info","message":"POP3 honeypot server started on port 110","timestamp":"2025-03-26T11:54:44.509Z"}
+{"level":"info","message":"IMAP honeypot server started on port 143","timestamp":"2025-03-26T11:54:44.509Z"}
+{"level":"info","message":"MySQL honeypot server started on port 3306","timestamp":"2025-03-26T11:54:44.509Z"}
+{"level":"info","message":"HTTP server started on port 8080","timestamp":"2025-03-26T11:54:44.510Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T11:54:44.528Z"}
+{"error":"Cannot find module 'node-forge'\nRequire stack:\n- /app/src/modules/https-honeypot.js\n- /app/src/index.js","level":"error","message":"Error starting HTTPS honeypot","timestamp":"2025-03-26T11:54:44.529Z"}
+{"level":"info","message":"Initial heartbeat sent successfully","timestamp":"2025-03-26T11:54:44.880Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:54:49.448Z"},"timestamp":"2025-03-26T11:54:49.449Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:54:49.448Z"},"timestamp":"2025-03-26T11:54:49.451Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:54:54.503Z"},"timestamp":"2025-03-26T11:54:54.503Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:54:54.503Z"},"timestamp":"2025-03-26T11:54:54.506Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:54:59.554Z"},"timestamp":"2025-03-26T11:54:59.554Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:54:59.554Z"},"timestamp":"2025-03-26T11:54:59.556Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:55:04.597Z"},"timestamp":"2025-03-26T11:55:04.597Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:55:04.597Z"},"timestamp":"2025-03-26T11:55:04.600Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_ENDPOINT-Angriff erkannt","request":{"body":{"password":"password123","username":"admin"},"headers":{"accept":"*/*","content-length":"35","content-type":"application/x-www-form-urlencoded","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/login","query":{},"timestamp":"2025-03-26T11:55:28.649Z"},"timestamp":"2025-03-26T11:55:28.649Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{"password":"password123","username":"admin"},"headers":{"accept":"*/*","content-length":"35","content-type":"application/x-www-form-urlencoded","host":"localhost:8080","user-agent":"curl/8.7.1"},"ip":"::ffff:192.168.65.1","method":"POST","path":"/login","query":{},"timestamp":"2025-03-26T11:55:28.649Z"},"timestamp":"2025-03-26T11:55:28.652Z"}
+{"ip":"::ffff:192.168.65.1","level":"info","message":"Login-Versuch","password":"******","timestamp":"2025-03-26T11:55:28.652Z","username":"admin"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:55:34.646Z"},"timestamp":"2025-03-26T11:55:34.646Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:55:34.646Z"},"timestamp":"2025-03-26T11:55:34.648Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:56:04.690Z"},"timestamp":"2025-03-26T11:56:04.690Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:56:04.690Z"},"timestamp":"2025-03-26T11:56:04.692Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:56:34.734Z"},"timestamp":"2025-03-26T11:56:34.734Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:56:34.734Z"},"timestamp":"2025-03-26T11:56:34.736Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:57:04.790Z"},"timestamp":"2025-03-26T11:57:04.790Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:57:04.790Z"},"timestamp":"2025-03-26T11:57:04.791Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:57:34.843Z"},"timestamp":"2025-03-26T11:57:34.843Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:57:34.843Z"},"timestamp":"2025-03-26T11:57:34.844Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:58:04.882Z"},"timestamp":"2025-03-26T11:58:04.882Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:58:04.882Z"},"timestamp":"2025-03-26T11:58:04.883Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:58:34.918Z"},"timestamp":"2025-03-26T11:58:34.918Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:58:34.918Z"},"timestamp":"2025-03-26T11:58:34.920Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:59:04.966Z"},"timestamp":"2025-03-26T11:59:04.966Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:59:04.966Z"},"timestamp":"2025-03-26T11:59:04.967Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T11:59:53.920Z","transports":["console","file","file","file"]}
+{"apiEndpoint":"https://api.ipswamp.com/api","debugMode":false,"honeypotId":"2","hostIP":"172.18.0.2","level":"info","message":"Honeypot starting up...","offlineMode":false,"timestamp":"2025-03-26T11:59:53.921Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T11:59:53.922Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T11:59:53.922Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T11:59:53.922Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T11:59:53.925Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T11:59:53.925Z"}
+{"level":"info","message":"Generating self-signed certificate for HTTPS honeypot...","timestamp":"2025-03-26T11:59:53.925Z"}
+{"level":"info","message":"SMTP honeypot server started on port 25","timestamp":"2025-03-26T11:59:53.927Z"}
+{"level":"info","message":"SMTP Submission honeypot server started on port 587","timestamp":"2025-03-26T11:59:53.928Z"}
+{"level":"info","message":"POP3 honeypot server started on port 110","timestamp":"2025-03-26T11:59:53.928Z"}
+{"level":"info","message":"IMAP honeypot server started on port 143","timestamp":"2025-03-26T11:59:53.928Z"}
+{"level":"info","message":"MySQL honeypot server started on port 3306","timestamp":"2025-03-26T11:59:53.928Z"}
+{"level":"info","message":"HTTP server started on port 8080","timestamp":"2025-03-26T11:59:53.929Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T11:59:53.946Z"}
+{"error":"Cannot find module 'node-forge'\nRequire stack:\n- /app/src/modules/https-honeypot.js\n- /app/src/index.js","level":"error","message":"Error starting HTTPS honeypot","timestamp":"2025-03-26T11:59:53.948Z"}
+{"level":"info","message":"Initial heartbeat sent successfully","timestamp":"2025-03-26T11:59:54.159Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:59:58.881Z"},"timestamp":"2025-03-26T11:59:58.881Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T11:59:58.881Z"},"timestamp":"2025-03-26T11:59:58.883Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T12:02:41.012Z","transports":["console","file","file","file"]}
+{"apiEndpoint":"https://api.ipswamp.com/api","debugMode":false,"honeypotId":"2","hostIP":"172.18.0.2","level":"info","message":"Honeypot starting up...","offlineMode":false,"timestamp":"2025-03-26T12:02:41.014Z"}
+{"level":"info","message":"Cleared stored attacks on startup","timestamp":"2025-03-26T12:02:41.014Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:02:41.014Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T12:02:41.015Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:02:41.015Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:02:41.018Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T12:02:41.019Z"}
+{"level":"info","message":"Generating self-signed certificate for HTTPS honeypot...","timestamp":"2025-03-26T12:02:41.019Z"}
+{"level":"info","message":"SMTP honeypot server started on port 25","timestamp":"2025-03-26T12:02:41.148Z"}
+{"level":"info","message":"SMTP Submission honeypot server started on port 587","timestamp":"2025-03-26T12:02:41.148Z"}
+{"level":"info","message":"POP3 honeypot server started on port 110","timestamp":"2025-03-26T12:02:41.148Z"}
+{"level":"info","message":"IMAP honeypot server started on port 143","timestamp":"2025-03-26T12:02:41.148Z"}
+{"level":"info","message":"MySQL honeypot server started on port 3306","timestamp":"2025-03-26T12:02:41.149Z"}
+{"level":"info","message":"HTTPS honeypot server started on port 8443","timestamp":"2025-03-26T12:02:41.149Z"}
+{"level":"info","message":"HTTP server started on port 8080","timestamp":"2025-03-26T12:02:41.150Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T12:02:41.158Z"}
+{"level":"info","message":"Initial heartbeat sent successfully","timestamp":"2025-03-26T12:02:41.582Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T12:02:45.961Z"},"timestamp":"2025-03-26T12:02:45.962Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T12:02:45.961Z"},"timestamp":"2025-03-26T12:02:45.963Z"}
+{"level":"warn","message":"Möglicher SUSPICIOUS_USER_AGENT-Angriff erkannt","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T12:03:16.009Z"},"timestamp":"2025-03-26T12:03:16.010Z"}
+{"level":"info","message":"HTTP-Anfrage empfangen","request":{"body":{},"headers":{"accept":"*/*","host":"localhost:8080","user-agent":"curl/8.12.1"},"ip":"::1","method":"GET","path":"/monitor","query":{},"timestamp":"2025-03-26T12:03:16.009Z"},"timestamp":"2025-03-26T12:03:16.011Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T12:05:03.132Z","transports":["console","file","file","file"]}
+{"apiEndpoint":"https://api.ipswamp.com/api","debugMode":false,"honeypotId":"2","hostIP":"172.18.0.2","level":"info","message":"Honeypot starting up...","offlineMode":false,"timestamp":"2025-03-26T12:05:03.133Z"}
+{"level":"info","message":"Cleared stored attacks on startup","timestamp":"2025-03-26T12:05:03.134Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:05:03.134Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T12:05:03.134Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:05:03.134Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:05:03.137Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T12:05:03.137Z"}
+{"level":"info","message":"SMTP honeypot server started on port 25","timestamp":"2025-03-26T12:05:03.152Z"}
+{"level":"info","message":"SMTP Submission honeypot server started on port 587","timestamp":"2025-03-26T12:05:03.152Z"}
+{"level":"info","message":"POP3 honeypot server started on port 110","timestamp":"2025-03-26T12:05:03.152Z"}
+{"level":"info","message":"IMAP honeypot server started on port 143","timestamp":"2025-03-26T12:05:03.152Z"}
+{"level":"info","message":"MySQL honeypot server started on port 3306","timestamp":"2025-03-26T12:05:03.153Z"}
+{"level":"info","message":"HTTPS honeypot server started on port 8443","timestamp":"2025-03-26T12:05:03.154Z"}
+{"level":"info","message":"HTTP server started on port 8080","timestamp":"2025-03-26T12:05:03.154Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T12:05:03.159Z"}
+{"level":"info","message":"Initial heartbeat sent successfully","timestamp":"2025-03-26T12:05:03.542Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":37276,"timestamp":"2025-03-26T12:20:20.600Z"}
+{"clientId":"c3ce34d22db42a52","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:20:22.553Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":37360,"timestamp":"2025-03-26T12:20:31.486Z"}
+{"clientId":"cd432994713a10f0","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:20:31.499Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":23403,"timestamp":"2025-03-26T12:20:32.575Z"}
+{"clientId":"21e34905ceac7819","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:20:32.586Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":40503,"timestamp":"2025-03-26T12:20:33.796Z"}
+{"clientId":"d0c34f65dd2f50db","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:20:33.807Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":18659,"timestamp":"2025-03-26T12:20:34.890Z"}
+{"clientId":"8ae9266c18882d5e","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:20:34.900Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":39259,"timestamp":"2025-03-26T12:20:35.951Z"}
+{"clientId":"9252822e99843a75","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:20:35.961Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T12:24:29.997Z","transports":["console","file","file","file"]}
+{"apiEndpoint":"https://api.ipswamp.com/api","debugMode":false,"honeypotId":"2","hostIP":"172.18.0.2","level":"info","message":"Honeypot starting up...","offlineMode":false,"timestamp":"2025-03-26T12:24:29.998Z"}
+{"level":"info","message":"Cleared stored attacks on startup","timestamp":"2025-03-26T12:24:29.999Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:24:29.999Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T12:24:29.999Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:24:29.999Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:24:30.003Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T12:24:30.003Z"}
+{"level":"info","message":"SMTP honeypot server started on port 25","timestamp":"2025-03-26T12:24:30.017Z"}
+{"level":"info","message":"SMTP Submission honeypot server started on port 587","timestamp":"2025-03-26T12:24:30.018Z"}
+{"level":"info","message":"POP3 honeypot server started on port 110","timestamp":"2025-03-26T12:24:30.018Z"}
+{"level":"info","message":"IMAP honeypot server started on port 143","timestamp":"2025-03-26T12:24:30.018Z"}
+{"level":"info","message":"MySQL honeypot server started on port 3306","timestamp":"2025-03-26T12:24:30.018Z"}
+{"level":"info","message":"HTTPS honeypot server started on port 8443","timestamp":"2025-03-26T12:24:30.019Z"}
+{"level":"info","message":"HTTP server started on port 8080","timestamp":"2025-03-26T12:24:30.019Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T12:24:30.025Z"}
+{"level":"info","message":"Initial heartbeat sent successfully","timestamp":"2025-03-26T12:24:30.204Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":20020,"timestamp":"2025-03-26T12:24:36.934Z"}
+{"clientId":"036b916b46221e3a","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:36.942Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":31630,"timestamp":"2025-03-26T12:24:38.177Z"}
+{"clientId":"758f871c840a0f7d","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:38.185Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":20507,"timestamp":"2025-03-26T12:24:39.006Z"}
+{"clientId":"1c17dad049b51e07","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:39.016Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":35616,"timestamp":"2025-03-26T12:24:39.538Z"}
+{"clientId":"cca2d370722833bd","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:39.550Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":58095,"timestamp":"2025-03-26T12:24:40.017Z"}
+{"clientId":"34db7bbf8615a50c","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:40.030Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":45601,"timestamp":"2025-03-26T12:24:41.424Z"}
+{"clientId":"0f036a4f78abf301","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:41.435Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":46373,"timestamp":"2025-03-26T12:24:42.065Z"}
+{"clientId":"8bef44af4822b26a","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:42.078Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":36995,"timestamp":"2025-03-26T12:24:49.943Z"}
+{"clientId":"59559a4b4c866c36","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:49.950Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":44278,"timestamp":"2025-03-26T12:24:50.301Z"}
+{"clientId":"8341703fb8deb825","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:50.315Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":17184,"timestamp":"2025-03-26T12:24:50.517Z"}
+{"clientId":"4e21e9af18ee8f46","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:50.528Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":51873,"timestamp":"2025-03-26T12:24:50.713Z"}
+{"clientId":"8de6d6a298cc68a6","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:50.719Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":54119,"timestamp":"2025-03-26T12:24:50.890Z"}
+{"clientId":"9455b103c6bde58f","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:50.900Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":60546,"timestamp":"2025-03-26T12:24:51.059Z"}
+{"clientId":"6e0a1cb1e0ae1447","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T12:24:51.064Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-26T12:28:35.870Z","transports":["console","file","file","file"]}
+{"apiEndpoint":"https://api.ipswamp.com/api","debugMode":false,"honeypotId":"2","hostIP":"172.18.0.2","level":"info","message":"Honeypot starting up...","offlineMode":false,"timestamp":"2025-03-26T12:28:35.872Z"}
+{"level":"info","message":"Cleared stored attacks on startup","timestamp":"2025-03-26T12:28:35.872Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:28:35.872Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-26T12:28:35.872Z"}
+{"level":"info","message":"SSH-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:28:35.873Z"}
+{"level":"info","message":"FTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-26T12:28:35.876Z"}
+{"level":"info","message":"FTP-Honeypot gestartet auf Port 21","timestamp":"2025-03-26T12:28:35.876Z"}
+{"level":"info","message":"SMTP honeypot server started on port 25","timestamp":"2025-03-26T12:28:35.890Z"}
+{"level":"info","message":"SMTP Submission honeypot server started on port 587","timestamp":"2025-03-26T12:28:35.891Z"}
+{"level":"info","message":"POP3 honeypot server started on port 110","timestamp":"2025-03-26T12:28:35.891Z"}
+{"level":"info","message":"IMAP honeypot server started on port 143","timestamp":"2025-03-26T12:28:35.891Z"}
+{"level":"info","message":"MySQL honeypot server started on port 3306","timestamp":"2025-03-26T12:28:35.891Z"}
+{"level":"info","message":"HTTPS honeypot server started on port 8443","timestamp":"2025-03-26T12:28:35.892Z"}
+{"level":"info","message":"HTTP server started on port 8080","timestamp":"2025-03-26T12:28:35.892Z"}
+{"level":"info","message":"SSH-Honeypot gestartet auf Port 2222","timestamp":"2025-03-26T12:28:35.898Z"}
+{"level":"info","message":"Initial heartbeat sent successfully","timestamp":"2025-03-26T12:28:36.245Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":55754,"timestamp":"2025-03-26T13:02:34.495Z"}
+{"clientId":"925452a8663cdf33","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:34.504Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":53322,"timestamp":"2025-03-26T13:02:35.506Z"}
+{"clientId":"d3ec9dd9dceb7f4a","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:35.520Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":42159,"timestamp":"2025-03-26T13:02:36.530Z"}
+{"clientId":"7919c8d9765122ee","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:36.541Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":59652,"timestamp":"2025-03-26T13:02:37.473Z"}
+{"clientId":"7fece0b8048da87c","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:37.485Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":31549,"timestamp":"2025-03-26T13:02:38.479Z"}
+{"clientId":"ea3494c29b7c5e59","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:38.490Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":22926,"timestamp":"2025-03-26T13:02:39.600Z"}
+{"clientId":"0b76e78d45eb870f","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:39.611Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":49517,"timestamp":"2025-03-26T13:02:40.754Z"}
+{"clientId":"6fed3f24e4683ee7","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:40.761Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":33802,"timestamp":"2025-03-26T13:02:42.122Z"}
+{"clientId":"f76615a11c379ebe","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:42.127Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":21543,"timestamp":"2025-03-26T13:02:43.279Z"}
+{"clientId":"6464045b4805d879","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:43.290Z"}
+{"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":23788,"timestamp":"2025-03-26T13:02:44.246Z"}
+{"attempt_count":10,"ip":"192.168.65.1","level":"warn","message":"Detected rapid SSH connection attempts from 192.168.65.1: 10 attempts in the last minute","timestamp":"2025-03-26T13:02:44.246Z"}
+{"clientId":"251056b686239517","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:44.254Z"}

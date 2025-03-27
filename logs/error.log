@@ -1,0 +1,2 @@
+{"error":"Cannot find module 'node-forge'\nRequire stack:\n- /app/src/modules/https-honeypot.js\n- /app/src/index.js","level":"error","message":"Error starting HTTPS honeypot","timestamp":"2025-03-26T11:54:44.529Z"}
+{"error":"Cannot find module 'node-forge'\nRequire stack:\n- /app/src/modules/https-honeypot.js\n- /app/src/index.js","level":"error","message":"Error starting HTTPS honeypot","timestamp":"2025-03-26T11:59:53.948Z"}

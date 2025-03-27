@@ -1,5 +1,7 @@
 // API-Service für die Kommunikation mit dem Backend
 const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
 
 // Import the attack pattern adapter
 const { enhanceAttackData } = require("../utils/attack-pattern-adapter");
@@ -17,6 +19,33 @@ const reportedIPCache = new Map();
 const IP_CACHE_TTL = 3600000; // 1 Stunde in Millisekunden
 const MAX_REPORTS_PER_IP_PER_HOUR = 5; // Maximal 5 Berichte pro IP pro Stunde
 const REPORT_TYPES_THROTTLE = true; // Nur neue Angriffstypen für bereits gemeldete IPs berichten
+
+// Clear stored attacks on module initialization
+// This ensures we don't send old attacks when the container restarts
+clearStoredAttacks();
+
+/**
+ * Function to clear all stored attacks
+ */
+function clearStoredAttacks() {
+  storedAttacks = [];
+  // Reset the reported IPs cache
+  reportedIPCache.clear();
+  // Also clear the stored attacks file if it exists
+  try {
+    const storedAttacksPath = path.join(
+      process.cwd(),
+      "logs",
+      "stored_attacks.json"
+    );
+    if (fs.existsSync(storedAttacksPath)) {
+      fs.unlinkSync(storedAttacksPath);
+    }
+  } catch (error) {
+    // Silent fail if we can't delete the file
+    console.error("Failed to delete stored attacks file:", error.message);
+  }
+}
 
 // Heartbeat-Funktion zum Registrieren des Honeypots bei der API
 async function sendHeartbeat(config, logger) {
@@ -681,4 +710,5 @@ module.exports = {
   getReportCacheStats,
   // Export für Tests/Debugging
   clearReportCache: () => reportedIPCache.clear(),
+  clearStoredAttacks, // Export the new function
 };

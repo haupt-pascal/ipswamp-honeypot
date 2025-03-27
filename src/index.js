@@ -11,8 +11,9 @@ const { setupMySQLHoneypot } = require("./modules/mysql-honeypot");
 const {
   sendHeartbeat,
   reportAttack,
-  getLastHeartbeatRequest,
-  getLastHeartbeatResponse,
+  getLastHeartbeatInfo,
+  getReportCacheStats,
+  clearStoredAttacks,
 } = require("./services/api-service");
 const { setupLogger } = require("./utils/logger");
 
@@ -77,6 +78,10 @@ logger.info("Honeypot starting up...", {
   debugMode: config.debugMode,
   offlineMode: config.offlineMode,
 });
+
+// Clear any stored attacks on startup
+clearStoredAttacks();
+logger.info("Cleared stored attacks on startup");
 
 // Track active honeypot modules
 const activeModules = [];
@@ -256,8 +261,9 @@ app.get("/monitor", (req, res) => {
 
   const uptimeString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-  const lastHeartbeat = getLastHeartbeatResponse();
-  const lastHeartbeatRequest = getLastHeartbeatRequest();
+  const heartbeatInfo = getLastHeartbeatInfo();
+  const lastHeartbeat = heartbeatInfo.response;
+  const lastHeartbeatRequest = heartbeatInfo.request;
 
   // Create a nice status response
   const status = {
@@ -287,6 +293,9 @@ app.get("/monitor", (req, res) => {
 
 // API diagnostics endpoint for troubleshooting
 app.get("/api-diagnostics", (req, res) => {
+  const heartbeatInfo = getLastHeartbeatInfo();
+  const cacheStats = getReportCacheStats();
+
   const diagnostics = {
     config: {
       honeypotId: config.honeypotId,
@@ -294,8 +303,8 @@ app.get("/api-diagnostics", (req, res) => {
       heartbeatInterval: config.heartbeatInterval,
       offlineMode: config.offlineMode,
     },
-    lastHeartbeatRequest: getLastHeartbeatRequest(),
-    lastHeartbeatResponse: getLastHeartbeatResponse(),
+    heartbeatInfo: heartbeatInfo,
+    reportCacheStats: cacheStats,
     activeModules: activeModules,
   };
 

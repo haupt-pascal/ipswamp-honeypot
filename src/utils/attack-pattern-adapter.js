@@ -233,6 +233,9 @@ const ATTACK_TYPE_MAPPING = {
   ssh_bruteforce: "SSH_BRUTEFORCE",
   ssh_invalid_user: "SSH_BRUTEFORCE",
   ssh_auth_failure: "SSH_BRUTEFORCE",
+  ssh_bruteforce_scan: "SSH_BRUTEFORCE", // Add the new attack type
+  ssh_command: "HONEYPOT",
+  ssh_shell_command: "HONEYPOT",
 
   // FTP module attack types
   ftp_bruteforce: "AUTHENTICATION_BREACH",

@@ -67,9 +67,22 @@ const ATTACK_PATTERNS = {
 function setupHTTPHoneypot(app, logger, config, reportAttack) {
   logger.info("HTTP-Honeypot-Modul wird eingerichtet...");
 
+  // Whitelist of system endpoints that should be excluded from attack detection
+  const SYSTEM_ENDPOINTS = [
+    "/monitor",
+    "/api-diagnostics",
+    "/test-heartbeat",
+    "/debug",
+  ];
+
   // Middleware für die Erkennung von Angriffen
   app.use((req, res, next) => {
     const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+    // Skip attack detection for system endpoints
+    if (SYSTEM_ENDPOINTS.includes(req.path)) {
+      return next();
+    }
 
     // Erfassen von Grundinformationen für jede Anfrage
     const requestInfo = {
@@ -331,12 +344,23 @@ function detectAttack(requestInfo) {
 
   // Überprüfe auf verdächtige User-Agents
   const userAgent = headers["user-agent"] || "";
+
+  // More specific detection for suspicious user agents
+  // Avoid flagging regular curl usage for monitoring tools
+  const suspiciousUserAgents = [
+    "sqlmap",
+    "nikto",
+    "nmap",
+    "masscan",
+    "zgrab",
+    "gobuster",
+    "dirbuster",
+  ];
+
   if (
-    userAgent.includes("sqlmap") ||
-    userAgent.includes("nikto") ||
-    userAgent.includes("nmap") ||
-    userAgent.includes("wget") ||
-    userAgent.includes("curl")
+    suspiciousUserAgents.some((agent) =>
+      userAgent.toLowerCase().includes(agent)
+    )
   ) {
     return "SUSPICIOUS_USER_AGENT";
   }
