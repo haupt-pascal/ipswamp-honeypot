@@ -16,8 +16,8 @@ let lastHeartbeatError = null;
 const reportedIPCache = new Map();
 
 // Konfiguration für das IP-Reporting-Throttling
-const IP_CACHE_TTL = 3600000; // 1 Stunde in Millisekunden
-const MAX_REPORTS_PER_IP_PER_HOUR = 5; // Maximal 5 Berichte pro IP pro Stunde
+const IP_CACHE_TTL = 3600000;
+const MAX_REPORTS_PER_IP_PER_HOUR = 10;
 const REPORT_TYPES_THROTTLE = true; // Nur neue Angriffstypen für bereits gemeldete IPs berichten
 
 // Clear stored attacks on module initialization
@@ -359,6 +359,7 @@ function shouldThrottleReport(ip, attackType) {
   }
 
   // Prüfen, ob maximale Anzahl an Berichten erreicht ist
+  // Verwende die konfigurierte Anzahl oder den Standardwert
   return (
     cacheInfo.reported_count >=
     (parseInt(process.env.MAX_REPORTS_PER_IP) || MAX_REPORTS_PER_IP_PER_HOUR)

@@ -7,6 +7,9 @@ const crypto = require("crypto");
 // Track connection attempts by IP address
 const connectionTracker = new Map();
 
+// Track authentication attempts by IP
+const authAttemptTracker = new Map();
+
 // Funktion zum Generieren eines SSH-Schlüsselpaars, falls nicht vorhanden
 function generateSSHKeys() {
   const sshDir = path.join(process.cwd(), "keys");
@@ -88,9 +91,10 @@ function trackConnectionAttempt(ipAddress, logger, config, reportAttack) {
   const oneMinuteAgo = now - 60000;
   tracker.attempts = tracker.attempts.filter((time) => time > oneMinuteAgo);
 
-  // Check if we have enough attempts to report (10 or more in a minute)
+  // Check if we have enough attempts to report
+  // Reduced from 10 to 3 attempts for more sensitive detection
   // and we haven't reported in the last 2 minutes to avoid spam
-  if (tracker.attempts.length >= 10 && now - tracker.lastReportTime > 120000) {
+  if (tracker.attempts.length >= 3 && now - tracker.lastReportTime > 120000) {
     logger.warn(
       `Detected rapid SSH connection attempts from ${ipAddress}: ${tracker.attempts.length} attempts in the last minute`,
       {
@@ -218,6 +222,59 @@ function setupSSHHoneypot(logger, config, reportAttack) {
         };
 
         logger.info("SSH-Authentifizierungsversuch", authInfo);
+
+        // Track authentication attempts for bruteforce detection
+        if (!authAttemptTracker.has(connectionInfo.ip)) {
+          authAttemptTracker.set(connectionInfo.ip, {
+            attempts: 1,
+            lastAttempt: Date.now(),
+            usernames: new Set([ctx.username]),
+            lastReported: 0,
+          });
+        } else {
+          const tracker = authAttemptTracker.get(connectionInfo.ip);
+          tracker.attempts++;
+          tracker.lastAttempt = Date.now();
+          if (ctx.username) {
+            tracker.usernames.add(ctx.username);
+          }
+
+          // Report bruteforce attempts after 3 failed logins
+          if (
+            tracker.attempts >= 3 &&
+            Date.now() - tracker.lastReported > 60000
+          ) {
+            logger.warn(
+              `Possible SSH login bruteforce from ${connectionInfo.ip}: ${tracker.attempts} attempts`,
+              {
+                ip: connectionInfo.ip,
+                attempts: tracker.attempts,
+                usernames: Array.from(tracker.usernames),
+              }
+            );
+
+            // Report the bruteforce attempt with more detailed information
+            reportAttack(config, {
+              ip_address: connectionInfo.ip,
+              attack_type: "SSH_BRUTEFORCE",
+              description: `SSH bruteforce detected: ${tracker.attempts} attempts with ${tracker.usernames.size} unique usernames`,
+              evidence: JSON.stringify({
+                ip: connectionInfo.ip,
+                attempts: tracker.attempts,
+                usernames: Array.from(tracker.usernames),
+                client_id: connectionInfo.clientId,
+                timestamp: new Date().toISOString(),
+              }),
+            }).catch((error) => {
+              logger.error("Failed to report SSH bruteforce", {
+                error: error.message,
+              });
+            });
+
+            // Update last reported time
+            tracker.lastReported = Date.now();
+          }
+        }
 
         // Melde den Anmeldungsversuch an die API
         reportAttack(config, {
@@ -466,6 +523,17 @@ function setupSSHHoneypot(logger, config, reportAttack) {
       });
     }
   );
+
+  // Clean up auth tracker periodically to prevent memory leaks
+  setInterval(() => {
+    const now = Date.now();
+    // Clean up trackers older than 1 hour
+    for (const [ip, data] of authAttemptTracker.entries()) {
+      if (now - data.lastAttempt > 3600000) {
+        authAttemptTracker.delete(ip);
+      }
+    }
+  }, 300000); // Run every 5 minutes
 
   // Server auf TCP-Port 2222 starten (nicht 22, um Konflikte zu vermeiden)
   const sshPort = parseInt(process.env.SSH_PORT || "2222");

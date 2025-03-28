@@ -12,6 +12,9 @@ const FTP_USERS = {
   ftpuser: { password: "ftp123", root: "./ftp" },
 };
 
+// Track authentication attempts by IP
+const authAttemptTracker = new Map();
+
 /**
  * Erstellt ein FTP-Honeypot-Modul
  * @param {Object} logger - Winston Logger-Instanz
@@ -113,13 +116,65 @@ function setupFTPHoneypot(logger, config, reportAttack) {
       });
     });
 
-    // Passwort-Event
+    // Passwort-Event - Track attempts for bruteforce detection
     connection.on("command:pass", (password, success) => {
       logger.info("FTP-Anmeldungsversuch", {
         clientId: clientInfo.id,
         username: clientInfo.username,
         success,
       });
+
+      // Track authentication attempts by IP for bruteforce detection
+      if (!authAttemptTracker.has(clientInfo.ip)) {
+        authAttemptTracker.set(clientInfo.ip, {
+          attempts: 1,
+          lastAttempt: Date.now(),
+          usernames: new Set([clientInfo.username || "anonymous"]),
+          lastReported: 0,
+        });
+      } else {
+        const tracker = authAttemptTracker.get(clientInfo.ip);
+        tracker.attempts++;
+        tracker.lastAttempt = Date.now();
+        if (clientInfo.username) {
+          tracker.usernames.add(clientInfo.username);
+        }
+
+        // Report bruteforce attempts after 3 failed logins
+        if (
+          tracker.attempts >= 3 &&
+          Date.now() - tracker.lastReported > 60000
+        ) {
+          logger.warn(
+            `Possible FTP bruteforce from ${clientInfo.ip}: ${tracker.attempts} attempts`,
+            {
+              ip: clientInfo.ip,
+              attempts: tracker.attempts,
+              usernames: Array.from(tracker.usernames),
+            }
+          );
+
+          // Report the bruteforce attempt
+          reportAttack(config, {
+            ip_address: clientInfo.ip,
+            attack_type: "FTP_BRUTEFORCE",
+            description: `FTP bruteforce detected: ${tracker.attempts} attempts with ${tracker.usernames.size} unique usernames`,
+            evidence: JSON.stringify({
+              ip: clientInfo.ip,
+              attempts: tracker.attempts,
+              usernames: Array.from(tracker.usernames),
+              timestamp: new Date().toISOString(),
+            }),
+          }).catch((error) => {
+            logger.error("Failed to report FTP bruteforce", {
+              error: error.message,
+            });
+          });
+
+          // Update last reported time
+          tracker.lastReported = Date.now();
+        }
+      }
 
       // Melde den Anmeldungsversuch an die API
       reportAttack(config, {
@@ -209,6 +264,18 @@ function setupFTPHoneypot(logger, config, reportAttack) {
       }
     });
   });
+
+  // Clean up auth tracker periodically to prevent memory leaks
+  setInterval(() => {
+    const now = Date.now();
+    // Clean up trackers older than 1 hour
+    for (const [ip, data] of authAttemptTracker.entries()) {
+      if (now - data.lastAttempt > 3600000) {
+        // 1 hour
+        authAttemptTracker.delete(ip);
+      }
+    }
+  }, 300000); // Run every 5 minutes
 
   // Server starten
   server.debugging = process.env.NODE_ENV !== "production";

@@ -63,6 +63,9 @@ const ATTACK_PATTERNS = {
   ],
 };
 
+// Track login attempts by IP
+const loginAttemptTracker = new Map();
+
 // HTTP-Honeypot einrichten
 function setupHTTPHoneypot(app, logger, config, reportAttack) {
   logger.info("HTTP-Honeypot-Modul wird eingerichtet...");
@@ -162,6 +165,55 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
       ip: clientIP,
     });
 
+    // Track login attempts for bruteforce detection
+    if (!loginAttemptTracker.has(clientIP)) {
+      loginAttemptTracker.set(clientIP, {
+        attempts: 1,
+        lastAttempt: Date.now(),
+        usernames: new Set([username]),
+        lastReported: 0,
+      });
+    } else {
+      const tracker = loginAttemptTracker.get(clientIP);
+      tracker.attempts++;
+      tracker.lastAttempt = Date.now();
+      if (username) {
+        tracker.usernames.add(username);
+      }
+
+      // Report bruteforce attempts after 3 failed logins
+      if (tracker.attempts >= 3 && Date.now() - tracker.lastReported > 60000) {
+        logger.warn(
+          `Possible HTTP login bruteforce from ${clientIP}: ${tracker.attempts} attempts`,
+          {
+            ip: clientIP,
+            attempts: tracker.attempts,
+            usernames: Array.from(tracker.usernames),
+          }
+        );
+
+        // Report the bruteforce attempt
+        reportAttack(config, {
+          ip_address: clientIP,
+          attack_type: "LOGIN_BRUTEFORCE",
+          description: `HTTP login bruteforce detected: ${tracker.attempts} attempts with ${tracker.usernames.size} unique usernames`,
+          evidence: JSON.stringify({
+            ip: clientIP,
+            attempts: tracker.attempts,
+            usernames: Array.from(tracker.usernames),
+            timestamp: new Date().toISOString(),
+          }),
+        }).catch((error) => {
+          logger.error("Failed to report HTTP bruteforce", {
+            error: error.message,
+          });
+        });
+
+        // Update last reported time
+        tracker.lastReported = Date.now();
+      }
+    }
+
     // Angriff an API melden - Credential Harvesting
     reportAttack(config, {
       ip_address: clientIP,
@@ -192,6 +244,18 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
       </html>
     `);
   });
+
+  // Clean up login tracker periodically to prevent memory leaks
+  setInterval(() => {
+    const now = Date.now();
+    // Clean up trackers older than 1 hour
+    for (const [ip, data] of loginAttemptTracker.entries()) {
+      if (now - data.lastAttempt > 3600000) {
+        // 1 hour
+        loginAttemptTracker.delete(ip);
+      }
+    }
+  }, 300000); // Run every 5 minutes
 
   // Fake-Admin-Bereich
   app.get("/admin", (req, res) => {

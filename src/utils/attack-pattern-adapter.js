@@ -216,7 +216,9 @@ const ATTACK_TYPE_MAPPING = {
   directory_listing: "DIRECTORY_LISTING_ATTEMPT",
   directory_scan: "DIRECTORY_LISTING_ATTEMPT",
   admin_bruteforce: "AUTHENTICATION_BREACH",
+  login_bruteforce: "AUTHENTICATION_BREACH",
   login_attempt: "AUTHENTICATION_BREACH",
+  admin_login_bruteforce: "AUTHENTICATION_BREACH",
   suspicious_request: "SUSPICIOUS_QUERY_STRING",
   strange_query: "SUSPICIOUS_QUERY_STRING",
   bot_request: "FAKE_CRAWLER",
@@ -233,7 +235,7 @@ const ATTACK_TYPE_MAPPING = {
   ssh_bruteforce: "SSH_BRUTEFORCE",
   ssh_invalid_user: "SSH_BRUTEFORCE",
   ssh_auth_failure: "SSH_BRUTEFORCE",
-  ssh_bruteforce_scan: "SSH_BRUTEFORCE", // Add the new attack type
+  ssh_bruteforce_scan: "SSH_BRUTEFORCE",
   ssh_command: "HONEYPOT",
   ssh_shell_command: "HONEYPOT",
 

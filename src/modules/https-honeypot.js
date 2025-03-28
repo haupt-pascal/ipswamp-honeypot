@@ -20,6 +20,9 @@ async function setupHTTPSHoneypot(config, logger) {
   // Track suspicious requests
   const suspiciousIPs = new Map();
 
+  // Track login attempts for bruteforce detection
+  const loginAttemptTracker = new Map();
+
   // Create self-signed certificate for HTTPS
   const certPath = path.join(process.cwd(), "logs", "https-cert.pem");
   const keyPath = path.join(process.cwd(), "logs", "https-key.pem");
@@ -71,7 +74,8 @@ async function setupHTTPSHoneypot(config, logger) {
     });
 
     // Report if this IP is exhibiting suspicious scanning behavior
-    if (ipData.count >= 5 && ipData.paths.size >= 3) {
+    // Reduced from 5 to 3 for more sensitive detection
+    if (ipData.count >= 3 && ipData.paths.size >= 2) {
       reportHTTPSAttack(config, logger, clientIP, "management_access", {
         request_count: ipData.count,
         paths: Array.from(ipData.paths),
@@ -141,6 +145,46 @@ async function setupHTTPSHoneypot(config, logger) {
       password_length: password ? password.length : 0,
     });
 
+    // Track login attempts for bruteforce detection
+    if (!loginAttemptTracker.has(clientIP)) {
+      loginAttemptTracker.set(clientIP, {
+        attempts: 1,
+        lastAttempt: Date.now(),
+        usernames: new Set([username]),
+        lastReported: 0,
+      });
+    } else {
+      const tracker = loginAttemptTracker.get(clientIP);
+      tracker.attempts++;
+      tracker.lastAttempt = Date.now();
+      if (username) {
+        tracker.usernames.add(username);
+      }
+
+      // Report bruteforce attempts after 3 failed logins
+      if (tracker.attempts >= 3 && Date.now() - tracker.lastReported > 60000) {
+        logger.warn(
+          `Possible HTTPS login bruteforce from ${clientIP}: ${tracker.attempts} attempts`,
+          {
+            ip: clientIP,
+            attempts: tracker.attempts,
+            usernames: Array.from(tracker.usernames),
+          }
+        );
+
+        // Report the bruteforce attempt
+        reportHTTPSAttack(config, logger, clientIP, "admin_login_bruteforce", {
+          attempts: tracker.attempts,
+          usernames: Array.from(tracker.usernames),
+          last_attempt: new Date().toISOString(),
+          path: req.path,
+        });
+
+        // Update last reported time
+        tracker.lastReported = Date.now();
+      }
+    }
+
     // Report login attempt
     reportHTTPSAttack(config, logger, clientIP, "admin_portal_access", {
       username: username,
@@ -175,6 +219,18 @@ async function setupHTTPSHoneypot(config, logger) {
       `);
     }, 1000);
   });
+
+  // Clean up login tracker periodically to prevent memory leaks
+  setInterval(() => {
+    const now = Date.now();
+    // Clean up trackers older than 1 hour
+    for (const [ip, data] of loginAttemptTracker.entries()) {
+      if (now - data.lastAttempt > 3600000) {
+        // 1 hour
+        loginAttemptTracker.delete(ip);
+      }
+    }
+  }, 300000); // Run every 5 minutes
 
   // Common paths for admin interfaces
   [

@@ -65,10 +65,12 @@ const config = {
   enableMySQL: process.env.ENABLE_MYSQL === "true",
 
   // IP throttling configuration
-  maxReportsPerIP: parseInt(process.env.MAX_REPORTS_PER_IP || "5"),
+  maxReportsPerIP: parseInt(process.env.MAX_REPORTS_PER_IP || "3"), // Reduced from 5 to 3
   ipCacheTTL: parseInt(process.env.IP_CACHE_TTL || "3600000"), // 1 hour
   storeThrottledAttacks: process.env.STORE_THROTTLED_ATTACKS === "true",
   reportUniqueTypesOnly: process.env.REPORT_UNIQUE_TYPES_ONLY === "true",
+  // New configuration for more sensitive detection
+  reportThreshold: parseInt(process.env.REPORT_THRESHOLD || "3"), // Report after 3 suspicious accesses
 };
 
 logger.info("Honeypot starting up...", {

@@ -9,8 +9,29 @@ if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir);
 }
 
+// Custom log levels with a 'suspicious' level between info and warn
+const customLevels = {
+  levels: {
+    error: 0,
+    warn: 1,
+    suspicious: 2, // New level for earlier detection
+    info: 3,
+    debug: 4,
+  },
+  colors: {
+    error: "red",
+    warn: "yellow",
+    suspicious: "magenta", // Distinct color for suspicious activities
+    info: "green",
+    debug: "blue",
+  },
+};
+
 // Logger-Funktion
 function setupLogger() {
+  // Add custom levels to winston
+  winston.addColors(customLevels.colors);
+
   // Formatierung für Konsolenausgabe
   const consoleFormat = winston.format.combine(
     winston.format.colorize(),
@@ -71,6 +92,7 @@ function setupLogger() {
 
   // Logger erstellen
   const logger = winston.createLogger({
+    levels: customLevels.levels,
     level: logLevel,
     transports: [
       // Konsolenausgabe mit angepasstem Format je nach Umgebung
@@ -100,6 +122,14 @@ function setupLogger() {
         format: fileFormat,
         maxsize: 10485760, // 10MB
         maxFiles: 10,
+      }),
+      // Separate Datei für verdächtige Aktivitäten (neue, sensitivere Kategorie)
+      new winston.transports.File({
+        filename: path.join(logsDir, "suspicious.log"),
+        level: "suspicious",
+        format: fileFormat,
+        maxsize: 10485760, // 10MB
+        maxFiles: 5,
       }),
       // Im Debug-Modus auch detaillierte Debug-Logs speichern
       ...(logLevel === "debug"
