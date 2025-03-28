@@ -47,7 +47,4 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            HONEYPOT_ID=${{ secrets.HONEYPOT_ID }}
-            API_KEY=${{ secrets.API_KEY }}
-            API_ENDPOINT=${{ secrets.API_ENDPOINT }}
+          # No build args for sensitive information

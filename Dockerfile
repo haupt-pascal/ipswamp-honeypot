@@ -20,16 +20,9 @@ EXPOSE 2222
 EXPOSE 21
 EXPOSE 9229
 
-# Define build arguments for sensitive values - no defaults for security
-ARG HONEYPOT_ID
-ARG API_KEY
-ARG API_ENDPOINT
-
-# Umgebungsvariablen setzen
+# Don't define build arguments for sensitive values
+# Set only non-sensitive environment defaults
 ENV NODE_ENV=production \
-    HONEYPOT_ID=${HONEYPOT_ID} \
-    API_KEY=${API_KEY} \
-    API_ENDPOINT=${API_ENDPOINT} \
     HEARTBEAT_INTERVAL=60000 \
     HEARTBEAT_RETRY_COUNT=3 \
     HEARTBEAT_RETRY_DELAY=5000
