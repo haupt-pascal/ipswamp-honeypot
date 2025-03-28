@@ -6,22 +6,48 @@ services:
     container_name: ipswamp-honeypot
     restart: unless-stopped
     ports:
-      - "8080:8080" # HTTP honeypot
+      # Core honeypot services
+      - "8081:8080"
+      - "8444:8443"
       - "2222:2222" # SSH honeypot
       - "21:21" # FTP honeypot
+      - "1025-1050:1025-1050" # FTP passive port range
+
+      # Mail-related honeypot services
+      - "25:25" # SMTP mail honeypot
+      - "587:587" # SMTP submission honeypot
+      - "110:110" # POP3 mail honeypot
+      - "143:143" # IMAP mail honeypot
+
+      # Database honeypot
+      - "3306:3306" # MySQL honeypot
     environment:
       - NODE_ENV=production
       - HONEYPOT_ID=${HONEYPOT_ID:-your_honeypot_id}
       - API_KEY=${API_KEY:-your_api_key}
       - API_ENDPOINT=${API_ENDPOINT:-https://api.ipswamp.com/api}
 
-      # Module enablement (limited to requested services)
+      # Basic configuration
+      - HEARTBEAT_INTERVAL=60000
+      - HTTP_PORT=8080
+      - HTTPS_PORT=8443
+      - SSH_PORT=2222
+      - FTP_PORT=21
+      - SMTP_PORT=25
+      - SMTP_SUBMISSION_PORT=587
+      - POP3_PORT=110
+      - IMAP_PORT=143
+      - MYSQL_PORT=3306
+      - HEARTBEAT_RETRY_COUNT=3
+      - HEARTBEAT_RETRY_DELAY=5000
+
+      # Enable all honeypot modules
       - ENABLE_HTTP=true
+      - ENABLE_HTTPS=true
       - ENABLE_SSH=true
       - ENABLE_FTP=true
-      - ENABLE_HTTPS=false
-      - ENABLE_MAIL=false
-      - ENABLE_MYSQL=false
+      - ENABLE_MAIL=true
+      - ENABLE_MYSQL=true
 
       # Performance settings
       - MAX_REPORTS_PER_IP=5
@@ -30,9 +56,11 @@ services:
       - REPORT_UNIQUE_TYPES_ONLY=true
     volumes:
       - ./logs:/app/logs
-      - ./ftp:/app/ftp
+      - ./ftp:/app/ftp # FTP directory
+      - ./mail:/app/mail # Mail directory
+      - ./mysql:/app/mysql # MySQL directory
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/monitor"]
+      test: ["CMD", "curl", "-f", "http://localhost:8081/monitor"]
       interval: 30s
       timeout: 10s
       retries: 3

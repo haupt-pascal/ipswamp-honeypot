@@ -2,8 +2,8 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Netzwerktools für Diagnose installieren
-RUN apk add --no-cache curl iputils bind-tools netcat-openbsd
+# Netzwerktools für Diagnose installieren (added openssl)
+RUN apk add --no-cache curl iputils bind-tools netcat-openbsd openssl
 
 # Abhängigkeiten installieren
 COPY package*.json ./
