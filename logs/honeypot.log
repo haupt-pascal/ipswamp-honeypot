@@ -193,3 +193,10 @@
 {"ip":"192.168.65.1","level":"info","message":"Neue SSH-Verbindung","port":23788,"timestamp":"2025-03-26T13:02:44.246Z"}
 {"attempt_count":10,"ip":"192.168.65.1","level":"warn","message":"Detected rapid SSH connection attempts from 192.168.65.1: 10 attempts in the last minute","timestamp":"2025-03-26T13:02:44.246Z"}
 {"clientId":"251056b686239517","commandCount":0,"level":"info","message":"SSH-Verbindung beendet","timestamp":"2025-03-26T13:02:44.254Z"}
+{"environment":"production","level":"info","logLevel":"info","message":"Logger initialisiert mit Level: info","timestamp":"2025-03-28T03:56:47.000Z","transports":["console","file","file","file"]}
+{"apiEndpoint":"https://api.ipswamp.com/api","debugMode":false,"honeypotId":"2","hostIP":"172.17.0.2","level":"info","message":"Honeypot starting up...","offlineMode":false,"timestamp":"2025-03-28T03:56:47.002Z"}
+{"level":"info","message":"Cleared stored attacks on startup","timestamp":"2025-03-28T03:56:47.002Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul wird eingerichtet...","timestamp":"2025-03-28T03:56:47.002Z"}
+{"level":"info","message":"HTTP-Honeypot-Modul erfolgreich eingerichtet.","timestamp":"2025-03-28T03:56:47.003Z"}
+{"level":"info","message":"HTTP server started on port 8080","timestamp":"2025-03-28T03:56:47.004Z"}
+{"level":"info","message":"Initial heartbeat sent successfully","timestamp":"2025-03-28T03:56:47.459Z"}

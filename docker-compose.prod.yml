@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  honeypot:
+    image: ghcr.io/haupt-pascal/ipswamp-honeypot:latest
+    container_name: ipswamp-honeypot
+    restart: unless-stopped
+    ports:
+      - "8080:8080" # HTTP honeypot
+      - "2222:2222" # SSH honeypot
+      - "21:21" # FTP honeypot
+    environment:
+      - NODE_ENV=production
+      - HONEYPOT_ID=${HONEYPOT_ID:-your_honeypot_id}
+      - API_KEY=${API_KEY:-your_api_key}
+      - API_ENDPOINT=${API_ENDPOINT:-https://api.ipswamp.com/api}
+
+      # Module enablement (limited to requested services)
+      - ENABLE_HTTP=true
+      - ENABLE_SSH=true
+      - ENABLE_FTP=true
+      - ENABLE_HTTPS=false
+      - ENABLE_MAIL=false
+      - ENABLE_MYSQL=false
+
+      # Performance settings
+      - MAX_REPORTS_PER_IP=5
+      - IP_CACHE_TTL=3600000
+      - STORE_THROTTLED_ATTACKS=true
+      - REPORT_UNIQUE_TYPES_ONLY=true
+    volumes:
+      - ./logs:/app/logs
+      - ./ftp:/app/ftp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/monitor"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          memory: 256M
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+
+networks:
+  default:
+    driver: bridge
