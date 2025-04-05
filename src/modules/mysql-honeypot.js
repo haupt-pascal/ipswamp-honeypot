@@ -1,7 +1,7 @@
 /**
- * MySQL Honeypot Module
+ * MySQL Honeypot
  *
- * Simulates a MySQL server to detect and analyze database attacks.
+ * Fake MySQL server that catches hackers trying to break into databases
  */
 
 const net = require("net");
@@ -9,10 +9,10 @@ const fs = require("fs");
 const path = require("path");
 const { reportAttack } = require("../services/api-service");
 
-// MySQL server version to emulate
+// What MySQL version we pretend to be
 const MYSQL_SERVER_VERSION = "5.7.38-log";
 
-// MySQL protocol constants
+// MySQL protocol stuff
 const MYSQL_PROTOCOL = {
   OK_PACKET: 0x00,
   EOF_PACKET: 0xfe,
@@ -20,21 +20,21 @@ const MYSQL_PROTOCOL = {
   HANDSHAKE: 0x0a,
 };
 
-// Setup MySQL honeypot server
+// Set up the MySQL honeypot
 async function setupMySQLHoneypot(config, logger) {
-  // Ensure MySQL directory exists
+  // Make sure we have a MySQL folder
   const mysqlDir = path.join(process.cwd(), "mysql");
   if (!fs.existsSync(mysqlDir)) {
     fs.mkdirSync(mysqlDir, { recursive: true });
   }
 
-  // Create and start the MySQL server
+  // Create and start the fake MySQL server
   const server = net.createServer((socket) => {
     const clientIP = socket.remoteAddress.replace(/^::ffff:/, "");
     const clientPort = socket.remotePort;
     const connectionId = `${clientIP}:${clientPort}`;
 
-    // Session tracking
+    // Keep track of the session
     const session = {
       state: "HANDSHAKE_SENT",
       connected: true,
@@ -51,7 +51,7 @@ async function setupMySQLHoneypot(config, logger) {
       port: clientPort,
     });
 
-    // Send initial handshake packet
+    // Send welcome packet
     sendHandshakePacket(socket, session);
 
     socket.on("data", (data) => {
@@ -59,16 +59,16 @@ async function setupMySQLHoneypot(config, logger) {
 
       try {
         if (session.state === "HANDSHAKE_SENT") {
-          // Client is sending authentication response
+          // Client trying to log in
           session.authAttempts++;
 
-          // Parse auth details, but always reject auth
+          // Grab username but always reject auth
           const username = parseUsernameFromAuthPacket(data);
           session.username = username || "unknown";
 
-          // Delay response to simulate checking
+          // Fake a delay like we're checking
           setTimeout(() => {
-            // Send error packet as if authentication failed
+            // Always say login failed
             sendErrorPacket(
               socket,
               1045,
@@ -79,7 +79,7 @@ async function setupMySQLHoneypot(config, logger) {
                 "' (using password: YES)"
             );
 
-            // Report brute force attempts
+            // Report if they keep trying
             if (session.authAttempts >= session.maxAuthAttempts) {
               reportMySQLAttack(config, logger, clientIP, "mysql_bruteforce", {
                 username: session.username,
@@ -88,11 +88,11 @@ async function setupMySQLHoneypot(config, logger) {
             }
           }, 500);
         } else if (session.state === "AUTHENTICATED") {
-          // This should never happen since we don't authenticate anyone
+          // This shouldn't happen since we never auth anyone
           const query = parseQueryFromPacket(data);
           session.queries.push(query);
 
-          // Store suspicious queries
+          // Look for SQL injection
           if (detectSQLi(query)) {
             reportMySQLAttack(config, logger, clientIP, "mysql_sqli_attempt", {
               query: query,
@@ -100,7 +100,7 @@ async function setupMySQLHoneypot(config, logger) {
             });
           }
 
-          // Always respond with an error
+          // Always say there's an error
           sendErrorPacket(socket, 1064, "You have an error in your SQL syntax");
         }
       } catch (err) {
@@ -123,10 +123,10 @@ async function setupMySQLHoneypot(config, logger) {
     socket.on("close", () => {
       session.connected = false;
 
-      // Session complete, check for suspicious patterns
+      // Check for suspicious patterns
       const sessionDuration = Date.now() - session.startTime;
 
-      // Report likely port scan
+      // Super quick connection + disconnect = likely a port scan
       if (sessionDuration < 500 && session.authAttempts === 0) {
         reportMySQLAttack(config, logger, clientIP, "mysql_scan", {
           duration_ms: sessionDuration,
@@ -153,19 +153,19 @@ async function setupMySQLHoneypot(config, logger) {
   ];
 }
 
-// Send initial handshake packet
+// Send MySQL handshake packet
 function sendHandshakePacket(socket, session) {
-  // This is a simplified version of the MySQL handshake packet
-  // In a real implementation, more protocol details would need to be implemented
+  // This is a simplified version - real MySQL has more complex protocol
+  // We just need enough to trick scanners/hackers
 
-  // Construct handshake packet with random salt
+  // Make a random salt
   const salt = Buffer.from(
     Array(20)
       .fill(0)
       .map(() => Math.floor(Math.random() * 256))
   );
 
-  // Protocol version (10) + server version + connection ID + salt, etc.
+  // Build the packet with version and connection ID etc
   const packet = Buffer.alloc(128);
   let offset = 0;
 
@@ -211,12 +211,12 @@ function sendHandshakePacket(socket, session) {
   // Auth plugin name
   offset += packet.write("mysql_native_password\0", offset);
 
-  // Construct final packet with header
+  // Make final packet with header
   const size = offset;
   const header = Buffer.alloc(4);
   header.writeUInt32LE((size << 8) + 0, 0); // Size in 3 bytes + 1 byte for sequence id
 
-  // Send packet
+  // Send it
   socket.write(
     Buffer.concat([header.slice(0, 3), Buffer.from([0]), packet.slice(0, size)])
   );
@@ -224,7 +224,7 @@ function sendHandshakePacket(socket, session) {
 
 // Send MySQL error packet
 function sendErrorPacket(socket, errorCode, message) {
-  // Construct error packet
+  // Build error packet
   const packet = Buffer.alloc(512);
   let offset = 0;
 
@@ -244,7 +244,7 @@ function sendErrorPacket(socket, errorCode, message) {
   // Error message
   offset += packet.write(message, offset);
 
-  // Construct final packet with header
+  // Make final packet with header
   const size = offset;
   const header = Buffer.alloc(4);
   header.writeUInt32LE((size << 8) + 1, 0); // Size in 3 bytes + 1 byte for sequence id
@@ -255,11 +255,11 @@ function sendErrorPacket(socket, errorCode, message) {
   );
 }
 
-// Extract username from authentication packet (simplified)
+// Pull username from auth packet (simplified)
 function parseUsernameFromAuthPacket(data) {
   try {
-    // Very simplified parsing - in real implementation would need more detailed protocol handling
-    const offset = 36; // Usually username starts around offset 36
+    // Super simplified parsing - real MySQL protocol is more complex
+    const offset = 36; // Username usually starts around offset 36
     const usernameBytes = [];
 
     for (let i = offset; i < data.length; i++) {
@@ -269,11 +269,11 @@ function parseUsernameFromAuthPacket(data) {
 
     return Buffer.from(usernameBytes).toString("utf8");
   } catch (err) {
-    return "unknown"; // If parsing fails, return unknown
+    return "unknown"; // If we can't parse, just return unknown
   }
 }
 
-// Extract SQL query from COM_QUERY packet (simplified)
+// Pull SQL query from packet (simplified)
 function parseQueryFromPacket(data) {
   try {
     // First byte of payload is command type, 3 for COM_QUERY
@@ -285,7 +285,7 @@ function parseQueryFromPacket(data) {
   }
 }
 
-// Detect SQL injection attempts in queries
+// Look for SQL injection in queries
 function detectSQLi(query) {
   if (!query) return false;
 
@@ -313,7 +313,7 @@ function detectSQLi(query) {
     "waitfor delay",
   ];
 
-  // Check if query contains SQL injection patterns
+  // See if any pattern matches
   return patterns.some((pattern) => lowerQuery.includes(pattern));
 }
 
@@ -327,7 +327,7 @@ function reportMySQLAttack(config, logger, ip, attackType, evidence) {
     timestamp: new Date().toISOString(),
   };
 
-  // Report the attack
+  // Send the report
   reportAttack(config, attackData, logger).catch((error) => {
     logger.error(`Failed to report MySQL attack: ${error.message}`, {
       ip,

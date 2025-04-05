@@ -54,9 +54,9 @@ services:
       - REPORT_UNIQUE_TYPES_ONLY=true
     volumes:
       - ./logs:/app/logs
-      - ./ftp:/app/ftp # FTP-Verzeichnis einbinden
-      - ./mail:/app/mail # Mail-Verzeichnis einbinden
-      - ./mysql:/app/mysql # MySQL-Verzeichnis einbinden
+      - ./ftp:/app/ftp # Mount FTP directory
+      - ./mail:/app/mail # Mount mail directory
+      - ./mysql:/app/mysql # Mount MySQL directory
     extra_hosts:
       - "host.docker.internal:host-gateway"
       - "hono:host-gateway" # Map hono hostname to host gateway

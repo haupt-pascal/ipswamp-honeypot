@@ -1,8 +1,8 @@
 /**
  * Attack Pattern Tester
  *
- * This utility tests the mapping of honeypot attack types to standardized
- * scoring system types to ensure compatibility.
+ * This script tests how our different attack types get mapped to the
+ * standardized types used by the scoring system.
  */
 
 const {
@@ -11,7 +11,7 @@ const {
   ATTACK_PATTERNS,
 } = require("../src/utils/attack-pattern-adapter");
 
-// Terminal colors for nice output
+// Cool terminal colors for nicer output
 const colors = {
   reset: "\x1b[0m",
   bright: "\x1b[1m",
@@ -24,7 +24,7 @@ const colors = {
   cyan: "\x1b[36m",
 };
 
-// Sample attack types from different honeypot modules
+// Some sample attacks to test the mapping with
 const attackSamples = [
   // HTTP Module attacks
   {

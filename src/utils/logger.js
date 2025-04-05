@@ -1,38 +1,38 @@
-// Logger-Konfiguration mit Winston
+// Custom logger setup - creates different log files for different types of events
 const winston = require("winston");
 const path = require("path");
 const fs = require("fs");
 
-// Logger-Verzeichnis erstellen, falls es nicht existiert
+// Make sure we have a logs folder
 const logsDir = path.join(process.cwd(), "logs");
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir);
 }
 
-// Custom log levels with a 'suspicious' level between info and warn
+// Custom log levels - added 'suspicious' between info and warn for early detection
 const customLevels = {
   levels: {
     error: 0,
     warn: 1,
-    suspicious: 2, // New level for earlier detection
+    suspicious: 2, // New level to catch things before they're full attacks
     info: 3,
     debug: 4,
   },
   colors: {
     error: "red",
     warn: "yellow",
-    suspicious: "magenta", // Distinct color for suspicious activities
+    suspicious: "magenta", // Purple for suspicious activities
     info: "green",
     debug: "blue",
   },
 };
 
-// Logger-Funktion
+// Main logger setup
 function setupLogger() {
-  // Add custom levels to winston
+  // Add our custom colors to winston
   winston.addColors(customLevels.colors);
 
-  // Formatierung für Konsolenausgabe
+  // How we format console output - colorized and pretty
   const consoleFormat = winston.format.combine(
     winston.format.colorize(),
     winston.format.timestamp(),
@@ -55,13 +55,13 @@ function setupLogger() {
     )
   );
 
-  // Formatierung für Dateiausgabe
+  // How we format file output - JSON for easier parsing
   const fileFormat = winston.format.combine(
     winston.format.timestamp(),
     winston.format.json()
   );
 
-  // Debug-Format mit mehr Details für Entwicklung
+  // Special debug format with more details
   const debugFormat = winston.format.combine(
     winston.format.colorize(),
     winston.format.timestamp(),
@@ -85,29 +85,29 @@ function setupLogger() {
     })
   );
 
-  // Bestimme Log-Level aus Umgebungsvariablen
+  // Get log level from env vars
   const logLevel =
     process.env.LOG_LEVEL ||
     (process.env.NODE_ENV === "development" ? "debug" : "info");
 
-  // Logger erstellen
+  // Create the logger with all outputs
   const logger = winston.createLogger({
     levels: customLevels.levels,
     level: logLevel,
     transports: [
-      // Konsolenausgabe mit angepasstem Format je nach Umgebung
+      // Console output with format based on environment
       new winston.transports.Console({
         format:
           process.env.NODE_ENV === "development" ? debugFormat : consoleFormat,
       }),
-      // Dateiausgabe für allgemeine Logs
+      // General logs
       new winston.transports.File({
         filename: path.join(logsDir, "honeypot.log"),
         format: fileFormat,
         maxsize: 5242880, // 5MB
         maxFiles: 5,
       }),
-      // Separate Datei für Fehler
+      // Errors only
       new winston.transports.File({
         filename: path.join(logsDir, "error.log"),
         level: "error",
@@ -115,7 +115,7 @@ function setupLogger() {
         maxsize: 5242880, // 5MB
         maxFiles: 5,
       }),
-      // Separate Datei für Angriffe
+      // Attack-specific log
       new winston.transports.File({
         filename: path.join(logsDir, "attacks.log"),
         level: "warn",
@@ -123,7 +123,7 @@ function setupLogger() {
         maxsize: 10485760, // 10MB
         maxFiles: 10,
       }),
-      // Separate Datei für verdächtige Aktivitäten (neue, sensitivere Kategorie)
+      // Suspicious activity log - more sensitive detection
       new winston.transports.File({
         filename: path.join(logsDir, "suspicious.log"),
         level: "suspicious",
@@ -131,7 +131,7 @@ function setupLogger() {
         maxsize: 10485760, // 10MB
         maxFiles: 5,
       }),
-      // Im Debug-Modus auch detaillierte Debug-Logs speichern
+      // Debug log only in debug mode
       ...(logLevel === "debug"
         ? [
             new winston.transports.File({
@@ -146,8 +146,8 @@ function setupLogger() {
     ],
   });
 
-  // Log-Level und Konfiguration protokollieren
-  logger.info(`Logger initialisiert mit Level: ${logLevel}`, {
+  // Log initial setup
+  logger.info(`Logger initialized with level: ${logLevel}`, {
     environment: process.env.NODE_ENV || "production",
     logLevel,
     transports: logger.transports.map((t) => t.name),

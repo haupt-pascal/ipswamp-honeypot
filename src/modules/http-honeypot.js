@@ -1,7 +1,7 @@
-// HTTP-Honeypot-Modul
+// HTTP Honeypot Module - Fake web server that catches hackers trying to exploit websites
 const express = require("express");
 
-// Typische Angriffsmuster für HTTP-Requests
+// Common patterns that attackers use - we check for these in requests
 const ATTACK_PATTERNS = {
   SQL_INJECTION: [
     "' OR 1=1",
@@ -66,11 +66,11 @@ const ATTACK_PATTERNS = {
 // Track login attempts by IP
 const loginAttemptTracker = new Map();
 
-// HTTP-Honeypot einrichten
+// Set up the HTTP honeypot
 function setupHTTPHoneypot(app, logger, config, reportAttack) {
-  logger.info("HTTP-Honeypot-Modul wird eingerichtet...");
+  logger.info("Setting up HTTP Honeypot module...");
 
-  // Whitelist of system endpoints that should be excluded from attack detection
+  // Our own endpoints that shouldn't trigger attack detection
   const SYSTEM_ENDPOINTS = [
     "/monitor",
     "/api-diagnostics",
@@ -78,7 +78,7 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
     "/debug",
   ];
 
-  // Middleware für die Erkennung von Angriffen
+  // Middleware to detect attacks
   app.use((req, res, next) => {
     const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
@@ -87,7 +87,7 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
       return next();
     }
 
-    // Erfassen von Grundinformationen für jede Anfrage
+    // Capture basic info for each request
     const requestInfo = {
       timestamp: new Date().toISOString(),
       method: req.method,
@@ -98,68 +98,68 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
       ip: clientIP,
     };
 
-    // Überprüfen auf verdächtige Anfragen
+    // Check for suspicious requests
     const attackType = detectAttack(requestInfo);
 
     if (attackType) {
-      logger.warn(`Möglicher ${attackType}-Angriff erkannt`, {
+      logger.warn(`Possible ${attackType} attack detected`, {
         request: requestInfo,
       });
 
-      // Angriff an API melden
+      // Report attack to API
       reportAttack(config, {
         ip_address: clientIP,
         attack_type: attackType,
-        description: `Honeypot hat einen ${attackType}-Angriff erkannt: ${req.method} ${req.path}`,
+        description: `Honeypot detected ${attackType} attack: ${req.method} ${req.path}`,
         evidence: JSON.stringify(requestInfo),
       }).catch((error) => {
-        logger.error("Fehler beim Melden des Angriffs", {
+        logger.error("Error reporting attack", {
           error: error.message,
         });
       });
 
-      // Weitermachen, um den fake server zu presentieren
+      // Continue to show the fake server
     }
 
-    // Aufzeichnen aller Anfragen für Analysezwecke
-    logger.info("HTTP-Anfrage empfangen", { request: requestInfo });
+    // Log all requests for analysis
+    logger.info("HTTP request received", { request: requestInfo });
     next();
   });
 
-  // Fake-Server-Antworten für verschiedene Endpunkte
+  // Fake server responses for various endpoints
 
-  // Fake-Login-Seite
+  // Fake login page
   app.get("/login", (req, res) => {
     res.send(`
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Administrations-Login</title>
+          <title>Admin Login</title>
         </head>
         <body>
           <h1>Login</h1>
           <form method="post" action="/login">
             <div>
-              <label>Benutzername:</label>
+              <label>Username:</label>
               <input type="text" name="username" />
             </div>
             <div>
-              <label>Passwort:</label>
+              <label>Password:</label>
               <input type="password" name="password" />
             </div>
-            <button type="submit">Anmelden</button>
+            <button type="submit">Login</button>
           </form>
         </body>
       </html>
     `);
   });
 
-  // Fake-Login-Post-Handler
+  // Fake login post handler
   app.post("/login", (req, res) => {
     const { username, password } = req.body;
     const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
-    logger.info("Login-Versuch", {
+    logger.info("Login attempt", {
       username,
       password: "******",
       ip: clientIP,
@@ -214,32 +214,32 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
       }
     }
 
-    // Angriff an API melden - Credential Harvesting
+    // Report to API - Credential Harvesting
     reportAttack(config, {
       ip_address: clientIP,
       attack_type: "CREDENTIAL_HARVESTING",
-      description: `Login-Versuch mit Benutzername: ${username}`,
+      description: `Login attempt with username: ${username}`,
       evidence: JSON.stringify({
         username,
         attempt_time: new Date().toISOString(),
       }),
     }).catch((error) => {
-      logger.error("Fehler beim Melden des Login-Versuchs", {
+      logger.error("Error reporting login attempt", {
         error: error.message,
       });
     });
 
-    // Immer mit einer Fehlermeldung antworten
+    // Always respond with an error
     res.status(401).send(`
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Fehler bei der Anmeldung</title>
+          <title>Login Error</title>
         </head>
         <body>
-          <h1>Fehler bei der Anmeldung</h1>
-          <p>Die eingegebenen Anmeldedaten sind ungültig. Bitte versuchen Sie es erneut.</p>
-          <a href="/login">Zurück zum Login</a>
+          <h1>Login Error</h1>
+          <p>The credentials you entered are invalid. Please try again.</p>
+          <a href="/login">Back to Login</a>
         </body>
       </html>
     `);
@@ -257,30 +257,30 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
     }
   }, 300000); // Run every 5 minutes
 
-  // Fake-Admin-Bereich
+  // Fake admin area
   app.get("/admin", (req, res) => {
     res.status(401).send(`
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Admin-Bereich - Zugriff verweigert</title>
+          <title>Admin Area - Access Denied</title>
         </head>
         <body>
-          <h1>Zugriff verweigert</h1>
-          <p>Sie müssen angemeldet sein, um auf den Admin-Bereich zugreifen zu können.</p>
-          <a href="/login">Zum Login</a>
+          <h1>Access Denied</h1>
+          <p>You must be logged in to access the admin area.</p>
+          <a href="/login">Go to Login</a>
         </body>
       </html>
     `);
   });
 
-  // Fake-PHP-Info-Seite
+  // Fake PHP info page
   app.get("/phpinfo.php", (req, res) => {
     res.send(`
       <!DOCTYPE html>
       <html>
         <head>
-          <title>PHP-Info</title>
+          <title>PHP Info</title>
         </head>
         <body>
           <h1>PHP Version 7.4.3</h1>
@@ -295,7 +295,7 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
     `);
   });
 
-  // Fake-API-Endpunkt
+  // Fake API endpoint
   app.get("/api/users", (req, res) => {
     res.status(401).json({
       error: "Unauthorized",
@@ -303,7 +303,7 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
     });
   });
 
-  // 404-Handler für alle anderen Anfragen
+  // 404 handler for all other requests
   app.use((req, res, next) => {
     // Skip system routes
     if (
@@ -319,34 +319,34 @@ function setupHTTPHoneypot(app, logger, config, reportAttack) {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>404 - Seite nicht gefunden</title>
+          <title>404 - Page Not Found</title>
         </head>
         <body>
-          <h1>404 - Seite nicht gefunden</h1>
-          <p>Die angeforderte Seite konnte nicht gefunden werden.</p>
+          <h1>404 - Page Not Found</h1>
+          <p>The requested page could not be found.</p>
         </body>
       </html>
     `);
   });
 
-  logger.info("HTTP-Honeypot-Modul erfolgreich eingerichtet.");
+  logger.info("HTTP Honeypot module successfully set up.");
 }
 
-// Funktion zur Erkennung von Angriffen
+// Function to detect attacks
 function detectAttack(requestInfo) {
   const { method, path, query, headers, body } = requestInfo;
 
-  // Verdächtige Pfade überprüfen
+  // Check suspicious paths
   for (const endpoint of ATTACK_PATTERNS.SUSPICIOUS_ENDPOINTS) {
     if (path.includes(endpoint)) {
       return "SUSPICIOUS_ENDPOINT";
     }
   }
 
-  // Überprüfe URL-Parameter auf Angriffsmuster
+  // Check URL parameters for attack patterns
   const queryString = Object.values(query || {}).join(" ");
 
-  // SQL-Injection in Query-Parametern
+  // SQL injection in query parameters
   if (
     ATTACK_PATTERNS.SQL_INJECTION.some((pattern) =>
       queryString.includes(pattern)
@@ -355,7 +355,7 @@ function detectAttack(requestInfo) {
     return "SQL_INJECTION";
   }
 
-  // Command-Injection in Query-Parametern
+  // Command injection in query parameters
   if (
     ATTACK_PATTERNS.COMMAND_INJECTION.some((pattern) =>
       queryString.includes(pattern)
@@ -364,12 +364,12 @@ function detectAttack(requestInfo) {
     return "COMMAND_INJECTION";
   }
 
-  // XSS in Query-Parametern
+  // XSS in query parameters
   if (ATTACK_PATTERNS.XSS.some((pattern) => queryString.includes(pattern))) {
     return "XSS";
   }
 
-  // Path Traversal in Query-Parametern
+  // Path traversal in query parameters
   if (
     ATTACK_PATTERNS.PATH_TRAVERSAL.some((pattern) =>
       queryString.includes(pattern)
@@ -378,11 +378,11 @@ function detectAttack(requestInfo) {
     return "PATH_TRAVERSAL";
   }
 
-  // Überprüfe Request-Body, wenn vorhanden
+  // Check request body if present
   if (body && typeof body === "object") {
     const bodyString = JSON.stringify(body);
 
-    // SQL-Injection im Body
+    // SQL injection in body
     if (
       ATTACK_PATTERNS.SQL_INJECTION.some((pattern) =>
         bodyString.includes(pattern)
@@ -391,7 +391,7 @@ function detectAttack(requestInfo) {
       return "SQL_INJECTION";
     }
 
-    // Command-Injection im Body
+    // Command injection in body
     if (
       ATTACK_PATTERNS.COMMAND_INJECTION.some((pattern) =>
         bodyString.includes(pattern)
@@ -400,13 +400,13 @@ function detectAttack(requestInfo) {
       return "COMMAND_INJECTION";
     }
 
-    // XSS im Body
+    // XSS in body
     if (ATTACK_PATTERNS.XSS.some((pattern) => bodyString.includes(pattern))) {
       return "XSS";
     }
   }
 
-  // Überprüfe auf verdächtige User-Agents
+  // Check for suspicious user agents
   const userAgent = headers["user-agent"] || "";
 
   // More specific detection for suspicious user agents
@@ -429,7 +429,7 @@ function detectAttack(requestInfo) {
     return "SUSPICIOUS_USER_AGENT";
   }
 
-  // Keine bekannten Angriffsmuster erkannt
+  // No known attack patterns detected
   return null;
 }
 

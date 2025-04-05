@@ -2,19 +2,19 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Netzwerktools für Diagnose installieren (added openssl)
+# Install network tools for diagnostics (added openssl)
 RUN apk add --no-cache curl iputils bind-tools netcat-openbsd openssl
 
-# Abhängigkeiten installieren
+# Install dependencies
 COPY package*.json ./
 RUN npm install
 # Add the missing dependency
 RUN npm install node-forge
 
-# Anwendungscode kopieren
+# Copy application code
 COPY . .
 
-# Ports für HTTP, SSH und FTP freigeben
+# Expose ports for HTTP, SSH, and FTP
 EXPOSE 8080
 EXPOSE 2222
 EXPOSE 21
@@ -27,8 +27,8 @@ ENV NODE_ENV=production \
     HEARTBEAT_RETRY_COUNT=3 \
     HEARTBEAT_RETRY_DELAY=5000
 
-# Logverzeichnis und FTP-Verzeichnis erstellen
+# Create log directory and FTP directory
 RUN mkdir -p logs ftp
 
-# Container starten
+# Start container
 CMD ["node", "src/index.js"]

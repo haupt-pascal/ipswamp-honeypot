@@ -1,3 +1,4 @@
+// Main entry point for the honeypot - brings together all the modules
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -17,7 +18,7 @@ const {
 } = require("./services/api-service");
 const { setupLogger } = require("./utils/logger");
 
-// Setup logger
+// Set up our logger for nice console and file output
 const logger = setupLogger();
 
 // Create express app
@@ -25,13 +26,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Create logs directory if it doesn't exist
+// Make sure we have a logs directory
 const logsDir = path.join(process.cwd(), "logs");
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
 
-// Configuration object
+// Config object with all our settings - mostly from environment variables
 const config = {
   honeypotId: process.env.HONEYPOT_ID || "test",
   apiKey:
@@ -53,10 +54,10 @@ const config = {
     process.env.NODE_ENV === "development" || process.env.DEBUG === "true",
   heartbeatRetryCount: parseInt(process.env.HEARTBEAT_RETRY_COUNT || "3"),
   heartbeatRetryDelay: parseInt(process.env.HEARTBEAT_RETRY_DELAY || "5000"),
-  offlineMode: process.env.OFFLINE_MODE === "true", // Add offline mode option
-  offlineAttackSync: parseInt(process.env.OFFLINE_ATTACK_SYNC || "300000"), // Sync every 5 minutes by default
+  offlineMode: process.env.OFFLINE_MODE === "true", // Offline mode = no API
+  offlineAttackSync: parseInt(process.env.OFFLINE_ATTACK_SYNC || "300000"), // Sync every 5 min by default
 
-  // Module enablement configuration
+  // Which modules to enable
   enableHTTP: process.env.ENABLE_HTTP !== "false", // Enable by default
   enableHTTPS: process.env.ENABLE_HTTPS === "true",
   enableSSH: process.env.ENABLE_SSH === "true",
@@ -64,12 +65,12 @@ const config = {
   enableMail: process.env.ENABLE_MAIL === "true",
   enableMySQL: process.env.ENABLE_MYSQL === "true",
 
-  // IP throttling configuration
-  maxReportsPerIP: parseInt(process.env.MAX_REPORTS_PER_IP || "3"), // Reduced from 5 to 3
+  // Throttling to avoid spamming the API
+  maxReportsPerIP: parseInt(process.env.MAX_REPORTS_PER_IP || "3"),
   ipCacheTTL: parseInt(process.env.IP_CACHE_TTL || "3600000"), // 1 hour
   storeThrottledAttacks: process.env.STORE_THROTTLED_ATTACKS === "true",
   reportUniqueTypesOnly: process.env.REPORT_UNIQUE_TYPES_ONLY === "true",
-  // New configuration for more sensitive detection
+  // New config for more sensitive detection
   reportThreshold: parseInt(process.env.REPORT_THRESHOLD || "3"), // Report after 3 suspicious accesses
 };
 
@@ -81,14 +82,14 @@ logger.info("Honeypot starting up...", {
   offlineMode: config.offlineMode,
 });
 
-// Clear any stored attacks on startup
+// Start fresh - clear any old attacks
 clearStoredAttacks();
 logger.info("Cleared stored attacks on startup");
 
-// Track active honeypot modules
+// Keep track of what's running
 const activeModules = [];
 
-// Setup HTTP honeypot module
+// Set up HTTP honeypot - this is the main one
 if (config.enableHTTP) {
   try {
     setupHTTPHoneypot(app, logger, config, reportAttack);
@@ -109,7 +110,7 @@ if (config.enableHTTP) {
   }
 }
 
-// Setup SSH honeypot module if enabled
+// Set up SSH honeypot if enabled
 if (config.enableSSH) {
   try {
     const sshServer = setupSSHHoneypot(logger, config, reportAttack);
@@ -130,7 +131,7 @@ if (config.enableSSH) {
   }
 }
 
-// Setup FTP honeypot module if enabled
+// Set up FTP honeypot if enabled
 if (config.enableFTP) {
   try {
     const ftpServer = setupFTPHoneypot(logger, config, reportAttack);
@@ -151,7 +152,7 @@ if (config.enableFTP) {
   }
 }
 
-// Setup HTTPS honeypot module if enabled
+// Set up HTTPS honeypot if enabled
 if (config.enableHTTPS) {
   try {
     setupHTTPSHoneypot(config, logger)
@@ -184,7 +185,7 @@ if (config.enableHTTPS) {
   }
 }
 
-// Setup Mail honeypots (SMTP, POP3, IMAP) if enabled
+// Set up Mail honeypots (SMTP, POP3, IMAP) if enabled
 if (config.enableMail) {
   try {
     setupMailHoneypot(config, logger)
@@ -219,7 +220,7 @@ if (config.enableMail) {
   }
 }
 
-// Setup MySQL honeypot if enabled
+// Set up MySQL honeypot if enabled
 if (config.enableMySQL) {
   try {
     setupMySQLHoneypot(config, logger)
@@ -252,8 +253,8 @@ if (config.enableMySQL) {
   }
 }
 
-// Make sure this route comes AFTER setting up the HTTP honeypot
-// but BEFORE the 404 handler in http-honeypot.js
+// Status page to check on things - IMPORTANT: must come AFTER setting up HTTP honeypot
+// but BEFORE the 404 handler
 app.get("/monitor", (req, res) => {
   const uptime = process.uptime();
   const days = Math.floor(uptime / 86400);

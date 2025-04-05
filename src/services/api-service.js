@@ -1,4 +1,4 @@
-// API-Service für die Kommunikation mit dem Backend
+// API service for sending reports to the backend
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
@@ -6,32 +6,32 @@ const path = require("path");
 // Import the attack pattern adapter
 const { enhanceAttackData } = require("../utils/attack-pattern-adapter");
 
-// Speichere die letzte Heartbeat-Anfrage und -Antwort für Debugging
+// Store heartbeat data for diagnostics
 let lastHeartbeatRequest = null;
 let lastHeartbeatResponse = null;
 let lastHeartbeatError = null;
 
-// Cache für gemeldete IP-Adressen
+// Cache for reported IPs to avoid spamming the API
 // Format: { ip_address: { timestamp: Date, attack_types: Set, reported_count: number } }
 const reportedIPCache = new Map();
 
-// Konfiguration für das IP-Reporting-Throttling
-const IP_CACHE_TTL = 3600000;
+// Settings for IP throttling
+const IP_CACHE_TTL = 3600000; // 1 hour
 const MAX_REPORTS_PER_IP_PER_HOUR = 10;
-const REPORT_TYPES_THROTTLE = true; // Nur neue Angriffstypen für bereits gemeldete IPs berichten
+const REPORT_TYPES_THROTTLE = true; // Only report new attack types for already reported IPs
 
-// Clear stored attacks on module initialization
-// This ensures we don't send old attacks when the container restarts
+// Clear stored attacks when the module starts
+// This prevents sending old attacks when the container restarts
 clearStoredAttacks();
 
 /**
- * Function to clear all stored attacks
+ * Clears all stored attacks
  */
 function clearStoredAttacks() {
   storedAttacks = [];
-  // Reset the reported IPs cache
+  // Clear the IP cache
   reportedIPCache.clear();
-  // Also clear the stored attacks file if it exists
+  // Also delete the stored attacks file if it exists
   try {
     const storedAttacksPath = path.join(
       process.cwd(),
@@ -47,12 +47,12 @@ function clearStoredAttacks() {
   }
 }
 
-// Heartbeat-Funktion zum Registrieren des Honeypots bei der API
+// Send a heartbeat to register with the API
 async function sendHeartbeat(config, logger) {
-  // Optionaler logger-Parameter für mehr Details
+  // Optional logger parameter for more details
   const log = logger || console;
 
-  // Erstelle Anfrage-Objekt für Debugging
+  // Create request object for debugging
   const requestData = {
     honeypot_id: config.honeypotId,
   };
@@ -74,22 +74,22 @@ async function sendHeartbeat(config, logger) {
     timestamp: new Date().toISOString(),
     url: requestConfig.url,
     method: requestConfig.method,
-    params: { ...requestConfig.params, api_key: "***redacted***" }, // Verberge API-Key für Logs
+    params: { ...requestConfig.params, api_key: "***redacted***" }, // Hide API key in logs
     data: requestConfig.data,
     headers: requestConfig.headers,
   };
 
   try {
-    // Debug-Logging vor der Anfrage
+    // Debug logging before request
     if (config.debugMode) {
-      log.debug("Sende Heartbeat-Anfrage", {
+      log.debug("Sending heartbeat request", {
         endpoint: requestConfig.url,
         honeypot_id: requestData.honeypot_id,
         headers: requestConfig.headers,
       });
     }
 
-    // Create a custom axios instance for this request with specific config
+    // Create a custom axios instance for this request
     const instance = axios.create({
       timeout: 10000,
       maxContentLength: Infinity,
@@ -102,7 +102,7 @@ async function sendHeartbeat(config, logger) {
       },
     });
 
-    // Use the instance for the request
+    // Send the request
     const response = await instance({
       url: requestConfig.url,
       method: requestConfig.method,
@@ -111,7 +111,7 @@ async function sendHeartbeat(config, logger) {
       headers: requestConfig.headers,
     });
 
-    // Speichere Antwort für Debugging
+    // Store response for debugging
     lastHeartbeatResponse = {
       timestamp: new Date().toISOString(),
       status: response.status,
@@ -122,9 +122,9 @@ async function sendHeartbeat(config, logger) {
 
     lastHeartbeatError = null;
 
-    // Debug-Logging nach erfolgreicher Anfrage
+    // Debug logging after successful request
     if (config.debugMode) {
-      log.debug("Heartbeat-Antwort erhalten", {
+      log.debug("Heartbeat response received", {
         status: response.status,
         data: response.data,
       });
@@ -132,7 +132,7 @@ async function sendHeartbeat(config, logger) {
 
     return response.data;
   } catch (error) {
-    // Detaillierte Fehlerinformationen erfassen
+    // Capture detailed error info
     lastHeartbeatError = {
       timestamp: new Date().toISOString(),
       message: error.message,
@@ -147,11 +147,11 @@ async function sendHeartbeat(config, logger) {
         : null,
     };
 
-    // Ausführlicheres Logging basierend auf Fehlertyp
+    // More detailed error logging based on type
     if (error.response) {
-      // Der Server hat geantwortet, aber mit einem Fehlercode
+      // The server responded with an error code
       log.error(
-        `Heartbeat-Fehler: Server antwortete mit Status ${error.response.status}`,
+        `Heartbeat error: Server responded with status ${error.response.status}`,
         {
           status: error.response.status,
           statusText: error.response.statusText,
@@ -159,14 +159,14 @@ async function sendHeartbeat(config, logger) {
         }
       );
     } else if (error.request) {
-      // Die Anfrage wurde gestellt, aber keine Antwort erhalten
-      log.error("Heartbeat-Fehler: Keine Antwort vom Server erhalten", {
+      // The request was made but no response received
+      log.error("Heartbeat error: No response from server", {
         message: error.message,
         code: error.code,
       });
     } else {
-      // Ein Fehler beim Konfigurieren der Anfrage
-      log.error("Heartbeat-Fehler: Konfigurationsfehler", {
+      // Something happened in setup
+      log.error("Heartbeat error: Request setup failed", {
         message: error.message,
       });
     }
@@ -175,21 +175,21 @@ async function sendHeartbeat(config, logger) {
   }
 }
 
-// Funktion zum Melden von erkannten Angriffen
+// Report detected attacks to the API
 async function reportAttack(config, attackData, logger) {
   const log = logger || console;
 
   // Enhance attack data with standardized types and severity
   const enhancedData = enhanceAttackData(attackData);
 
-  // Extrahiere IP und Angriffstyp
+  // Get IP and attack type
   const { ip_address, attack_type } = enhancedData;
 
-  // Überprüfe, ob diese IP mit diesem Angriffstyp kürzlich gemeldet wurde
+  // Check if we should throttle this report
   if (shouldThrottleReport(ip_address, attack_type)) {
     if (config.debugMode) {
       log.debug(
-        `IP ${ip_address} wurde kürzlich mit Angriffstyp ${attack_type} gemeldet - Bericht gedrosselt`,
+        `IP ${ip_address} was recently reported with attack type ${attack_type} - throttling report`,
         {
           ip: ip_address,
           attack_type: attack_type,
@@ -199,10 +199,10 @@ async function reportAttack(config, attackData, logger) {
       );
     }
 
-    // Inkrementiere Zähler, auch wenn nicht gemeldet wird
+    // Still increment counter even if not reporting
     updateReportCache(ip_address, attack_type);
 
-    // Speichere trotzdem lokal, falls gewünscht
+    // Store locally if configured to do so
     if (config.storeThrottledAttacks) {
       storeAttackLocally({
         ...enhancedData,
@@ -217,12 +217,12 @@ async function reportAttack(config, attackData, logger) {
     };
   }
 
-  // Aktualisiere den Cache mit dieser Meldung
+  // Update the cache with this report
   updateReportCache(ip_address, attack_type);
 
   // Check if we're in offline mode
   if (config.offlineMode) {
-    log.info("Offline-Modus: Angriff lokal gespeichert", {
+    log.info("Offline mode: Attack stored locally", {
       attack_type: enhancedData.attack_type,
       ip_address: enhancedData.ip_address,
     });
@@ -232,7 +232,7 @@ async function reportAttack(config, attackData, logger) {
 
   try {
     if (config.debugMode) {
-      log.debug("Melde Angriff an API", {
+      log.debug("Reporting attack to API", {
         endpoint: `${config.apiEndpoint}/honeypot/report-ip`,
         type: enhancedData.attack_type,
       });
@@ -246,7 +246,7 @@ async function reportAttack(config, attackData, logger) {
         const parsedEvidence = JSON.parse(evidence);
         evidence = Array.isArray(parsedEvidence) ? parsedEvidence : [evidence];
       } catch (e) {
-        // If not valid JSON, use as a single element array
+        // If not valid JSON, use as single element array
         evidence = [evidence];
       }
     } else if (evidence && !Array.isArray(evidence)) {
@@ -254,7 +254,7 @@ async function reportAttack(config, attackData, logger) {
       evidence = [JSON.stringify(evidence)];
     }
 
-    // Prepare the request body according to the API specification
+    // Prepare the request body for the API
     const requestBody = {
       ip_address: enhancedData.ip_address,
       attack_type: enhancedData.attack_type,
@@ -265,7 +265,7 @@ async function reportAttack(config, attackData, logger) {
       source: "honeypot",
     };
 
-    // Create a custom axios instance for this request with specific config
+    // Create a custom axios instance for this request
     const instance = axios.create({
       timeout: 5000,
       maxContentLength: Infinity,
@@ -278,7 +278,7 @@ async function reportAttack(config, attackData, logger) {
       },
     });
 
-    // Use the instance for the request
+    // Send the request
     const response = await instance.post(
       `${config.apiEndpoint}/honeypot/report-ip`,
       requestBody,
@@ -289,7 +289,7 @@ async function reportAttack(config, attackData, logger) {
       }
     );
 
-    log.debug("Angriff erfolgreich gemeldet", {
+    log.debug("Attack successfully reported", {
       status: response.status,
       attack_type: enhancedData.attack_type,
       score: response.data?.current_score,
@@ -308,11 +308,11 @@ async function reportAttack(config, attackData, logger) {
       apiEndpoint: `${config.apiEndpoint}/honeypot/report-ip`,
     };
 
-    log.error("Fehler beim Melden des Angriffs", errorDetails);
+    log.error("Error reporting attack", errorDetails);
 
-    // If we get 403 forbidden, it could be an API key issue
+    // If we get 403 forbidden, could be an API key issue
     if (error.response && error.response.status === 403) {
-      log.warn("API-Key hat keine Berechtigung für Angriffsmeldungen", {
+      log.warn("API key doesn't have permission for attack reporting", {
         honeypotId: config.honeypotId,
       });
     }
@@ -325,13 +325,13 @@ async function reportAttack(config, attackData, logger) {
 }
 
 /**
- * Überprüft, ob ein Bericht gedrosselt werden sollte
- * @param {string} ip IP-Adresse
- * @param {string} attackType Angriffstyp
- * @returns {boolean} True, wenn gedrosselt werden sollte
+ * Checks if a report should be throttled
+ * @param {string} ip IP address
+ * @param {string} attackType Attack type
+ * @returns {boolean} True if should be throttled
  */
 function shouldThrottleReport(ip, attackType) {
-  // Wenn IP nicht im Cache, nicht drosseln
+  // If IP not in cache, don't throttle
   if (!reportedIPCache.has(ip)) {
     return false;
   }
@@ -339,15 +339,15 @@ function shouldThrottleReport(ip, attackType) {
   const cacheInfo = reportedIPCache.get(ip);
   const now = Date.now();
 
-  // Cache-Eintrag abgelaufen
+  // Cache entry expired
   if (now - cacheInfo.timestamp > IP_CACHE_TTL) {
     reportedIPCache.delete(ip);
     return false;
   }
 
-  // Wenn wir nach Angriffstyp drosseln, prüfen, ob dieser Typ neu ist
+  // If we throttle by attack type, check if this type is new
   if (REPORT_TYPES_THROTTLE && !cacheInfo.attack_types.has(attackType)) {
-    return false; // Neuer Angriffstyp, nicht drosseln
+    return false; // New attack type, don't throttle
   }
 
   // Check if we've configured unique types only
@@ -358,8 +358,7 @@ function shouldThrottleReport(ip, attackType) {
     return true; // Already reported this type, throttle it
   }
 
-  // Prüfen, ob maximale Anzahl an Berichten erreicht ist
-  // Verwende die konfigurierte Anzahl oder den Standardwert
+  // Check if max reports reached
   return (
     cacheInfo.reported_count >=
     (parseInt(process.env.MAX_REPORTS_PER_IP) || MAX_REPORTS_PER_IP_PER_HOUR)
@@ -367,9 +366,9 @@ function shouldThrottleReport(ip, attackType) {
 }
 
 /**
- * Aktualisiert den Cache mit einem neuen Bericht
- * @param {string} ip IP-Adresse
- * @param {string} attackType Angriffstyp
+ * Updates the cache with a new report
+ * @param {string} ip IP address
+ * @param {string} attackType Attack type
  */
 function updateReportCache(ip, attackType) {
   const now = Date.now();
@@ -385,7 +384,7 @@ function updateReportCache(ip, attackType) {
 
   const cacheInfo = reportedIPCache.get(ip);
 
-  // Wenn Cache-Eintrag abgelaufen, zurücksetzen
+  // If cache expired, reset it
   if (now - cacheInfo.timestamp > IP_CACHE_TTL) {
     reportedIPCache.set(ip, {
       timestamp: now,
@@ -395,13 +394,13 @@ function updateReportCache(ip, attackType) {
     return;
   }
 
-  // Sonst aktualisieren
+  // Otherwise update
   cacheInfo.attack_types.add(attackType);
   cacheInfo.reported_count++;
 }
 
 /**
- * Löscht abgelaufene Cache-Einträge
+ * Cleans up expired cache entries
  */
 function cleanupReportCache() {
   const now = Date.now();
@@ -412,10 +411,10 @@ function cleanupReportCache() {
   }
 }
 
-// Cache bereinigen alle 10 Minuten
+// Clean up cache every 10 minutes
 setInterval(cleanupReportCache, 600000);
 
-// Helper function to store attacks locally when API is unreachable
+// Store attacks locally when API is unreachable
 function storeAttackLocally(attackData) {
   const fs = require("fs");
   const path = require("path");
@@ -424,12 +423,12 @@ function storeAttackLocally(attackData) {
     const logsDir = path.join(process.cwd(), "logs");
     const offlineAttacksFile = path.join(logsDir, "offline_attacks.json");
 
-    // Create logs directory if it doesn't exist
+    // Create logs directory if needed
     if (!fs.existsSync(logsDir)) {
       fs.mkdirSync(logsDir, { recursive: true });
     }
 
-    // Create an entry with timestamp
+    // Add timestamp to the entry
     const entry = {
       ...attackData,
       stored_at: new Date().toISOString(),
@@ -453,7 +452,7 @@ function storeAttackLocally(attackData) {
   }
 }
 
-// Function to upload stored offline attacks
+// Upload stored offline attacks
 async function uploadStoredAttacks(config, logger) {
   const log = logger || console;
   const fs = require("fs");
@@ -478,13 +477,13 @@ async function uploadStoredAttacks(config, logger) {
     }
 
     log.info(
-      `Versuche ${attacks.length} offline gespeicherte Angriffe hochzuladen...`
+      `Attempting to upload ${attacks.length} offline stored attacks...`
     );
 
     let uploadedCount = 0;
     const remainingAttacks = [];
 
-    // Create the same custom axios instance here
+    // Create an axios instance
     const instance = axios.create({
       timeout: 5000,
       maxContentLength: Infinity,
@@ -519,7 +518,7 @@ async function uploadStoredAttacks(config, logger) {
               ? parsedEvidence
               : [evidence];
           } catch (e) {
-            // If not valid JSON, use as a single element array
+            // If not valid JSON, use as single element array
             evidence = [evidence];
           }
         } else if (evidence && !Array.isArray(evidence)) {
@@ -527,7 +526,7 @@ async function uploadStoredAttacks(config, logger) {
           evidence = [JSON.stringify(evidence)];
         }
 
-        // Prepare the request body according to the API specification
+        // Prepare request body
         const requestBody = {
           ip_address: enhancedAttack.ip_address,
           attack_type: enhancedAttack.attack_type,
@@ -538,7 +537,7 @@ async function uploadStoredAttacks(config, logger) {
           source: "honeypot",
         };
 
-        // Use the instance for the request
+        // Send request
         await instance.post(
           `${config.apiEndpoint}/honeypot/report-ip`,
           requestBody,
@@ -551,7 +550,7 @@ async function uploadStoredAttacks(config, logger) {
         attack.pending_upload = false;
         attack.uploaded_at = new Date().toISOString();
       } catch (error) {
-        log.error(`Fehler beim Upload von offline Attack: ${error.message}`);
+        log.error(`Error uploading offline attack: ${error.message}`);
         remainingAttacks.push(attack);
       }
     }
@@ -572,26 +571,26 @@ async function uploadStoredAttacks(config, logger) {
       status: "upload_completed",
     };
   } catch (error) {
-    log.error("Fehler beim Verarbeiten der offline Angriffe", {
+    log.error("Error processing offline attacks", {
       error: error.message,
     });
     return { error: error.message, status: "upload_failed" };
   }
 }
 
-// Funktion zum Überprüfen, ob eine IP-Adresse bereits als verdächtig bekannt ist
+// Check if an IP is already known as suspicious
 async function checkIP(config, ipAddress, logger) {
-  // Optionaler logger-Parameter für mehr Details
+  // Optional logger parameter
   const log = logger || console;
 
   try {
     if (config.debugMode) {
-      log.debug(`Überprüfe IP ${ipAddress} bei der API...`);
+      log.debug(`Checking IP ${ipAddress} with API...`);
     }
 
-    // Create a custom axios instance for this request with specific config
+    // Create a custom axios instance
     const instance = axios.create({
-      timeout: 5000, // 5 seconds timeout
+      timeout: 5000, // 5 second timeout
       headers: {
         Accept: "application/json",
       },
@@ -610,7 +609,7 @@ async function checkIP(config, ipAddress, logger) {
       status: response.status,
     };
   } catch (error) {
-    log.error(`Fehler beim Überprüfen der IP ${ipAddress}`, {
+    log.error(`Error checking IP ${ipAddress}`, {
       error: error.message,
       statusCode: error.response?.status,
     });
@@ -624,17 +623,17 @@ async function checkIP(config, ipAddress, logger) {
   }
 }
 
-// Funktion zum Testen der API-Verbindung
+// Test API connection
 async function testApiConnection(config, logger) {
-  // Optionaler logger-Parameter für mehr Details
+  // Optional logger parameter
   const log = logger || console;
 
   try {
-    log.debug("Teste API-Verbindung...");
+    log.debug("Testing API connection...");
 
-    // Create a custom axios instance for this request with specific config
+    // Create a custom axios instance
     const instance = axios.create({
-      timeout: 5000, // 5 seconds timeout
+      timeout: 5000, // 5 second timeout
       headers: {
         Accept: "application/json",
       },
@@ -650,10 +649,10 @@ async function testApiConnection(config, logger) {
       success: true,
       data: response.data,
       status: response.status,
-      message: "API-Verbindung erfolgreich",
+      message: "API connection successful",
     };
   } catch (error) {
-    log.error("API-Verbindungstest fehlgeschlagen", {
+    log.error("API connection test failed", {
       error: error.message,
       statusCode: error.response?.status,
     });
@@ -667,7 +666,7 @@ async function testApiConnection(config, logger) {
   }
 }
 
-// Diagnostik-Funktion für API-Probleme
+// Get last heartbeat info for diagnostics
 function getLastHeartbeatInfo() {
   return {
     request: lastHeartbeatRequest,
@@ -677,14 +676,14 @@ function getLastHeartbeatInfo() {
   };
 }
 
-// Gibt Statistiken zum IP-Reporting-Cache zurück
+// Get stats about the IP reporting cache
 function getReportCacheStats() {
   const stats = {
     total_cached_ips: reportedIPCache.size,
     ip_details: {},
   };
 
-  // Begrenzte Details für die TOP 10 am häufigsten gemeldeten IPs
+  // Show details for top 10 most reported IPs
   const sortedEntries = [...reportedIPCache.entries()]
     .sort((a, b) => b[1].reported_count - a[1].reported_count)
     .slice(0, 10);
@@ -709,7 +708,7 @@ module.exports = {
   uploadStoredAttacks,
   storeAttackLocally,
   getReportCacheStats,
-  // Export für Tests/Debugging
+  // Export for tests/debugging
   clearReportCache: () => reportedIPCache.clear(),
-  clearStoredAttacks, // Export the new function
+  clearStoredAttacks,
 };

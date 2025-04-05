@@ -1,8 +1,7 @@
 /**
- * HTTPS Management Portal Honeypot Module
+ * HTTPS Admin Portal Honeypot
  *
- * Simulates a secure admin interface to detect and analyze attacks targeting
- * management interfaces and admin portals.
+ * Looks like a legit HTTPS admin portal but just catches hackers trying to break in
  */
 
 const express = require("express");
@@ -12,24 +11,24 @@ const path = require("path");
 const crypto = require("crypto");
 const { reportAttack } = require("../services/api-service");
 
-// Setup HTTPS honeypot server
+// Set up a fake secure admin portal
 async function setupHTTPSHoneypot(config, logger) {
   // Create Express app
   const app = express();
 
-  // Track suspicious requests
+  // Track sus activity
   const suspiciousIPs = new Map();
 
-  // Track login attempts for bruteforce detection
+  // Track login attempts to catch brute forcers
   const loginAttemptTracker = new Map();
 
-  // Create self-signed certificate for HTTPS
+  // Create self-signed cert for HTTPS
   const certPath = path.join(process.cwd(), "logs", "https-cert.pem");
   const keyPath = path.join(process.cwd(), "logs", "https-key.pem");
 
-  // Generate certificates if they don't exist
+  // Make certs if we don't have them
   if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
-    logger.info("Generating self-signed certificate for HTTPS honeypot...");
+    logger.info("Making self-signed cert for HTTPS honeypot...");
     generateSelfSignedCert(certPath, keyPath);
   }
 
@@ -39,13 +38,13 @@ async function setupHTTPSHoneypot(config, logger) {
     cert: fs.readFileSync(certPath),
   };
 
-  // Basic request logging middleware
+  // Log all requests middleware
   app.use((req, res, next) => {
     const clientIP =
       req.headers["x-forwarded-for"] ||
       req.connection.remoteAddress.replace(/^::ffff:/, "");
 
-    // Track client IP activity
+    // Keep track of each IP's activity
     if (!suspiciousIPs.has(clientIP)) {
       suspiciousIPs.set(clientIP, {
         count: 0,
@@ -65,16 +64,16 @@ async function setupHTTPSHoneypot(config, logger) {
       ipData.userAgents.add(req.headers["user-agent"]);
     }
 
-    // Log basic request info
-    logger.info(`HTTPS request received: ${req.method} ${req.path}`, {
+    // Log what they're doing
+    logger.info(`HTTPS request: ${req.method} ${req.path}`, {
       ip: clientIP,
       method: req.method,
       path: req.path,
       user_agent: req.headers["user-agent"],
     });
 
-    // Report if this IP is exhibiting suspicious scanning behavior
-    // Reduced from 5 to 3 for more sensitive detection
+    // Report IPs doing too much scanning
+    // Lowered from 5 to 3 to catch them faster
     if (ipData.count >= 3 && ipData.paths.size >= 2) {
       reportHTTPSAttack(config, logger, clientIP, "management_access", {
         request_count: ipData.count,
@@ -83,18 +82,18 @@ async function setupHTTPSHoneypot(config, logger) {
         timespan_seconds: Math.floor((Date.now() - ipData.firstSeen) / 1000),
       });
 
-      // Reset counter after reporting
+      // Reset counter so we don't spam reports
       ipData.count = 0;
     }
 
     next();
   });
 
-  // Body parsing middleware
+  // Handle form data and JSON
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
-  // Management portal login page
+  // Fake admin login page
   app.get("/", (req, res) => {
     res.send(`
       <!DOCTYPE html>
@@ -130,7 +129,7 @@ async function setupHTTPSHoneypot(config, logger) {
     `);
   });
 
-  // Login handler - always fail
+  // Login handler - always rejects but logs the creds
   app.post("/login", (req, res) => {
     const clientIP =
       req.headers["x-forwarded-for"] ||
@@ -138,8 +137,8 @@ async function setupHTTPSHoneypot(config, logger) {
 
     const { username, password } = req.body;
 
-    // Log login attempt
-    logger.warn(`Login attempt to management portal`, {
+    // Log what they tried
+    logger.warn(`Login attempt to admin portal`, {
       ip: clientIP,
       username: username,
       password_length: password ? password.length : 0,
@@ -161,7 +160,7 @@ async function setupHTTPSHoneypot(config, logger) {
         tracker.usernames.add(username);
       }
 
-      // Report bruteforce attempts after 3 failed logins
+      // Report bruteforce after 3+ failed logins
       if (tracker.attempts >= 3 && Date.now() - tracker.lastReported > 60000) {
         logger.warn(
           `Possible HTTPS login bruteforce from ${clientIP}: ${tracker.attempts} attempts`,
@@ -172,7 +171,7 @@ async function setupHTTPSHoneypot(config, logger) {
           }
         );
 
-        // Report the bruteforce attempt
+        // Report the bruteforce
         reportHTTPSAttack(config, logger, clientIP, "admin_login_bruteforce", {
           attempts: tracker.attempts,
           usernames: Array.from(tracker.usernames),
@@ -180,12 +179,12 @@ async function setupHTTPSHoneypot(config, logger) {
           path: req.path,
         });
 
-        // Update last reported time
+        // Don't report again for a minute
         tracker.lastReported = Date.now();
       }
     }
 
-    // Report login attempt
+    // Report each login attempt
     reportHTTPSAttack(config, logger, clientIP, "admin_portal_access", {
       username: username,
       password_length: password ? password.length : 0,
@@ -193,7 +192,7 @@ async function setupHTTPSHoneypot(config, logger) {
       method: req.method,
     });
 
-    // Always return failure (after a delay to simulate checking)
+    // Always reject (after a delay to seem legit)
     setTimeout(() => {
       res.status(401).send(`
         <!DOCTYPE html>
@@ -220,10 +219,10 @@ async function setupHTTPSHoneypot(config, logger) {
     }, 1000);
   });
 
-  // Clean up login tracker periodically to prevent memory leaks
+  // Clean up login tracker every 5 mins
   setInterval(() => {
     const now = Date.now();
-    // Clean up trackers older than 1 hour
+    // Delete entries older than 1 hour
     for (const [ip, data] of loginAttemptTracker.entries()) {
       if (now - data.lastAttempt > 3600000) {
         // 1 hour
@@ -232,7 +231,7 @@ async function setupHTTPSHoneypot(config, logger) {
     }
   }, 300000); // Run every 5 minutes
 
-  // Common paths for admin interfaces
+  // Common admin paths attackers try to find
   [
     "/admin",
     "/administrator",
@@ -269,25 +268,25 @@ async function setupHTTPSHoneypot(config, logger) {
         req.headers["x-forwarded-for"] ||
         req.connection.remoteAddress.replace(/^::ffff:/, "");
 
-      // Report suspicious access attempts
+      // Report attempts to access admin pages
       reportHTTPSAttack(config, logger, clientIP, "admin_portal_access", {
         path: req.path,
         method: req.method,
         user_agent: req.headers["user-agent"] || "None",
       });
 
-      // Redirect to login page
+      // Redirect to login
       res.redirect("/");
     });
   });
 
-  // Catch-all for other paths
+  // Catch-all for everything else
   app.use((req, res) => {
     const clientIP =
       req.headers["x-forwarded-for"] ||
       req.connection.remoteAddress.replace(/^::ffff:/, "");
 
-    // Report access attempts to unusual paths
+    // Report weird paths they try
     if (req.path !== "/favicon.ico") {
       reportHTTPSAttack(config, logger, clientIP, "suspicious_request", {
         path: req.path,
@@ -297,7 +296,7 @@ async function setupHTTPSHoneypot(config, logger) {
       });
     }
 
-    // Return 404
+    // Show 404 page
     res.status(404).send(`
       <!DOCTYPE html>
       <html>
@@ -326,7 +325,7 @@ async function setupHTTPSHoneypot(config, logger) {
   const server = https.createServer(httpsOptions, app);
 
   server.listen(config.httpsPort, () => {
-    logger.info(`HTTPS honeypot server started on port ${config.httpsPort}`);
+    logger.info(`HTTPS honeypot started on port ${config.httpsPort}`);
   });
 
   return [
@@ -338,36 +337,36 @@ async function setupHTTPSHoneypot(config, logger) {
   ];
 }
 
-// Generate self-signed certificate for HTTPS
+// Make our own self-signed SSL cert
 function generateSelfSignedCert(certPath, keyPath) {
-  // Ensure logs directory exists
+  // Make sure logs dir exists
   const logsDir = path.dirname(certPath);
   if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir, { recursive: true });
   }
 
-  // Generate key and certificate using OpenSSL
+  // Try to use OpenSSL if it's available
   const { execSync } = require("child_process");
 
   try {
-    // Check if OpenSSL is available
+    // See if we have OpenSSL
     execSync("openssl version");
 
-    // Generate private key
+    // Generate key
     execSync(`openssl genrsa -out "${keyPath}" 2048`);
 
-    // Generate self-signed certificate
+    // Generate self-signed cert
     execSync(
       `openssl req -new -x509 -key "${keyPath}" -out "${certPath}" -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"`
     );
 
-    console.log("Self-signed certificate generated successfully.");
+    console.log("Self-signed cert created with OpenSSL 👍");
   } catch (err) {
     console.error(
-      "Failed to generate certificate using OpenSSL. Falling back to internal method."
+      "Couldn't use OpenSSL to make cert, trying built-in method..."
     );
 
-    // Fallback method if OpenSSL isn't available
+    // Use node-forge if OpenSSL isn't installed
     const pki = require("node-forge").pki;
 
     // Generate a keypair
@@ -383,7 +382,7 @@ function generateSelfSignedCert(certPath, keyPath) {
       cert.validity.notBefore.getFullYear() + 1
     );
 
-    // Set subject and issuer
+    // Set subject/issuer
     const attrs = [
       { name: "commonName", value: "localhost" },
       { name: "countryName", value: "US" },
@@ -394,34 +393,31 @@ function generateSelfSignedCert(certPath, keyPath) {
     cert.setSubject(attrs);
     cert.setIssuer(attrs);
 
-    // Sign the certificate
+    // Sign the cert
     cert.sign(keys.privateKey);
 
-    // Convert to PEM format
+    // Save as PEM files
     const pemCert = pki.certificateToPem(cert);
     const pemKey = pki.privateKeyToPem(keys.privateKey);
 
-    // Write to files
     fs.writeFileSync(certPath, pemCert);
     fs.writeFileSync(keyPath, pemKey);
 
-    console.log(
-      "Self-signed certificate generated successfully using internal method."
-    );
+    console.log("Created self-signed cert with internal method 👍");
   }
 }
 
-// Report HTTPS attack to the API
+// Send HTTPS attack reports to API
 function reportHTTPSAttack(config, logger, ip, attackType, evidence) {
   const attackData = {
     ip_address: ip,
     attack_type: attackType,
-    description: `HTTPS management portal ${attackType} detected`,
+    description: `HTTPS admin portal ${attackType} detected`,
     evidence: [JSON.stringify(evidence)],
     timestamp: new Date().toISOString(),
   };
 
-  // Report the attack
+  // Send it
   reportAttack(config, attackData, logger).catch((error) => {
     logger.error(`Failed to report HTTPS attack: ${error.message}`, {
       ip,

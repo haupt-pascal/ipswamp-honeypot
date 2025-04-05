@@ -1,11 +1,11 @@
 /**
  * Attack Pattern Adapter
  *
- * Maps honeypot attack classifications to standardized types compatible with
- * the scoring system. This ensures consistent scoring across different sources.
+ * Takes the raw attack classifications from our honeypots and maps them to
+ * standardized types for consistent scoring across different sources.
  */
 
-// Attack pattern mapping based on the scoring system
+// Attack pattern definitions with their severity scores
 const ATTACK_PATTERNS = {
   // Low severity attacks (1-5)
   SUSPICIOUS_USER_AGENT: {
@@ -202,9 +202,9 @@ const ATTACK_PATTERNS = {
   },
 };
 
-// Mapping from internal attack types to standardized types
+// Maps our internal attack types to standardized ones for the API
 const ATTACK_TYPE_MAPPING = {
-  // HTTP module attack types
+  // HTTP module
   sql_injection: "SQLI_ATTEMPT",
   sql_injection_attempt: "SQLI_ATTEMPT",
   xss_attack: "XSS_ATTEMPT",
@@ -231,7 +231,7 @@ const ATTACK_TYPE_MAPPING = {
   management_access: "AUTHENTICATION_BREACH",
   admin_portal_access: "AUTHENTICATION_BREACH",
 
-  // SSH module attack types
+  // SSH module
   ssh_bruteforce: "SSH_BRUTEFORCE",
   ssh_invalid_user: "SSH_BRUTEFORCE",
   ssh_auth_failure: "SSH_BRUTEFORCE",
@@ -239,12 +239,12 @@ const ATTACK_TYPE_MAPPING = {
   ssh_command: "HONEYPOT",
   ssh_shell_command: "HONEYPOT",
 
-  // FTP module attack types
+  // FTP module
   ftp_bruteforce: "AUTHENTICATION_BREACH",
   ftp_invalid_user: "AUTHENTICATION_BREACH",
   ftp_auth_failure: "AUTHENTICATION_BREACH",
 
-  // Mail server attack types
+  // Mail server
   smtp_auth_attempt: "AUTHENTICATION_BREACH",
   smtp_spam_attempt: "MAIL_SPAM",
   smtp_relay_attempt: "MAIL_SPAM",
@@ -258,7 +258,7 @@ const ATTACK_TYPE_MAPPING = {
   mail_overflow_attempt: "BOTNET_ACTIVITY",
   email_harvesting: "SUSPICIOUS_QUERY_STRING",
 
-  // MySQL attack types
+  // MySQL stuff
   mysql_bruteforce: "AUTHENTICATION_BREACH",
   mysql_invalid_user: "AUTHENTICATION_BREACH",
   mysql_auth_failure: "AUTHENTICATION_BREACH",
@@ -266,7 +266,7 @@ const ATTACK_TYPE_MAPPING = {
   mysql_overflow_attempt: "HTTP_INJECTION",
   mysql_scan: "PORT_SCAN",
 
-  // Generic honeypot attack types
+  // Generic honeypot stuff
   port_scan: "PORT_SCAN",
   port_probe: "PORT_SCAN",
   portscan: "PORT_SCAN",
@@ -280,22 +280,22 @@ const ATTACK_TYPE_MAPPING = {
   generic_attack: "MANUAL",
   suspicious_activity: "HONEYPOT",
 
-  // Default fallback
+  // Fallback
   default: "HONEYPOT",
 };
 
 /**
- * Maps an internal attack type to a standardized type for the scoring system
+ * Maps internal attack type to standardized type for the scoring system
  *
- * @param {string} internalType - The internal attack type used by the honeypot
- * @param {object} attackData - Additional attack data that might help determine the type
+ * @param {string} internalType - The attack type used by our honeypot
+ * @param {object} attackData - Extra data that might help determine the type
  * @returns {string} - The standardized attack type for the scoring system
  */
 function mapAttackType(internalType, attackData = {}) {
   // Use lowercase for consistent mapping
   const lowerType = (internalType || "default").toLowerCase();
 
-  // Special case handling based on additional data
+  // Special cases based on evidence data
   if (lowerType === "suspicious_request" && attackData.evidence) {
     const evidence = Array.isArray(attackData.evidence)
       ? attackData.evidence.join(" ").toLowerCase()
@@ -331,7 +331,7 @@ function mapAttackType(internalType, attackData = {}) {
  * @returns {number} - Severity level from 1-5
  */
 function calculateSeverity(standardizedType, attackData = {}) {
-  // Base severity levels for different attack types based on the pattern base score
+  // Base severity levels based on pattern base score
   const severityMap = {
     SQLI_ATTEMPT: 4,
     XSS_ATTEMPT: 3,
@@ -349,7 +349,7 @@ function calculateSeverity(standardizedType, attackData = {}) {
   // Get base severity
   let severity = severityMap[standardizedType] || severityMap["default"];
 
-  // Adjust based on evidence amount
+  // Bump up severity if we have lots of evidence
   if (
     attackData.evidence &&
     Array.isArray(attackData.evidence) &&
@@ -358,7 +358,7 @@ function calculateSeverity(standardizedType, attackData = {}) {
     severity = Math.min(5, severity + 1);
   }
 
-  // Adjust based on frequency if available
+  // Bump up severity if activity happens a lot
   if (attackData.frequency && attackData.frequency > 10) {
     severity = Math.min(5, severity + 1);
   }
@@ -367,7 +367,7 @@ function calculateSeverity(standardizedType, attackData = {}) {
 }
 
 /**
- * Enhances attack data with standardized information for the API
+ * Enhances attack data with standardized info for the API
  *
  * @param {object} attackData - Original attack data from honeypot
  * @returns {object} - Enhanced attack data with standardized fields
@@ -393,7 +393,7 @@ function enhanceAttackData(attackData) {
     source: standardizedType,
     severity: severity,
     category: pattern.category,
-    // Add metadata to help with debugging and tracking
+    // Add metadata to help with debugging
     metadata: {
       original_type: attackData.attack_type,
       baseScore: pattern.baseScore,

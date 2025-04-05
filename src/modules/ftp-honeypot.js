@@ -1,10 +1,10 @@
-// FTP-Honeypot-Modul
+// FTP Honeypot Module - Simulates an FTP server to catch sneaky attackers
 const ftpd = require("ftpd");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-// FTP-Konfiguration
+// Default FTP user accounts - super basic creds that attackers try
 const FTP_USERS = {
   anonymous: { password: "", root: "./ftp" },
   admin: { password: "admin123", root: "./ftp" },
@@ -12,25 +12,25 @@ const FTP_USERS = {
   ftpuser: { password: "ftp123", root: "./ftp" },
 };
 
-// Track authentication attempts by IP
+// Track auth attempts to catch brute forcers
 const authAttemptTracker = new Map();
 
 /**
- * Erstellt ein FTP-Honeypot-Modul
- * @param {Object} logger - Winston Logger-Instanz
- * @param {Object} config - Konfiguration des Honeypots
- * @param {Function} reportAttack - Funktion zum Melden von Angriffen
- * @returns {Object} FTP-Server-Instanz
+ * Sets up the FTP honeypot server
+ * @param {Object} logger - Winston logger instance
+ * @param {Object} config - Honeypot config
+ * @param {Function} reportAttack - Function to report attacks to API
+ * @returns {Object} FTP server instance
  */
 function setupFTPHoneypot(logger, config, reportAttack) {
-  logger.info("FTP-Honeypot-Modul wird eingerichtet...");
+  logger.info("Setting up FTP Honeypot module...");
 
-  // FTP-Verzeichnis erstellen, falls es nicht existiert
+  // Create FTP dir if it doesn't exist
   const ftpRoot = path.join(process.cwd(), "ftp");
   if (!fs.existsSync(ftpRoot)) {
     fs.mkdirSync(ftpRoot, { recursive: true });
 
-    // Einige Demo-Dateien erstellen
+    // Create some bait files
     fs.writeFileSync(
       path.join(ftpRoot, "README.txt"),
       "This is a test FTP server."
@@ -40,7 +40,7 @@ function setupFTPHoneypot(logger, config, reportAttack) {
       "Welcome to our FTP server!"
     );
 
-    // Einen "private" Ordner erstellen als Köder
+    // Create a "private" folder as bait
     const privateDir = path.join(ftpRoot, "private");
     fs.mkdirSync(privateDir, { recursive: true });
     fs.writeFileSync(
@@ -64,14 +64,14 @@ function setupFTPHoneypot(logger, config, reportAttack) {
     );
   }
 
-  // FTP-Server-Optionen
+  // FTP server options
   const options = {
     host: "0.0.0.0",
     port: parseInt(process.env.FTP_PORT || "21"),
-    tls: null, // Kein TLS für Honeypot (kann für sicheres FTP hinzugefügt werden)
+    tls: null, // No TLS for honeypot (could add for secure FTP)
   };
 
-  // FTP-Server erstellen
+  // Create FTP server
   const server = new ftpd.FtpServer(options.host, {
     getInitialCwd: () => "/",
     getRoot: (username) => FTP_USERS[username]?.root || ftpRoot,
@@ -81,13 +81,13 @@ function setupFTPHoneypot(logger, config, reportAttack) {
     allowUnauthorizedTls: true,
     useWriteFile: false,
     useReadFile: false,
-    uploadMaxSlurpSize: 1024, // 1KB - keine großen Uploads erlauben
+    uploadMaxSlurpSize: 1024, // 1KB - don't allow big uploads
   });
 
-  // Verbindungen verfolgen
+  // Track connections
   const connections = new Map();
 
-  // Server-Events
+  // Server events
   server.on("client:connected", (connection) => {
     const clientInfo = {
       id: crypto.randomBytes(8).toString("hex"),
@@ -101,30 +101,30 @@ function setupFTPHoneypot(logger, config, reportAttack) {
 
     connections.set(clientInfo.id, clientInfo);
 
-    logger.info("FTP-Verbindung hergestellt", {
+    logger.info("FTP connection established", {
       clientId: clientInfo.id,
       ip: clientInfo.ip,
       port: clientInfo.port,
     });
 
-    // Login-Event
+    // Login event
     connection.on("command:user", (username, success) => {
       clientInfo.username = username;
-      logger.info("FTP-Benutzername empfangen", {
+      logger.info("FTP username received", {
         clientId: clientInfo.id,
         username,
       });
     });
 
-    // Passwort-Event - Track attempts for bruteforce detection
+    // Password event - Track attempts for bruteforce detection
     connection.on("command:pass", (password, success) => {
-      logger.info("FTP-Anmeldungsversuch", {
+      logger.info("FTP login attempt", {
         clientId: clientInfo.id,
         username: clientInfo.username,
         success,
       });
 
-      // Track authentication attempts by IP for bruteforce detection
+      // Track auth attempts by IP for bruteforce detection
       if (!authAttemptTracker.has(clientInfo.ip)) {
         authAttemptTracker.set(clientInfo.ip, {
           attempts: 1,
@@ -176,18 +176,18 @@ function setupFTPHoneypot(logger, config, reportAttack) {
         }
       }
 
-      // Melde den Anmeldungsversuch an die API
+      // Report the login attempt to the API
       reportAttack(config, {
         ip_address: clientInfo.ip,
         attack_type: "FTP_LOGIN_ATTEMPT",
-        description: `FTP-Anmeldungsversuch: Benutzer: ${clientInfo.username}, Erfolg: ${success}`,
+        description: `FTP login attempt: User: ${clientInfo.username}, Success: ${success}`,
         evidence: JSON.stringify({
           username: clientInfo.username,
           success,
           timestamp: new Date().toISOString(),
         }),
       }).catch((error) => {
-        logger.error("Fehler beim Melden des FTP-Anmeldungsversuchs", {
+        logger.error("Error reporting FTP login attempt", {
           error: error.message,
         });
       });
@@ -197,7 +197,7 @@ function setupFTPHoneypot(logger, config, reportAttack) {
       }
     });
 
-    // Befehls-Tracking
+    // Command tracking
     connection.on("command:*", (command, parameters) => {
       clientInfo.commands.push({
         command,
@@ -205,19 +205,19 @@ function setupFTPHoneypot(logger, config, reportAttack) {
         time: new Date(),
       });
 
-      logger.info("FTP-Befehl empfangen", {
+      logger.info("FTP command received", {
         clientId: clientInfo.id,
         command,
         parameters,
       });
 
-      // Bestimmte verdächtige Befehle melden (z.B. DELE, STOR in sensiblen Verzeichnissen)
+      // Report certain suspicious commands (e.g., DELE, STOR in sensitive directories)
       const suspiciousCommands = ["DELE", "RMD", "STOR", "SITE"];
       if (suspiciousCommands.includes(command)) {
         reportAttack(config, {
           ip_address: clientInfo.ip,
           attack_type: "FTP_SUSPICIOUS_COMMAND",
-          description: `Verdächtiger FTP-Befehl: ${command} ${parameters}`,
+          description: `Suspicious FTP command: ${command} ${parameters}`,
           evidence: JSON.stringify({
             clientId: clientInfo.id,
             username: clientInfo.username,
@@ -227,20 +227,20 @@ function setupFTPHoneypot(logger, config, reportAttack) {
             timestamp: new Date().toISOString(),
           }),
         }).catch((error) => {
-          logger.error("Fehler beim Melden des verdächtigen FTP-Befehls", {
+          logger.error("Error reporting suspicious FTP command", {
             error: error.message,
           });
         });
       }
     });
 
-    // Verbindungs-Ende
+    // Connection end
     connection.on("close", () => {
       if (connections.has(clientInfo.id)) {
         const sessionInfo = connections.get(clientInfo.id);
         const duration = (new Date() - sessionInfo.startTime) / 1000;
 
-        logger.info("FTP-Verbindung geschlossen", {
+        logger.info("FTP connection closed", {
           clientId: clientInfo.id,
           ip: clientInfo.ip,
           duration: `${duration.toFixed(2)}s`,
@@ -251,7 +251,7 @@ function setupFTPHoneypot(logger, config, reportAttack) {
       }
     });
 
-    // Authentifizierungslogik
+    // Authentication logic
     connection.on("command:pass", (password) => {
       const username = clientInfo.username;
 
@@ -277,11 +277,11 @@ function setupFTPHoneypot(logger, config, reportAttack) {
     }
   }, 300000); // Run every 5 minutes
 
-  // Server starten
+  // Start server
   server.debugging = process.env.NODE_ENV !== "production";
   server.listen(options.port);
 
-  logger.info(`FTP-Honeypot gestartet auf Port ${options.port}`);
+  logger.info(`FTP Honeypot started on port ${options.port}`);
 
   return server;
 }

@@ -1,8 +1,7 @@
 /**
- * Mail Server Honeypot Module
+ * Mail Server Honeypot
  *
- * Simulates SMTP, POP3, and IMAP mail servers to detect and analyze attacks
- * targeting mail infrastructure.
+ * Fake SMTP, POP3, and IMAP servers to catch mail server hackers
  */
 
 const net = require("net");
@@ -10,17 +9,17 @@ const fs = require("fs");
 const path = require("path");
 const { reportAttack } = require("../services/api-service");
 
-// Setup mail honeypot servers (SMTP, POP3, IMAP)
+// Set up all the mail honeypot servers
 async function setupMailHoneypot(config, logger) {
   const mailServers = [];
 
-  // Ensure mail directory exists
+  // Make sure we have a mail folder
   const mailDir = path.join(process.cwd(), "mail");
   if (!fs.existsSync(mailDir)) {
     fs.mkdirSync(mailDir, { recursive: true });
   }
 
-  // Setup SMTP server
+  // Create SMTP server (email sending)
   if (config.smtpPort) {
     const smtpServer = createSMTPServer(config, logger);
     mailServers.push({
@@ -31,7 +30,7 @@ async function setupMailHoneypot(config, logger) {
     logger.info(`SMTP honeypot server started on port ${config.smtpPort}`);
   }
 
-  // Setup SMTP Submission server (usually port 587)
+  // Create SMTP Submission server (port 587)
   if (config.smtpSubmissionPort) {
     const smtpSubmissionServer = createSMTPServer(config, logger, true);
     mailServers.push({
@@ -44,7 +43,7 @@ async function setupMailHoneypot(config, logger) {
     );
   }
 
-  // Setup POP3 server
+  // Create POP3 server (email receiving)
   if (config.pop3Port) {
     const pop3Server = createPOP3Server(config, logger);
     mailServers.push({
@@ -55,7 +54,7 @@ async function setupMailHoneypot(config, logger) {
     logger.info(`POP3 honeypot server started on port ${config.pop3Port}`);
   }
 
-  // Setup IMAP server
+  // Create IMAP server (email management)
   if (config.imapPort) {
     const imapServer = createIMAPServer(config, logger);
     mailServers.push({
@@ -69,14 +68,14 @@ async function setupMailHoneypot(config, logger) {
   return mailServers;
 }
 
-// Create SMTP honeypot server
+// Make a fake SMTP server
 function createSMTPServer(config, logger, isSubmission = false) {
   const server = net.createServer((socket) => {
     const clientIP = socket.remoteAddress.replace(/^::ffff:/, "");
     const clientPort = socket.remotePort;
     const connectionId = `${clientIP}:${clientPort}`;
 
-    // Session state tracking
+    // Track this session
     const session = {
       authenticated: false,
       commands: [],
@@ -95,7 +94,7 @@ function createSMTPServer(config, logger, isSubmission = false) {
       server: isSubmission ? "submission" : "smtp",
     });
 
-    // SMTP Welcome banner
+    // SMTP welcome banner
     socket.write(
       `220 mail.example.com ESMTP ${
         isSubmission ? "Postfix" : "Sendmail 8.15.2"
@@ -105,20 +104,20 @@ function createSMTPServer(config, logger, isSubmission = false) {
     socket.on("data", (data) => {
       const command = data.toString().trim();
 
-      // Add to session command history
+      // Add to history
       if (command && !session.inDataMode) {
         session.commands.push(command);
       } else if (session.inDataMode) {
         session.data.push(command);
       }
 
-      // Process SMTP commands
+      // Handle SMTP commands
       if (session.inDataMode) {
         // In DATA mode, look for end marker
         if (command.endsWith("\r\n.\r\n") || command.endsWith("\n.\n")) {
           session.inDataMode = false;
 
-          // Check for suspicious patterns in email data
+          // Check if this looks like spam
           const emailData = session.data.join("\n");
           const isSpam = detectSpam(emailData);
 
@@ -131,19 +130,19 @@ function createSMTPServer(config, logger, isSubmission = false) {
             });
           }
 
-          // Always accept the message but do nothing with it
+          // Pretend to accept but do nothing
           socket.write("250 Message accepted\r\n");
         }
       } else {
-        // Regular command processing
+        // Regular command mode
         const commandUpper = command.toUpperCase();
 
-        // Check for SMTP commands
+        // All the SMTP commands
         if (
           commandUpper.startsWith("HELO") ||
           commandUpper.startsWith("EHLO")
         ) {
-          // For EHLO, list our "capabilities"
+          // For EHLO, list our "features"
           if (commandUpper.startsWith("EHLO")) {
             const capabilities = [
               "250-mail.example.com",
@@ -165,11 +164,11 @@ function createSMTPServer(config, logger, isSubmission = false) {
           // Authentication attempt
           session.authAttempts++;
 
-          // Always reject auth after delay
+          // Always say no after a delay
           setTimeout(() => {
             socket.write("535 5.7.8 Authentication credentials invalid\r\n");
 
-            // Report auth attempt
+            // Report if they keep trying
             if (session.authAttempts >= session.maxAuthAttempts) {
               reportMailAttack(config, logger, clientIP, "smtp_auth_attempt", {
                 commands: session.commands,
@@ -184,7 +183,7 @@ function createSMTPServer(config, logger, isSubmission = false) {
           const recipient = command.substring(8).trim();
           session.rcptTo.push(recipient);
 
-          // Check for email harvesting
+          // Check for spammers trying all emails
           if (session.rcptTo.length > 10) {
             reportMailAttack(config, logger, clientIP, "email_harvesting", {
               commands: session.commands,
@@ -217,7 +216,7 @@ function createSMTPServer(config, logger, isSubmission = false) {
             "252 Cannot VRFY user; try RCPT to attempt delivery\r\n"
           );
 
-          // Multiple VRFY commands indicate possible user enumeration
+          // Multiple VRFY = email enumeration
           const vrfyCount = session.commands.filter(
             (cmd) =>
               cmd.toUpperCase().startsWith("VRFY") ||
@@ -232,7 +231,7 @@ function createSMTPServer(config, logger, isSubmission = false) {
           }
         } else if (commandUpper === "STARTTLS") {
           socket.write("220 Ready to start TLS\r\n");
-          // We don't actually implement TLS, so connection will likely fail after this
+          // We don't really do TLS, so they'll probably error after this
         } else {
           // Unknown command
           socket.write("500 Command unrecognized\r\n");
@@ -245,18 +244,18 @@ function createSMTPServer(config, logger, isSubmission = false) {
     });
 
     socket.on("close", () => {
-      // Session complete, check for suspicious patterns
+      // Check for suspicious patterns
       const sessionDuration = Date.now() - session.startTime;
       const commandCount = session.commands.length;
 
-      // Report if this looks like a port scan (very short connection)
+      // Likely port scan (connect and quit super fast)
       if (sessionDuration < 500 && commandCount <= 1) {
         reportMailAttack(config, logger, clientIP, "smtp_scan", {
           duration_ms: sessionDuration,
         });
       }
 
-      // Report relay attempt if many recipients from different domains
+      // Check for spam relay attempt (lots of different domains)
       if (session.rcptTo.length > 5) {
         const domains = new Set(
           session.rcptTo.map((rcpt) => {
@@ -285,14 +284,14 @@ function createSMTPServer(config, logger, isSubmission = false) {
   return server;
 }
 
-// Create POP3 honeypot server
+// Make a fake POP3 server
 function createPOP3Server(config, logger) {
   const server = net.createServer((socket) => {
     const clientIP = socket.remoteAddress.replace(/^::ffff:/, "");
     const clientPort = socket.remotePort;
     const connectionId = `${clientIP}:${clientPort}`;
 
-    // Session tracking
+    // Track session
     const session = {
       authenticated: false,
       state: "AUTHORIZATION",
@@ -318,11 +317,11 @@ function createPOP3Server(config, logger) {
       } else if (command.startsWith("pass ")) {
         session.authAttempts++;
 
-        // Always reject after delay
+        // Always say no after a delay
         setTimeout(() => {
           socket.write("-ERR Authentication failed\r\n");
 
-          // Report brute force attempts
+          // Report bruteforce attempts
           if (session.authAttempts >= session.maxAuthAttempts) {
             reportMailAttack(config, logger, clientIP, "pop3_bruteforce", {
               username: session.username,
@@ -347,7 +346,7 @@ function createPOP3Server(config, logger) {
         command === "uidl" ||
         command === "dele"
       ) {
-        // These commands require authentication
+        // Commands that need auth
         if (session.authenticated) {
           if (command === "stat") {
             socket.write("+OK 0 0\r\n"); // No messages
@@ -373,11 +372,11 @@ function createPOP3Server(config, logger) {
     });
 
     socket.on("close", () => {
-      // Session complete, check for suspicious patterns
+      // Check for suspicious stuff
       const sessionDuration = Date.now() - session.startTime;
       const commandCount = session.commands.length;
 
-      // Report likely port scan
+      // Likely port scan
       if (sessionDuration < 500 && commandCount <= 1) {
         reportMailAttack(config, logger, clientIP, "pop3_scan", {
           duration_ms: sessionDuration,
@@ -396,14 +395,14 @@ function createPOP3Server(config, logger) {
   return server;
 }
 
-// Create IMAP honeypot server
+// Make a fake IMAP server
 function createIMAPServer(config, logger) {
   const server = net.createServer((socket) => {
     const clientIP = socket.remoteAddress.replace(/^::ffff:/, "");
     const clientPort = socket.remotePort;
     const connectionId = `${clientIP}:${clientPort}`;
 
-    // Session tracking
+    // Track session
     const session = {
       authenticated: false,
       state: "NON_AUTHENTICATED",
@@ -425,7 +424,7 @@ function createIMAPServer(config, logger) {
       const command = data.toString().trim();
       session.commands.push(command);
 
-      // Extract tag and command parts
+      // IMAP has tags on commands
       const parts = command.split(" ");
       const tag = parts[0];
       const cmd = parts.length > 1 ? parts[1].toUpperCase() : "";
@@ -433,7 +432,7 @@ function createIMAPServer(config, logger) {
       if (cmd === "LOGIN") {
         session.authAttempts++;
 
-        // Always reject with delay
+        // Always say no after a delay
         setTimeout(() => {
           socket.write(
             `${tag} NO [AUTHENTICATIONFAILED] Authentication failed\r\n`
@@ -483,23 +482,23 @@ function createIMAPServer(config, logger) {
           "UID",
         ].includes(cmd)
       ) {
-        // These commands require authentication
+        // Commands that need auth
         if (session.authenticated) {
           socket.write(`${tag} NO Not implemented\r\n`);
         } else {
           socket.write(`${tag} NO Authentication required\r\n`);
         }
       } else if (cmd === "AUTHENTICATE") {
-        // Handle various auth methods
+        // Handle auth method
         if (parts.length > 2) {
           const authMethod = parts[2].toUpperCase();
           if (authMethod === "PLAIN" || authMethod === "LOGIN") {
-            // Some clients send auth data immediately, others need a continuation
+            // Some clients send auth data right away, others need more steps
             if (parts.length > 3) {
               session.authAttempts++;
               socket.write(`${tag} NO Authentication failed\r\n`);
             } else {
-              // Send continuation request
+              // Ask for more info
               socket.write("+ \r\n");
             }
           } else {
@@ -509,11 +508,11 @@ function createIMAPServer(config, logger) {
           socket.write(`${tag} BAD Missing required argument\r\n`);
         }
       } else if (cmd.startsWith("+")) {
-        // Client responding to a continuation request
+        // Client responding to auth continuation
         session.authAttempts++;
         socket.write(`${tag} NO Authentication failed\r\n`);
 
-        // Report brute force after multiple attempts
+        // Report brute force after multiple tries
         if (session.authAttempts >= session.maxAuthAttempts) {
           reportMailAttack(config, logger, clientIP, "imap_bruteforce", {
             auth_attempts: session.authAttempts,
@@ -530,11 +529,11 @@ function createIMAPServer(config, logger) {
     });
 
     socket.on("close", () => {
-      // Session complete, check for suspicious patterns
+      // Check for suspicious patterns
       const sessionDuration = Date.now() - session.startTime;
       const commandCount = session.commands.length;
 
-      // Report likely port scan
+      // Likely port scan
       if (sessionDuration < 500 && commandCount <= 1) {
         reportMailAttack(config, logger, clientIP, "imap_scan", {
           duration_ms: sessionDuration,
@@ -553,12 +552,12 @@ function createIMAPServer(config, logger) {
   return server;
 }
 
-// Helper function to detect spam in email content
+// Check if email looks like spam
 function detectSpam(emailData) {
-  // Simple heuristics to detect spam
+  // Super simple spam check
   const lowerEmail = emailData.toLowerCase();
 
-  // Check for common spam phrases
+  // Look for common spam words
   const spamPhrases = [
     "viagra",
     "cialis",
@@ -586,15 +585,15 @@ function detectSpam(emailData) {
     "unsubscribe",
   ];
 
-  // Check for excessive URLs
+  // Check for too many URLs
   const urlCount = (lowerEmail.match(/https?:\/\//g) || []).length;
 
-  // Check for suspicious content patterns
+  // Check for hidden content
   const hasHtmlWithHiddenContent =
     lowerEmail.includes('style="display:none"') ||
     lowerEmail.includes("visibility:hidden");
 
-  // Check for common spam indicators
+  // Check for spam phrases
   const hasSpamPhrases = spamPhrases.some((phrase) =>
     lowerEmail.includes(phrase)
   );
@@ -612,7 +611,7 @@ function reportMailAttack(config, logger, ip, attackType, evidence) {
     timestamp: new Date().toISOString(),
   };
 
-  // Report the attack
+  // Send the report
   reportAttack(config, attackData, logger).catch((error) => {
     logger.error(`Failed to report mail attack: ${error.message}`, {
       ip,

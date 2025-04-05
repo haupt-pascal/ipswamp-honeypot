@@ -1,33 +1,32 @@
-// SSH-Honeypot-Modul
+// SSH Honeypot - Looks like a real SSH server but logs everything hackers try to do
 const { Server } = require("ssh2");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-// Track connection attempts by IP address
+// Keep track of connection attempts by IP
 const connectionTracker = new Map();
 
-// Track authentication attempts by IP
+// Track auth attempts to catch brute forcers
 const authAttemptTracker = new Map();
 
-// Funktion zum Generieren eines SSH-Schlüsselpaars, falls nicht vorhanden
+// Make SSH keys if we don't have them already
 function generateSSHKeys() {
   const sshDir = path.join(process.cwd(), "keys");
   const privateKeyPath = path.join(sshDir, "ssh_host_rsa_key");
   const publicKeyPath = path.join(sshDir, "ssh_host_rsa_key.pub");
 
-  // Erstelle das Verzeichnis, falls es nicht existiert
+  // Create keys folder if needed
   if (!fs.existsSync(sshDir)) {
     fs.mkdirSync(sshDir, { recursive: true });
   }
 
-  // Überprüfe, ob die Schlüssel bereits existieren
+  // Check if we already have keys
   if (!fs.existsSync(privateKeyPath) || !fs.existsSync(publicKeyPath)) {
-    console.log("Generiere neue SSH-Schlüssel...");
+    console.log("Generating new SSH keys...");
 
-    // Diese Funktion ist nur eine Platzhalter - in der Produktion würde man hier
-    // echte Schlüssel mit der crypto-Bibliothek oder über externe Befehle erzeugen
-    // Für diesen Honeypot verwenden wir vorgenerierte Schlüssel
+    // In a real app we'd make proper keys with crypto
+    // For the honeypot, using fixed keys is fine
 
     const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA1A1jcqpYzP9CwVxvyeBQfPNdS/bZ7+IoO5L4HoL51DFt4cNL
@@ -60,7 +59,7 @@ G1o/5SC40/rys5Vi5iHLEmuI1LJV+tJCEOYxHkznbPJoQVeLmU6IJKoVC9XBEY4F
     const publicKey =
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUDWNyqljM/0LBXG/J4FB8811L9tnv4ig7kvgegvnUMW3hw0tHFZMveM0oYFYKf2uN7M/wU8aWEV6cdfa9IBkrREQkjlJItaTkY8sv+cbDP1QlCn6WC9nVBWhN1W/4/6cH7oRTHicK171j3DzIoU/sQLID7tnGpiEu8bMoE3xY92pcoQ/loqBmzuGVszeIokfYYVrgpnYZlsbYcv0cXIulHgMYS8GP2P2F/ZTNd5sXXUV4gZUKpPFVtC0Ae/NzoiVWkv19Kj1ro31YQK0K6oxSh0NFUrMoMWdGNtWdHvw6aVZe1Xz7Cq7NQkPk2XSBFkX9DMRdgIE8NgZB2o3WRn9d honeypot@example.com";
 
-    // Schlüssel in Dateien schreiben
+    // Save keys to disk with right permissions
     fs.writeFileSync(privateKeyPath, privateKey, { mode: 0o600 });
     fs.writeFileSync(publicKeyPath, publicKey, { mode: 0o644 });
   }
@@ -71,9 +70,9 @@ G1o/5SC40/rys5Vi5iHLEmuI1LJV+tJCEOYxHkznbPJoQVeLmU6IJKoVC9XBEY4F
   };
 }
 
-// Function to track and detect rapid connection attempts
+// Detect super fast connection attempts - could be port scans
 function trackConnectionAttempt(ipAddress, logger, config, reportAttack) {
-  // Initialize tracking for this IP if it doesn't exist
+  // Start tracking this IP if we haven't seen it before
   if (!connectionTracker.has(ipAddress)) {
     connectionTracker.set(ipAddress, {
       attempts: [],
@@ -84,16 +83,15 @@ function trackConnectionAttempt(ipAddress, logger, config, reportAttack) {
   const tracker = connectionTracker.get(ipAddress);
   const now = Date.now();
 
-  // Add this attempt with timestamp
+  // Add this attempt
   tracker.attempts.push(now);
 
-  // Remove attempts older than 1 minute
+  // Forget attempts older than 1 minute
   const oneMinuteAgo = now - 60000;
   tracker.attempts = tracker.attempts.filter((time) => time > oneMinuteAgo);
 
-  // Check if we have enough attempts to report
-  // Reduced from 10 to 3 attempts for more sensitive detection
-  // and we haven't reported in the last 2 minutes to avoid spam
+  // Report sus activity if 3+ attempts in under a minute
+  // And we haven't reported in the last 2 mins to avoid spam
   if (tracker.attempts.length >= 3 && now - tracker.lastReportTime > 120000) {
     logger.warn(
       `Detected rapid SSH connection attempts from ${ipAddress}: ${tracker.attempts.length} attempts in the last minute`,
@@ -103,7 +101,7 @@ function trackConnectionAttempt(ipAddress, logger, config, reportAttack) {
       }
     );
 
-    // Report as a brute force or scan attempt
+    // Report as brute force or scan
     reportAttack(config, {
       ip_address: ipAddress,
       attack_type: "SSH_BRUTEFORCE_SCAN",
@@ -126,7 +124,7 @@ function trackConnectionAttempt(ipAddress, logger, config, reportAttack) {
   }
 }
 
-// Clean up old connection tracking data periodically
+// Clean up old connection data every 5 mins
 setInterval(() => {
   const now = Date.now();
   const twoHoursAgo = now - 7200000; // 2 hours
@@ -142,14 +140,14 @@ setInterval(() => {
   }
 }, 300000); // Run cleanup every 5 minutes
 
-// Funktion zum Aufsetzen des SSH-Honeypots
+// Set up the fake SSH server
 function setupSSHHoneypot(logger, config, reportAttack) {
-  logger.info("SSH-Honeypot-Modul wird eingerichtet...");
+  logger.info("Setting up SSH Honeypot module...");
 
-  // SSH-Schlüssel generieren oder laden
+  // Get our SSH keys
   const { privateKey, publicKey } = generateSSHKeys();
 
-  // Liste bekannter Benutzer für den Honeypot (kann erweitert werden)
+  // Bait usernames and passwords hackers will try
   const users = {
     root: { password: "password123" },
     admin: { password: "admin123" },
@@ -159,7 +157,7 @@ function setupSSHHoneypot(logger, config, reportAttack) {
     pi: { password: "raspberry" },
   };
 
-  // SSH-Server erstellen
+  // Create SSH server
   const server = new Server(
     {
       hostKeys: [privateKey],
@@ -168,15 +166,15 @@ function setupSSHHoneypot(logger, config, reportAttack) {
       const clientIP = client._sock.remoteAddress;
       const clientPort = client._sock.remotePort;
 
-      logger.info("Neue SSH-Verbindung", {
+      logger.info("New SSH connection", {
         ip: clientIP,
         port: clientPort,
       });
 
-      // Track this connection attempt for rapid connection detection
+      // Track this connection to detect port scans
       trackConnectionAttempt(clientIP, logger, config, reportAttack);
 
-      // Verbindungsdaten
+      // Connection data
       const connectionInfo = {
         ip: clientIP,
         port: clientPort,
@@ -186,10 +184,10 @@ function setupSSHHoneypot(logger, config, reportAttack) {
         hasAuthenticated: false,
       };
 
-      // Report quick connections as potential port scans
+      // Report quick connections as port scans
       const connectionTimeout = setTimeout(() => {
         if (!connectionInfo.hasAuthenticated) {
-          // Report this as a port scan if the connection wasn't an authentication attempt
+          // Report as port scan if they connect but don't try to auth
           reportAttack(config, {
             ip_address: connectionInfo.ip,
             attack_type: "PORT_SCAN",
@@ -202,15 +200,15 @@ function setupSSHHoneypot(logger, config, reportAttack) {
               port: connectionInfo.port,
             }),
           }).catch((error) => {
-            logger.error("Fehler beim Melden des SSH-Port-Scan", {
+            logger.error("Error reporting SSH port scan", {
               error: error.message,
             });
           });
         }
-      }, 5000); // Report if no authentication attempt within 5 seconds
+      }, 5000); // Report if no auth attempt within 5 seconds
 
       client.on("authentication", (ctx) => {
-        // Clear the timeout since we got an auth attempt
+        // Clear timeout since we got an auth attempt
         clearTimeout(connectionTimeout);
         connectionInfo.hasAuthenticated = true;
 
@@ -221,9 +219,9 @@ function setupSSHHoneypot(logger, config, reportAttack) {
           password: ctx.method === "password" ? ctx.password : null,
         };
 
-        logger.info("SSH-Authentifizierungsversuch", authInfo);
+        logger.info("SSH authentication attempt", authInfo);
 
-        // Track authentication attempts for bruteforce detection
+        // Track auth attempts for brute force detection
         if (!authAttemptTracker.has(connectionInfo.ip)) {
           authAttemptTracker.set(connectionInfo.ip, {
             attempts: 1,
@@ -239,7 +237,7 @@ function setupSSHHoneypot(logger, config, reportAttack) {
             tracker.usernames.add(ctx.username);
           }
 
-          // Report bruteforce attempts after 3 failed logins
+          // Report brute force after 3+ failed logins
           if (
             tracker.attempts >= 3 &&
             Date.now() - tracker.lastReported > 60000
@@ -253,7 +251,7 @@ function setupSSHHoneypot(logger, config, reportAttack) {
               }
             );
 
-            // Report the bruteforce attempt with more detailed information
+            // Report with all the details
             reportAttack(config, {
               ip_address: connectionInfo.ip,
               attack_type: "SSH_BRUTEFORCE",
@@ -271,42 +269,40 @@ function setupSSHHoneypot(logger, config, reportAttack) {
               });
             });
 
-            // Update last reported time
+            // Reset report timer
             tracker.lastReported = Date.now();
           }
         }
 
-        // Melde den Anmeldungsversuch an die API
+        // Report each login attempt to the API
         reportAttack(config, {
           ip_address: connectionInfo.ip,
           attack_type: "SSH_BRUTEFORCE",
-          description: `SSH-Anmeldungsversuch: Benutzer: ${ctx.username}, Methode: ${ctx.method}`,
+          description: `SSH login attempt: User: ${ctx.username}, Method: ${ctx.method}`,
           evidence: JSON.stringify(authInfo),
         }).catch((error) => {
-          logger.error("Fehler beim Melden des SSH-Anmeldungsversuchs", {
+          logger.error("Error reporting SSH login attempt", {
             error: error.message,
           });
         });
 
-        // Prüfe, ob der Benutzer existiert und das Passwort korrekt ist
+        // Check if login should succeed
         if (
           ctx.method === "password" &&
           users[ctx.username] &&
           users[ctx.username].password === ctx.password
         ) {
-          // Authentifizierung erfolgreich - in einem echten Honeypot würden wir hier
-          // eventuell die Anmeldung zulassen, um das Verhalten zu beobachten
+          // Success! In a real honeypot we might
+          // allow access to observe their behavior
           ctx.accept();
         } else {
-          // Authentifizierung fehlgeschlagen
-          // Bei einem echten Honeypot könnte man nach einer bestimmten Anzahl von Versuchen
-          // die Authentifizierung akzeptieren, um das Verhalten zu beobachten
+          // Auth failed
           ctx.reject();
         }
       });
 
       client.on("ready", () => {
-        logger.info("SSH-Client authentifiziert", {
+        logger.info("SSH client authenticated", {
           clientId: connectionInfo.clientId,
           ip: connectionInfo.ip,
         });
@@ -315,37 +311,37 @@ function setupSSHHoneypot(logger, config, reportAttack) {
           const session = accept();
 
           session.on("exec", (accept, reject, info) => {
-            logger.info("SSH-Kommando ausgeführt", {
+            logger.info("SSH command executed", {
               clientId: connectionInfo.clientId,
               command: info.command,
             });
 
-            // Kommando zur Liste hinzufügen
+            // Save command to history
             connectionInfo.commands.push(info.command);
 
-            // Melde das Kommando an die API
+            // Report the command to the API
             reportAttack(config, {
               ip_address: connectionInfo.ip,
               attack_type: "SSH_COMMAND",
-              description: `SSH-Kommando ausgeführt: ${info.command}`,
+              description: `SSH command executed: ${info.command}`,
               evidence: JSON.stringify({
                 clientId: connectionInfo.clientId,
                 command: info.command,
                 timestamp: new Date().toISOString(),
               }),
             }).catch((error) => {
-              logger.error("Fehler beim Melden des SSH-Kommandos", {
+              logger.error("Error reporting SSH command", {
                 error: error.message,
               });
             });
 
-            // Kanal für die Antwort erzeugen
+            // Create channel for output
             const channel = accept();
 
-            // Simulierte Ausgabe generieren
+            // Fake command output
             let output = `Command '${info.command}' executed.\r\n`;
 
-            // Befehle simulieren
+            // Different outputs for common commands
             if (info.command.includes("ls")) {
               output =
                 "total 20\r\ndrwxr-xr-x 2 root root 4096 Mar 18 12:34 .\r\ndrwxr-xr-x 4 root root 4096 Mar 18 12:30 ..\r\n-rw-r--r-- 1 root root  220 Mar 18 12:28 .bash_logout\r\n-rw-r--r-- 1 root root 3771 Mar 18 12:28 .bashrc\r\n-rw-r--r-- 1 root root  807 Mar 18 12:28 .profile\r\n";
@@ -370,13 +366,13 @@ function setupSSHHoneypot(logger, config, reportAttack) {
           });
 
           session.on("shell", (accept, reject) => {
-            logger.info("SSH-Shell gestartet", {
+            logger.info("SSH shell started", {
               clientId: connectionInfo.clientId,
             });
 
             const channel = accept();
 
-            // Shell-Banner anzeigen
+            // Show fake welcome banner
             channel.write(
               "Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-91-generic x86_64)\r\n\r\n"
             );
@@ -402,39 +398,39 @@ function setupSSHHoneypot(logger, config, reportAttack) {
             channel.on("data", (data) => {
               const input = data.toString();
 
-              // Echo eingabe
+              // Echo input back (like a normal terminal)
               channel.write(input);
 
-              // Behandle Enter-Taste (Carriage Return)
+              // Handle Enter key
               if (input === "\r") {
                 channel.write("\n");
 
                 if (buffer.length > 0) {
-                  logger.info("SSH-Shell-Kommando", {
+                  logger.info("SSH shell command", {
                     clientId: connectionInfo.clientId,
                     command: buffer,
                   });
 
-                  // Kommando zur Liste hinzufügen
+                  // Add to command history
                   connectionInfo.commands.push(buffer);
 
-                  // Melde das Kommando an die API
+                  // Report the command to API
                   reportAttack(config, {
                     ip_address: connectionInfo.ip,
                     attack_type: "SSH_SHELL_COMMAND",
-                    description: `SSH-Shell-Kommando: ${buffer}`,
+                    description: `SSH shell command: ${buffer}`,
                     evidence: JSON.stringify({
                       clientId: connectionInfo.clientId,
                       command: buffer,
                       timestamp: new Date().toISOString(),
                     }),
                   }).catch((error) => {
-                    logger.error("Fehler beim Melden des SSH-Shell-Kommandos", {
+                    logger.error("Error reporting SSH shell command", {
                       error: error.message,
                     });
                   });
 
-                  // Simulierte Ausgabe generieren
+                  // Show different outputs for different commands
                   let output = "";
 
                   if (buffer === "ls") {
@@ -465,25 +461,25 @@ function setupSSHHoneypot(logger, config, reportAttack) {
                     channel.write(output);
                   }
 
-                  // Eingabeaufforderung zurücksetzen
+                  // Show prompt again
                   channel.write("root@honeypot:~# ");
 
-                  // Buffer zurücksetzen
+                  // Clear command buffer
                   buffer = "";
                 } else {
-                  // Leerer Befehl (nur Enter)
+                  // Empty command (just hit Enter)
                   channel.write("root@honeypot:~# ");
                 }
               }
-              // Behandle Backspace
+              // Handle Backspace
               else if (input === "\x7f" || input === "\b") {
                 if (buffer.length > 0) {
                   buffer = buffer.slice(0, -1);
-                  // Backspace, space, backspace um das Zeichen zu löschen
+                  // Backspace, space, backspace to visually delete the character
                   channel.write("\b \b");
                 }
               }
-              // Normale Zeichen
+              // Regular typing
               else {
                 buffer += input;
               }
@@ -491,7 +487,7 @@ function setupSSHHoneypot(logger, config, reportAttack) {
           });
 
           session.on("pty", (accept, reject, info) => {
-            logger.info("SSH-PTY angefordert", {
+            logger.info("SSH PTY requested", {
               clientId: connectionInfo.clientId,
               term: info.term,
               width: info.cols,
@@ -503,10 +499,10 @@ function setupSSHHoneypot(logger, config, reportAttack) {
       });
 
       client.on("end", () => {
-        // Clear the timeout when connection ends naturally
+        // Clear the timeout when connection ends normally
         clearTimeout(connectionTimeout);
 
-        logger.info("SSH-Verbindung beendet", {
+        logger.info("SSH connection ended", {
           clientId: connectionInfo.clientId,
           commandCount: connectionInfo.commands.length,
         });
@@ -516,7 +512,7 @@ function setupSSHHoneypot(logger, config, reportAttack) {
         // Clear the timeout on error
         clearTimeout(connectionTimeout);
 
-        logger.error("SSH-Verbindungsfehler", {
+        logger.error("SSH connection error", {
           clientId: connectionInfo.clientId,
           error: err.message,
         });
@@ -524,7 +520,7 @@ function setupSSHHoneypot(logger, config, reportAttack) {
     }
   );
 
-  // Clean up auth tracker periodically to prevent memory leaks
+  // Clean up auth tracker every 5 mins
   setInterval(() => {
     const now = Date.now();
     // Clean up trackers older than 1 hour
@@ -535,10 +531,10 @@ function setupSSHHoneypot(logger, config, reportAttack) {
     }
   }, 300000); // Run every 5 minutes
 
-  // Server auf TCP-Port 2222 starten (nicht 22, um Konflikte zu vermeiden)
+  // Start server on port 2222 (not 22 to avoid conflicts)
   const sshPort = parseInt(process.env.SSH_PORT || "2222");
   server.listen(sshPort, "0.0.0.0", () => {
-    logger.info(`SSH-Honeypot gestartet auf Port ${sshPort}`);
+    logger.info(`SSH Honeypot started on port ${sshPort}`);
   });
 
   return server;

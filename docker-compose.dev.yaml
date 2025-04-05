@@ -25,7 +25,7 @@ services:
       - FTP_PORT=21
       - LOG_LEVEL=debug
       - DEBUG=true
-      # IP-Report-Throttling-Konfiguration
+      # IP report throttling configuration
       - MAX_REPORTS_PER_IP=5
       - IP_CACHE_TTL=3600000
       - STORE_THROTTLED_ATTACKS=true
