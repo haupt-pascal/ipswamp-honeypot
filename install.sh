@@ -16,7 +16,6 @@ BLUE="\033[34m"
 RESET="\033[0m"
 
 # Default values
-DEFAULT_HONEYPOT_ID="honeypot-$(openssl rand -hex 4)"
 INSTALL_DIR="$(pwd)"
 LOG_FILE="$INSTALL_DIR/install_log.txt"
 
@@ -106,9 +105,6 @@ fi
 if [ $# -ge 2 ]; then
     HONEYPOT_ID="$2"
     log "Honeypot ID provided via command line argument: $HONEYPOT_ID"
-else
-    HONEYPOT_ID="$DEFAULT_HONEYPOT_ID"
-    log "Using default Honeypot ID: $HONEYPOT_ID"
 fi
 
 # Detect OS
