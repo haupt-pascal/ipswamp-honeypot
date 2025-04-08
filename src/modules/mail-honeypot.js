@@ -71,8 +71,11 @@ async function setupMailHoneypot(config, logger) {
 // Make a fake SMTP server
 function createSMTPServer(config, logger, isSubmission = false) {
   const server = net.createServer((socket) => {
-    const clientIP = socket.remoteAddress.replace(/^::ffff:/, "");
-    const clientPort = socket.remotePort;
+    // Safely extract client IP with fallback to 'unknown'
+    const clientIP = socket.remoteAddress
+      ? socket.remoteAddress.replace(/^::ffff:/, "")
+      : "unknown";
+    const clientPort = socket.remotePort || 0;
     const connectionId = `${clientIP}:${clientPort}`;
 
     // Track this session
@@ -287,8 +290,11 @@ function createSMTPServer(config, logger, isSubmission = false) {
 // Make a fake POP3 server
 function createPOP3Server(config, logger) {
   const server = net.createServer((socket) => {
-    const clientIP = socket.remoteAddress.replace(/^::ffff:/, "");
-    const clientPort = socket.remotePort;
+    // Safely extract client IP with fallback to 'unknown'
+    const clientIP = socket.remoteAddress
+      ? socket.remoteAddress.replace(/^::ffff:/, "")
+      : "unknown";
+    const clientPort = socket.remotePort || 0;
     const connectionId = `${clientIP}:${clientPort}`;
 
     // Track session
@@ -398,8 +404,11 @@ function createPOP3Server(config, logger) {
 // Make a fake IMAP server
 function createIMAPServer(config, logger) {
   const server = net.createServer((socket) => {
-    const clientIP = socket.remoteAddress.replace(/^::ffff:/, "");
-    const clientPort = socket.remotePort;
+    // Safely extract client IP with fallback to 'unknown'
+    const clientIP = socket.remoteAddress
+      ? socket.remoteAddress.replace(/^::ffff:/, "")
+      : "unknown";
+    const clientPort = socket.remotePort || 0;
     const connectionId = `${clientIP}:${clientPort}`;
 
     // Track session
